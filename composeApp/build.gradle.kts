@@ -31,6 +31,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            api("org.jetbrains.skiko:skiko:0.7.58")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

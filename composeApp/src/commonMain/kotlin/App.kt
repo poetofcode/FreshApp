@@ -18,7 +18,9 @@ import freshapp.composeapp.generated.resources.compose_multiplatform
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
-fun App() {
+fun App(
+    imageUtil: ImageUtil
+) {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -28,10 +30,11 @@ fun App() {
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
+                    imageUtil.AsyncImage("https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg")
                     Text("Compose: $greeting")
                 }
             }
         }
     }
 }
+
