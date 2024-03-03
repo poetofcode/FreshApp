@@ -1,6 +1,15 @@
-## Run on desctop
+## Run on desktop
 
 Threre is a bug with it. Read more: https://stackoverflow.com/questions/77429595/cannot-locate-tasks-that-match-composeappcompilejava-as-task-compilejava-i
+
+Build dist:
+
+```bash
+ ./gradlew composeApp:createDistributable
+```
+
+Read more: https://github.com/JetBrains/compose-multiplatform/blob/master/tutorials/Native_distributions_and_local_execution/README.md
+
 
 ## Links
 
