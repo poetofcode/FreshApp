@@ -34,9 +34,14 @@ fun App() {
                 state = navState
             )
 
-            Row {
-                Tabs.values().forEach { tab ->
-                    Button(modifier = Modifier.padding(20.dp), onClick = { /* navState.pop() */ }) {
+            Row(modifier = Modifier.fillMaxWidth().background(Color.LightGray), horizontalArrangement = Arrangement.Center) {
+                Tabs.entries.forEach { tab ->
+                    Button(
+                        modifier = Modifier.padding(20.dp),
+                        onClick = {
+
+                        }
+                    ) {
                         val text = when (tab) {
                             Tabs.HOME -> "Лента"
                             Tabs.PROFILE -> "Профиль"
@@ -65,8 +70,8 @@ class HomeTabScreen : Screen {
 
     @Composable
     override fun Content() {
-        Box(Modifier.fillMaxSize().background(Color.Blue)) {
-            Text(text = "Screen One", color = Color.White)
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "Лента постов")
         }
     }
 
@@ -78,8 +83,8 @@ class ProfileTabScreen : Screen {
 
     @Composable
     override fun Content() {
-        Box(Modifier.fillMaxSize().background(Color.Green)) {
-            Text(text = "Screen two", color = Color.White)
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "О приложении")
         }
     }
 
