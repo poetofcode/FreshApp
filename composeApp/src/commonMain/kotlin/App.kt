@@ -60,6 +60,7 @@ fun App() {
         LaunchedEffect(Unit) {
             navState.push(HomeTabScreen())
             navState.push(ProfileTabScreen())
+            navState.moveToFront(Tabs.HOME.key)
         }
     }
 }
