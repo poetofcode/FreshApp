@@ -28,13 +28,16 @@ fun App() {
     MaterialTheme {
         val navState = remember { NavStateImpl() }
 
-        Column (horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Navigator(
                 modifier = Modifier.weight(1f),
                 state = navState
             )
 
-            Row(modifier = Modifier.fillMaxWidth().background(Color.LightGray), horizontalArrangement = Arrangement.Center) {
+            Row(
+                modifier = Modifier.fillMaxWidth().background(Color.LightGray),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Tabs.entries.forEach { tab ->
                     Button(
                         modifier = Modifier.padding(20.dp),
