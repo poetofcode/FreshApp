@@ -34,21 +34,34 @@ fun App() {
                 state = navState
             )
 
-            Button(modifier = Modifier.padding(20.dp), onClick = { navState.pop() }) {
-                Text(text = "Вернуться назад")
+            Row {
+                Tabs.values().forEach { tab ->
+                    Button(modifier = Modifier.padding(20.dp), onClick = { /* navState.pop() */ }) {
+                        val text = when (tab) {
+                            Tabs.HOME -> "Лента"
+                            Tabs.PROFILE -> "Профиль"
+                        }
+                        Text(text = text)
+                    }
+                }
             }
         }
 
         LaunchedEffect(Unit) {
-            navState.push(ScreenOne())
-            navState.push(ScreenTwo())
+            navState.push(HomeTabScreen())
+            navState.push(ProfileTabScreen())
         }
     }
 }
 
-class ScreenOne : Screen {
+enum class Tabs(val key: String) {
+    HOME("tab_home"),
+    PROFILE("tab_profile"),
+}
+
+class HomeTabScreen : Screen {
     override val id: String
-        get() = "one"
+        get() = Tabs.HOME.key
 
     @Composable
     override fun Content() {
@@ -59,9 +72,9 @@ class ScreenOne : Screen {
 
 }
 
-class ScreenTwo : Screen {
+class ProfileTabScreen : Screen {
     override val id: String
-        get() = "two"
+        get() = Tabs.PROFILE.key
 
     @Composable
     override fun Content() {
