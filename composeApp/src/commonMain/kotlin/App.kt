@@ -20,6 +20,8 @@ import navigation.NavState
 import navigation.NavStateImpl
 import navigation.Navigator
 import navigation.Screen
+import screens.HomeTabScreen
+import screens.ProfileTabScreen
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -65,30 +67,4 @@ fun App() {
 enum class Tabs(val key: String) {
     HOME("tab_home"),
     PROFILE("tab_profile"),
-}
-
-class HomeTabScreen : Screen {
-    override val id: String
-        get() = Tabs.HOME.key
-
-    @Composable
-    override fun Content() {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Лента постов")
-        }
-    }
-
-}
-
-class ProfileTabScreen : Screen {
-    override val id: String
-        get() = Tabs.PROFILE.key
-
-    @Composable
-    override fun Content() {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "О приложении")
-        }
-    }
-
 }
