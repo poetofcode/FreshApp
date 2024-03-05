@@ -24,7 +24,7 @@ interface NavState {
 
     fun pop()
     
-    // fun moveToFront(screenId: String)
+    fun moveToFront(screenId: String)
 }
 
 class NavStateImpl : NavState {
@@ -42,6 +42,17 @@ class NavStateImpl : NavState {
             return
         }
         _screens.value = _screens.value.subList(0, _screens.value.size - 1)
+    }
+
+    override fun moveToFront(screenId: String) {
+        var currScreens = _screens.value.toMutableList()
+        currScreens.firstOrNull {
+            it.id == screenId
+        }?.let { found ->
+            currScreens = currScreens.filterNot { it.id == screenId }.toMutableList()
+            currScreens.add(found)
+            _screens.value = currScreens
+        }
     }
 
 }

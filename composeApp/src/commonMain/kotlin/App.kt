@@ -39,7 +39,7 @@ fun App() {
                     Button(
                         modifier = Modifier.padding(20.dp),
                         onClick = {
-
+                            navState.moveToFront(tab.key)
                         }
                     ) {
                         val text = when (tab) {
