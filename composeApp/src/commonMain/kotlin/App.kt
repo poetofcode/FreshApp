@@ -17,6 +17,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.compose_multiplatform
 import navigation.NavState
+import navigation.NavStateImpl
 import navigation.Navigator
 import navigation.Screen
 
@@ -25,24 +26,7 @@ import navigation.Screen
 @Preview
 fun App() {
     MaterialTheme {
-        val navState = object : NavState {
-            private val _screens = mutableStateOf<List<Screen>>(emptyList())
-
-            override val screens: State<List<Screen>>
-                get() = _screens
-
-            override fun push(screen: Screen) {
-                _screens.value += screen
-            }
-
-            override fun pop() {
-                if (_screens.value.size <= 1) {
-                    return
-                }
-                _screens.value = _screens.value.subList(0, _screens.value.size - 1)
-            }
-
-        }
+        val navState = remember { NavStateImpl() }
 
         Column (horizontalAlignment = Alignment.CenterHorizontally) {
             Navigator(
