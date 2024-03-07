@@ -1,5 +1,6 @@
 package presentation.screens.home_tab_screen
 
+import ImageUtil
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,7 +21,7 @@ import domain.model.PostModel
 import presentation.Tabs
 import presentation.navigation.BaseScreen
 
-class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
+class HomeTabScreen(val imageUtil: ImageUtil) : BaseScreen<HomeTabViewModel>() {
 
     override val id: String
         get() = Tabs.HOME.key
@@ -69,11 +70,7 @@ class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
                 .padding(8.dp)
         ) {
             post.image?.let { imageUrl ->
-//                AsyncImage(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    model = imageUrl,
-//                    contentDescription = null,
-//                    )
+                imageUtil.AsyncImage(url = imageUrl)
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(text = post.title.orEmpty(), fontSize = 16.sp)
