@@ -1,7 +1,7 @@
 package factories
 
 import base.ViewModelFactory
-import screens.HomeTabViewModel
+import screens.home_tab_screen.HomeTabViewModel
 
 class HomeTabViewModelFactory : ViewModelFactory<HomeTabViewModel> {
     override fun createViewModel(): HomeTabViewModel {
