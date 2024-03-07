@@ -1,11 +1,12 @@
 package presentation.factories
 
+import data.repository.FeedRepository
 import presentation.base.ViewModelFactory
 import presentation.screens.home_tab_screen.HomeTabViewModel
 
-class HomeTabViewModelFactory : ViewModelFactory<HomeTabViewModel> {
+class HomeTabViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<HomeTabViewModel> {
     override fun createViewModel(): HomeTabViewModel {
-        return HomeTabViewModel()
+        return HomeTabViewModel(feedRepository = feedRepository)
     }
 
     override val vmTypeName: String
@@ -13,6 +14,8 @@ class HomeTabViewModelFactory : ViewModelFactory<HomeTabViewModel> {
 
 }
 
-val viewModelFactories = listOf(
-    HomeTabViewModelFactory()
+fun viewModelFactories(
+    repositoryFactory: RepositoryFactory
+) = listOf(
+    HomeTabViewModelFactory(repositoryFactory.createFeedRepository())
 )

@@ -1,6 +1,9 @@
 package presentation.base
 
+import kotlinx.coroutines.CoroutineScope
+
 class ViewModelStore(
+    val coroutineScope: CoroutineScope,
     val vmFactories: List<ViewModelFactory<*>>
 ) {
     
@@ -10,6 +13,8 @@ class ViewModelStore(
             factory.vmTypeName == T::class.java.typeName
         }?.let { found ->
             createdVm = found.createViewModel() as T
+            (createdVm as? BaseViewModel)?.setCoroutineScope(coroutineScope)
+
         }
         return createdVm ?: throw Exception("ViewModelFactory not found")
     }

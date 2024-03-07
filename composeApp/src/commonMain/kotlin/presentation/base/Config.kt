@@ -8,6 +8,6 @@ data class Config(
 
     val viewModelStore : ViewModelStore,
 
-    val repositoryFactory: RepositoryFactory = MockRepositoryFactory()
+    val repositoryFactory: RepositoryFactory
 
 )
