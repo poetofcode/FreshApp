@@ -1,6 +1,5 @@
 package com.poetofcode.freshapp
 
-import App
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import presentation.App
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.MockRepositoryFactory
@@ -28,7 +28,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(Config(viewModelStore = vmStoreImpl, repositoryFactory = repositoryFactory))
+            App(
+                Config(
+                    viewModelStore = vmStoreImpl,
+                    repositoryFactory = repositoryFactory,
+                    imageUtil = AndroidImageUtil()
+                )
+            )
         }
     }
 }

@@ -1,6 +1,5 @@
 package presentation.screens.home_tab_screen
 
-import Tabs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
+import presentation.Tabs
 import presentation.navigation.BaseScreen
 
 class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
