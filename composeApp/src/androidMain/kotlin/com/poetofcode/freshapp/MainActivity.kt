@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import presentation.base.ConfigImpl
+import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
 
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(ConfigImpl(vmStore = vmStoreImpl))
+            App(Config(viewModelStore = vmStoreImpl))
         }
     }
 }
@@ -29,5 +29,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App(ConfigImpl(vmStore = vmStoreImpl))
+    App(Config(viewModelStore = vmStoreImpl))
 }

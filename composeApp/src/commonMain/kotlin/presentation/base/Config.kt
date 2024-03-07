@@ -1,17 +1,13 @@
 package presentation.base
 
 import presentation.base.ViewModelStore
+import presentation.factories.MockRepositoryFactory
+import presentation.factories.RepositoryFactory
 
-interface Config {
-    
-    val viewModelStore : ViewModelStore
-    
-}
+data class Config(
 
-class ConfigImpl(val vmStore: ViewModelStore) : Config {
+    val viewModelStore : ViewModelStore,
 
-    override val viewModelStore: ViewModelStore
-        get() = vmStore
+    val repositoryFactory: RepositoryFactory = MockRepositoryFactory()
 
-
-}
+)
