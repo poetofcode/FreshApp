@@ -37,10 +37,7 @@ class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
         LaunchedEffect(Unit) {
             viewModel.fetchFeed()
         }
-
         val posts by viewModel.posts.collectAsState()
-
-        println("posts: " + posts)
 
         // Navigator(modifier = Modifier.fillMaxSize(), state = navState)
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
