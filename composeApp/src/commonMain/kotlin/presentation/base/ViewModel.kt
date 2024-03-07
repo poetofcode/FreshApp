@@ -1,4 +1,4 @@
-package base
+package presentation.base
 
 interface ViewModel {
     

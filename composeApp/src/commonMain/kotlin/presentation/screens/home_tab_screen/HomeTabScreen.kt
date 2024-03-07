@@ -1,4 +1,4 @@
-package screens
+package presentation.screens.home_tab_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -8,14 +8,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import base.ViewModel
-import base.ViewModelFactory
-import base.ViewModelStore
-import navigation.BaseScreen
-import navigation.NavStateImpl
-import navigation.Navigator
-import navigation.Screen
-import screens.home_tab_screen.HomeTabViewModel
+import presentation.base.ViewModel
+import presentation.base.ViewModelFactory
+import presentation.base.ViewModelStore
+import presentation.navigation.BaseScreen
+import presentation.navigation.NavStateImpl
+import presentation.navigation.Navigator
+import presentation.navigation.Screen
+import presentation.screens.home_tab_screen.HomeTabViewModel
 
 class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
 

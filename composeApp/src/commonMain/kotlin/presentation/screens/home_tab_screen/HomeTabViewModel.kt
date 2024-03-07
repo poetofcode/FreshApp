@@ -1,6 +1,6 @@
-package screens.home_tab_screen
+package presentation.screens.home_tab_screen
 
-import base.ViewModel
+import presentation.base.ViewModel
 
 class HomeTabViewModel : ViewModel {
     

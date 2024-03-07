@@ -1,5 +1,3 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -10,18 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import base.Config
+import presentation.base.Config
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.compose_multiplatform
-import navigation.NavState
-import navigation.NavStateImpl
-import navigation.Navigator
-import navigation.Screen
-import screens.HomeTabScreen
+import presentation.navigation.NavStateImpl
+import presentation.navigation.Navigator
+import presentation.screens.home_tab_screen.HomeTabScreen
 
 
 @OptIn(ExperimentalResourceApi::class)

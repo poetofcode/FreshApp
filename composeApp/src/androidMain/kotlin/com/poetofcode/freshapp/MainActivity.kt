@@ -6,10 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import base.ConfigImpl
-import base.ViewModel
-import base.ViewModelStore
-import factories.viewModelFactories
+import presentation.base.ConfigImpl
+import presentation.base.ViewModelStore
+import presentation.factories.viewModelFactories
 
 
 val vmStoreImpl = ViewModelStore(

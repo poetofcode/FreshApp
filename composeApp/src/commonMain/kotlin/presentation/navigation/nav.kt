@@ -1,4 +1,4 @@
-package navigation
+package presentation.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import base.ViewModel
-import base.ViewModelStore
+import presentation.base.ViewModel
+import presentation.base.ViewModelStore
 
 
 typealias AnyScreen = BaseScreen<*>

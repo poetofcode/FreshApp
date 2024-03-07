@@ -1,4 +1,6 @@
-package base
+package presentation.base
+
+import presentation.base.ViewModelStore
 
 interface Config {
     
