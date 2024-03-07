@@ -15,12 +15,7 @@ import navigation.BaseScreen
 import navigation.NavStateImpl
 import navigation.Navigator
 import navigation.Screen
-
-class HomeTabViewModel : ViewModel {
-
-    fun getScreenTitle() : String = "Home screen for example"
-
-}
+import screens.home_tab_screen.HomeTabViewModel
 
 class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
 
