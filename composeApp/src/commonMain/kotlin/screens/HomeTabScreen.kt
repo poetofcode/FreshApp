@@ -18,6 +18,8 @@ import navigation.Screen
 
 class HomeTabViewModel : ViewModel {
 
+    fun getScreenTitle() : String = "Home screen for example"
+
 }
 
 class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
@@ -36,7 +38,7 @@ class HomeTabScreen : BaseScreen<HomeTabViewModel>() {
     override fun Content() {
         // Navigator(modifier = Modifier.fillMaxSize(), state = navState)
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Лента постов (Список)")
+            Text(text = viewModel.getScreenTitle())
             Spacer(Modifier.size(50.dp))
         }
     }

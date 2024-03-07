@@ -5,11 +5,13 @@ class ViewModelStore(
 ) {
     
     inline fun <reified T: ViewModel> getViewModel(key: String) : T {
+        var createdVm: T? = null
         vmFactories.first { factory ->
-            TODO()
+            factory.vmTypeName == T::class.java.typeName
+        }?.let { found ->
+            createdVm = found.createViewModel() as T
         }
-        
-        TODO()
+        return createdVm ?: throw Exception("ViewModelFactory not found")
     }
     
     fun removeViewModel(viewModel: ViewModel) {

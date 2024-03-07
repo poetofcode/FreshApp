@@ -8,6 +8,9 @@ class HomeTabViewModelFactory : ViewModelFactory<HomeTabViewModel> {
         return HomeTabViewModel()
     }
 
+    override val vmTypeName: String
+        get() = HomeTabViewModel::class.java.typeName
+
 }
 
 val viewModelFactories = listOf(
