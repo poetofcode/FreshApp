@@ -1,21 +1,28 @@
 package presentation.screens.home_tab_screen
 
-import androidx.compose.runtime.mutableStateOf
-import data.model.FeedResponse
 import data.repository.FeedRepository
+import domain.model.PostModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import presentation.base.BaseViewModel
-import presentation.base.ViewModel
 
 class HomeTabViewModel(
-    feedRepository: FeedRepository
+    val feedRepository: FeedRepository
 ) : BaseViewModel() {
     
-    val posts = mutableStateOf<List<FeedResponse.Post>>(emptyList())
+    val posts = MutableStateFlow<List<PostModel>>(emptyList())
 
     fun getScreenTitle() : String = "Home screen for example"
 
-    init {
+    fun fetchFeed() {
+        viewModelScope.launch {
+            posts.value = feedRepository.fetchFeed()
+        }
+    }
 
+    fun fetchFeedSync() = runBlocking {
+        return@runBlocking feedRepository.fetchFeed()
     }
 
 }
