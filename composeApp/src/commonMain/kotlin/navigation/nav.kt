@@ -9,31 +9,49 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import base.ViewModel
+import base.ViewModelStore
 
-interface Screen {
+
+typealias AnyScreen = BaseScreen<*>
+
+interface Screen<T: ViewModel> {
     val id: String
     
+    val viewModel: T
+
     @Composable
     fun Content()
 }
 
-interface NavState {
-    val screens : State<List<Screen>>
+abstract class BaseScreen<T: ViewModel> : Screen<T> {
 
-    fun push(screen: Screen)
+    protected lateinit var viewModelStore: ViewModelStore
+
+    fun setVMStore(viewModelStore: ViewModelStore) {
+        this.viewModelStore = viewModelStore
+    }
+
+}
+
+interface NavState {
+    val screens : State<List<AnyScreen>>
+
+    fun push(screen: AnyScreen)
 
     fun pop()
     
     fun moveToFront(screenId: String)
 }
 
-class NavStateImpl : NavState {
-    private val _screens = mutableStateOf<List<Screen>>(emptyList())
+class NavStateImpl(val viewModelStore: ViewModelStore) : NavState {
+    private val _screens = mutableStateOf<List<AnyScreen>>(emptyList())
 
-    override val screens: State<List<Screen>>
+    override val screens: State<List<AnyScreen>>
         get() = _screens
 
-    override fun push(screen: Screen) {
+    override fun push(screen: AnyScreen) {
+        screen.setVMStore(viewModelStore)
         _screens.value += screen
     }
 

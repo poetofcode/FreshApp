@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import base.Config
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -21,14 +22,14 @@ import navigation.NavStateImpl
 import navigation.Navigator
 import navigation.Screen
 import screens.HomeTabScreen
-import screens.ProfileTabScreen
+
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
-fun App() {
+fun App(config: Config) {
     MaterialTheme {
-        val navState = remember { NavStateImpl() }
+        val navState = remember { NavStateImpl(viewModelStore = config.viewModelStore) }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Navigator(
@@ -59,7 +60,7 @@ fun App() {
 
         LaunchedEffect(Unit) {
             navState.push(HomeTabScreen())
-            navState.push(ProfileTabScreen())
+            // navState.push(ProfileTabScreen())
             navState.moveToFront(Tabs.HOME.key)
         }
     }

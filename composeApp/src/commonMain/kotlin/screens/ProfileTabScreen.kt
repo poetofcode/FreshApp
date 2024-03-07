@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import navigation.Screen
 
+/*
 class ProfileTabScreen : Screen {
     override val id: String
         get() = Tabs.PROFILE.key
@@ -20,3 +21,4 @@ class ProfileTabScreen : Screen {
     }
 
 }
+*/

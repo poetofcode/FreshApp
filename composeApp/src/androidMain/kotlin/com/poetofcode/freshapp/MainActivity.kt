@@ -6,13 +6,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import base.ConfigImpl
+import base.ViewModel
+import base.ViewModelStore
+import factories.viewModelFactories
+
+
+val vmStoreImpl = ViewModelStore(
+    vmFactories = viewModelFactories
+)
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+            App(ConfigImpl(vmStore = vmStoreImpl))
         }
     }
 }
@@ -20,5 +30,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    App(ConfigImpl(vmStore = vmStoreImpl))
 }
