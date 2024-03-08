@@ -15,7 +15,7 @@ class MockFeedRepository : FeedRepository {
             ),
             PostModel(
                 title = "Странные осцилляции в казалось бы простой числовой последовательности",
-                image = "https://habrastorage.org/r/w1560/getpro/habr/upload_files/731/62a/233/73162a23305ee4bb339cf4d11b4c8154.pnghttps://habrastorage.org/r/w1560/getpro/habr/upload_files/731/62a/233/73162a23305ee4bb339cf4d11b4c8154.pnghttps://habrastorage.org/r/w1560/getpro/habr/upload_files/731/62a/233/73162a23305ee4bb339cf4d11b4c8154.png",
+                image = "https://habrastorage.org/r/w1560/getpro/habr/upload_files/731/62a/233/73162a23305ee4bb339cf4d11b4c8154.png",
                 link = "https://habr.com/ru/articles/798733/",
                 commentsCount = "3"
             ),

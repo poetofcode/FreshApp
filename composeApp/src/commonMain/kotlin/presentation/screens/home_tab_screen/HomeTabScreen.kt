@@ -77,48 +77,4 @@ class HomeTabScreen(val imageUtil: ImageUtil) : BaseScreen<HomeTabViewModel>() {
         }
     }
 
-
-    /*
-    inner class PostListScreen : Screen {
-        override val id: String
-            get() = "post_list"
-
-        @Composable
-        override fun Content() {
-            Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Лента постов (Список)")
-
-                Spacer(Modifier.size(50.dp))
-
-                Button(onClick = {
-                    navState.push(PostDetailsScreen())
-                }) {
-                    Text(text = "Открыть детали")
-                }
-            }
-        }
-
-    }
-
-    inner class PostDetailsScreen : Screen {
-        override val id: String
-            get() = "post_details"
-
-        @Composable
-        override fun Content() {
-            Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Лента постов (Детальный)")
-
-                Spacer(Modifier.size(50.dp))
-
-                Button(onClick = {
-                    navState.pop()
-                }) {
-                    Text(text = "< Назад")
-                }
-            }
-        }
-
-    }
-    */
 }

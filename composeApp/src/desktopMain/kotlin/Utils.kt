@@ -19,6 +19,8 @@ import javax.imageio.ImageIO
 
 class DesktopImageUtil : ImageUtil {
 
+    private val cache = mutableMapOf<String, Resource<ImageBitmap>>()
+
     @Composable
     override fun AsyncImage(url: String) {
         val scope = rememberCoroutineScope()
@@ -31,11 +33,13 @@ class DesktopImageUtil : ImageUtil {
                     ""
                 )
             }
+
             IdleResource, LoadingResource -> {
                 Box(Modifier.padding(20.dp)) {
                     Text(text = "Загрузка", color = Color.Blue)
                 }
             }
+
             is ExceptionResource -> {
                 Box(Modifier.padding(20.dp)) {
                     Text(text = "Ошибка", color = Color.Red)
@@ -43,20 +47,31 @@ class DesktopImageUtil : ImageUtil {
             }
         }
 
+
         LaunchedEffect(Unit) {
-            scope.launch {
-                if (imageBitmapState.value is IdleResource) {
+            if (imageBitmapState.value is IdleResource) {
+                val cached = cache.get(url)
+                if (cached != null && cached !is IdleResource && cached !is ExceptionResource) {
+                    imageBitmapState.value = cached
+                    return@LaunchedEffect
+                }
+
+                scope.launch {
                     imageBitmapState.value = LoadingResource
 
                     imageBitmapState.value = try {
+                        println("Loading ${url}")
                         val imageRes = loadNetworkImage(url)
                         CompleteResource(imageRes)
                     } catch (e: Throwable) {
+                        e.printStackTrace()
                         ExceptionResource(e)
                     }
+                    cache.put(url, imageBitmapState.value)
                 }
             }
         }
+
     }
 }
 
