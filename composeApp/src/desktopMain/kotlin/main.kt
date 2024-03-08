@@ -1,15 +1,21 @@
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import presentation.App
 import presentation.base.Config
 import presentation.base.ViewModelStore
-import presentation.factories.MockRepositoryFactory
+import presentation.factories.NetworkingFactory
+import presentation.factories.NetworkingFactoryImpl
+import presentation.factories.RepositoryFactoryImpl
 import presentation.factories.viewModelFactories
 
 fun main() = application {
-    val repositoryFactory = MockRepositoryFactory()
+    // val repositoryFactory = MockRepositoryFactory()
+    val networkingFactory: NetworkingFactory = NetworkingFactoryImpl()
+
+    val repositoryFactory = RepositoryFactoryImpl(
+        api = networkingFactory.createApi()
+    )
 
     val vmStoreImpl = ViewModelStore(
         coroutineScope = rememberCoroutineScope(),
