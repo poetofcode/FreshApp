@@ -71,7 +71,12 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
                 .padding(8.dp)
         ) {
             post.image?.let { imageUrl ->
-                AsyncImage(imageUrl)
+                AsyncImage(
+                    modifier = Modifier,
+                    url = imageUrl,
+                    loadingView = {},
+                    errorView = {}
+                )
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(text = post.title.orEmpty(), fontSize = 16.sp)
