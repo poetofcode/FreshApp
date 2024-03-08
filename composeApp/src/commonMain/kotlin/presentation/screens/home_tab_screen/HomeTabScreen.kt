@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import domain.model.PostModel
 import presentation.Tabs
 import presentation.navigation.BaseScreen
+import specific.AsyncImage
 
 class HomeTabScreen(val imageUtil: ImageUtil) : BaseScreen<HomeTabViewModel>() {
 
@@ -70,7 +71,8 @@ class HomeTabScreen(val imageUtil: ImageUtil) : BaseScreen<HomeTabViewModel>() {
                 .padding(8.dp)
         ) {
             post.image?.let { imageUrl ->
-                imageUtil.AsyncImage(url = imageUrl)
+                // imageUtil.AsyncImage(url = imageUrl)
+                AsyncImage(imageUrl)
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(text = post.title.orEmpty(), fontSize = 16.sp)
