@@ -39,10 +39,10 @@ kotlin {
             implementation(libs.ktor.client.negotiation)
             implementation(libs.ktor.client.json)
             implementation(libs.ktor.client.logging)
-            implementation("ch.qos.logback:logback-classic:1.5.2")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation("ch.qos.logback:logback-classic:1.5.2")
         }
     }
 }
