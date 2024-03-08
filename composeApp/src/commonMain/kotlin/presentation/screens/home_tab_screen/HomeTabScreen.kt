@@ -1,6 +1,5 @@
 package presentation.screens.home_tab_screen
 
-import ImageUtil
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

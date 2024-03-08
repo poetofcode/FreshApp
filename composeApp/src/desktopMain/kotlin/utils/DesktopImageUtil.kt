@@ -18,12 +18,12 @@ import java.net.HttpURLConnection
 import java.net.URL
 import javax.imageio.ImageIO
 
-internal class DesktopImageUtil : ImageUtil {
+internal class DesktopImageUtil {
 
     private val cache = mutableMapOf<String, Resource<ImageBitmap>>()
 
     @Composable
-    override fun AsyncImage(url: String) {
+    fun AsyncImage(url: String) {
         val scope = rememberCoroutineScope()
         val imageBitmapState = remember { mutableStateOf<Resource<ImageBitmap>>(IdleResource) }
 

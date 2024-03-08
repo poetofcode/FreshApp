@@ -1,13 +1,12 @@
 package com.poetofcode.freshapp
 
-import ImageUtil
 import androidx.compose.runtime.Composable
 import coil.compose.AsyncImage
 
-internal class AndroidImageUtil : ImageUtil {
+internal class AndroidImageUtil {
 
     @Composable
-    override fun AsyncImage(url: String) {
+    fun AsyncImage(url: String) {
         AsyncImage(model = url, contentDescription = null)
     }
 }
