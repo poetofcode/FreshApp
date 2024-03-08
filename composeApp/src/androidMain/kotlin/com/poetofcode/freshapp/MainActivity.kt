@@ -10,12 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import presentation.App
 import presentation.base.Config
 import presentation.base.ViewModelStore
-import presentation.factories.MockRepositoryFactory
-import presentation.factories.viewModelFactories
+import presentation.factories.*
 
 
 class MainActivity : ComponentActivity() {
-    val repositoryFactory = MockRepositoryFactory()
+    // val repositoryFactory = MockRepositoryFactory()
+    val networkingFactory: NetworkingFactory = NetworkingFactoryImpl()
+
+    val repositoryFactory = RepositoryFactoryImpl(
+        api = networkingFactory.createApi()
+    )
+
 
     val vmStoreImpl = ViewModelStore(
         coroutineScope = lifecycleScope,
