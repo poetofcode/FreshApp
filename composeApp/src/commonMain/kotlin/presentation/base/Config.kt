@@ -1,8 +1,5 @@
 package presentation.base
 
-import ImageUtil
-import presentation.base.ViewModelStore
-import presentation.factories.MockRepositoryFactory
 import presentation.factories.RepositoryFactory
 
 data class Config(
@@ -11,5 +8,4 @@ data class Config(
 
     val repositoryFactory: RepositoryFactory,
 
-    val imageUtil: ImageUtil 
 )

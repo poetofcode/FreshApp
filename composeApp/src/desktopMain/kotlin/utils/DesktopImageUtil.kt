@@ -12,12 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Image
+import presentation.model.*
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.imageio.ImageIO
 
-class DesktopImageUtil : ImageUtil {
+internal class DesktopImageUtil : ImageUtil {
 
     private val cache = mutableMapOf<String, Resource<ImageBitmap>>()
 
@@ -74,18 +75,7 @@ class DesktopImageUtil : ImageUtil {
     }
 }
 
-sealed interface Resource<out T>
-
-data object IdleResource : Resource<Nothing>
-
-data class CompleteResource<T>(val result: T) : Resource<T>
-
-data class ExceptionResource(val exception: Throwable) : Resource<Nothing>
-
-data object LoadingResource : Resource<Nothing>
-
-
-suspend fun loadNetworkImage(link: String): ImageBitmap = withContext(Dispatchers.IO) {
+internal suspend fun loadNetworkImage(link: String): ImageBitmap = withContext(Dispatchers.IO) {
     val url = URL(link)
     val connection = url.openConnection() as HttpURLConnection
     connection.connect()

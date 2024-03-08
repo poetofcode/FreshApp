@@ -4,7 +4,7 @@ import ImageUtil
 import androidx.compose.runtime.Composable
 import coil.compose.AsyncImage
 
-class AndroidImageUtil : ImageUtil {
+internal class AndroidImageUtil : ImageUtil {
 
     @Composable
     override fun AsyncImage(url: String) {

@@ -20,7 +20,6 @@ fun main() = application {
         App(Config(
             viewModelStore = vmStoreImpl,
             repositoryFactory = repositoryFactory,
-            imageUtil = DesktopImageUtil()
         ))
     }
 }

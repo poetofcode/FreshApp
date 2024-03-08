@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
                 Config(
                     viewModelStore = vmStoreImpl,
                     repositoryFactory = repositoryFactory,
-                    imageUtil = AndroidImageUtil()
                 )
             )
         }

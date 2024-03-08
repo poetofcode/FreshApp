@@ -54,7 +54,7 @@ fun App(config: Config) {
         }
 
         LaunchedEffect(Unit) {
-            navState.push(HomeTabScreen(config.imageUtil))
+            navState.push(HomeTabScreen())
             // navState.push(ProfileTabScreen())
             navState.moveToFront(Tabs.HOME.key)
         }

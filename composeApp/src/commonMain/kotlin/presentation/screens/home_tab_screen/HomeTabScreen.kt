@@ -22,7 +22,7 @@ import presentation.Tabs
 import presentation.navigation.BaseScreen
 import specific.AsyncImage
 
-class HomeTabScreen(val imageUtil: ImageUtil) : BaseScreen<HomeTabViewModel>() {
+class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
 
     override val id: String
         get() = Tabs.HOME.key
@@ -71,7 +71,6 @@ class HomeTabScreen(val imageUtil: ImageUtil) : BaseScreen<HomeTabViewModel>() {
                 .padding(8.dp)
         ) {
             post.image?.let { imageUrl ->
-                // imageUtil.AsyncImage(url = imageUrl)
                 AsyncImage(imageUrl)
             }
             Spacer(modifier = Modifier.size(8.dp))
