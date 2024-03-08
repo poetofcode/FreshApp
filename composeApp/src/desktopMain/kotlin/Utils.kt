@@ -60,7 +60,6 @@ class DesktopImageUtil : ImageUtil {
                     imageBitmapState.value = LoadingResource
 
                     imageBitmapState.value = try {
-                        println("Loading ${url}")
                         val imageRes = loadNetworkImage(url)
                         CompleteResource(imageRes)
                     } catch (e: Throwable) {
