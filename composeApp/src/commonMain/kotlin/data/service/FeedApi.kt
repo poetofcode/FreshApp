@@ -1,7 +1,9 @@
 package data.service
 
-import data.model.FeedResponse
+import data.entity.DataResponse
+import data.entity.FeedResponse
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -34,8 +36,12 @@ class FeedApi() {
     }
     
     suspend fun fetchFeed(url: String) : FeedResponse {
-        val response: HttpResponse = client.get(url)
+        val response: DataResponse<FeedResponse> = client.get(url).body()
+
         
+        println("Response: $response")
+
+
         return FeedResponse()
     }
     
