@@ -3,10 +3,13 @@ package data.service
 import data.model.FeedResponse
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 class FeedApi() {
     
@@ -19,6 +22,13 @@ class FeedApi() {
 //                    request.url.host.contains("ktor.io")
 //                }
                 sanitizeHeader { header -> header == HttpHeaders.Authorization }
+            }
+
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                })
             }
         }
     }

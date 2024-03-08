@@ -35,6 +35,8 @@ kotlin {
             api("org.jetbrains.skiko:skiko:0.7.58")
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.negotiation)
+            implementation(libs.ktor.client.json)
             implementation(libs.ktor.client.logging)
             implementation("ch.qos.logback:logback-classic:1.5.2")
         }
