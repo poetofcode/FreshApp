@@ -33,12 +33,18 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             api("org.jetbrains.skiko:skiko:0.7.58")
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
     }
 }
+
+//repositories {
+//    mavenCentral()
+//}
 
 android {
     namespace = "com.poetofcode.freshapp"
