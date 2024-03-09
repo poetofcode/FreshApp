@@ -21,6 +21,9 @@ import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
+import presentation.navigation.NavigateEffect
+import presentation.navigation.SharedMemory
+import presentation.screens.postDetailsScreen.PostDetailsScreen
 import specific.AsyncImage
 
 class PostListScreen() : BaseScreen<PostListViewModel>() {
@@ -99,12 +102,9 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
         Column(
             modifier = Modifier
                 .clickable {
-                    
+                    SharedMemory.effectFlow.tryEmit(NavigateEffect(PostDetailsScreen()))
                 }
                 .padding(vertical = 5.dp)
-                .clickable {
-                    // context.openLinkInBrowser(post.link ?: return@clickable)
-                }
                 .fillMaxWidth()
                 .background(
                     color = Color.LightGray, // MaterialTheme.colorScheme.surface,
