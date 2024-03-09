@@ -13,4 +13,6 @@ Read more: https://github.com/JetBrains/compose-multiplatform/blob/master/tutori
 
 ## Links
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+* Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+* KMP Libraries: https://github.com/AAkira/Kotlin-Multiplatform-Libraries
