@@ -77,7 +77,7 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
                 OutlinedButton(modifier = Modifier.align(Alignment.TopEnd).background(Color.Transparent).padding(10.dp), onClick = {
                     viewModel.fetchFeed()
                 }) {
-                    Text(text = "🗘", fontSize = 24.sp)
+                    Text(text = "🔁", fontSize = 24.sp)
                 }
             }
         }
