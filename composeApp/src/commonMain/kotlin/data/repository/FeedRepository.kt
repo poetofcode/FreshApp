@@ -14,8 +14,7 @@ class FeedRepositoryImpl(val api: FreshApi) : FeedRepository {
 
     override suspend fun fetchFeed(): List<PostModel> {
         val resultResponse = api.fetchFeed()
-        val parsed = resultResponse.resultOrError()
-        return parsed?.posts?.map { post ->
+        return resultResponse.resultOrError()?.posts?.map { post ->
                 PostModel(
                     title = post.title.orEmpty(),
                     image = post.image,
