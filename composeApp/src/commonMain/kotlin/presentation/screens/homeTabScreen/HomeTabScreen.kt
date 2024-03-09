@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,24 +48,36 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
         }
 
         // Navigator(modifier = Modifier.fillMaxSize(), state = navState)
-        when (readyState) {
-            is CompleteResource -> Posts(posts)
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            when (readyState) {
+                is CompleteResource -> Posts(posts)
 
-            is ExceptionResource -> {
-                Column(
-                    Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(text = "Ошибка загрузки", color = Color.Red)
-                    Spacer(Modifier.size(10.dp))
-                    Text(text = "${readyState.exception}")
+                is ExceptionResource -> {
+                    Column(
+                        Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "Ошибка загрузки", color = Color.Red)
+                        Spacer(Modifier.size(10.dp))
+                        Text(text = "${readyState.exception}")
+                    }
+                }
+
+                else -> {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
 
-            else -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+            if (readyState !is LoadingResource) {
+                OutlinedButton(modifier = Modifier.align(Alignment.TopEnd).background(Color.Transparent).padding(10.dp), onClick = {
+                    viewModel.fetchFeed()
+                }) {
+                    Text(text = "🗘", fontSize = 24.sp)
                 }
             }
         }
