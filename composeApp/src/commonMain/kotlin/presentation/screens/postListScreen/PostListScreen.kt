@@ -6,27 +6,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
-import presentation.Tabs
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
-import presentation.model.IdleResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
-import presentation.screens.homeTabScreen.HomeTabViewModel
 import specific.AsyncImage
 
 class PostListScreen() : BaseScreen<PostListViewModel>() {
@@ -104,6 +98,9 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
         // val context = LocalContext.current
         Column(
             modifier = Modifier
+                .clickable {
+                    
+                }
                 .padding(vertical = 5.dp)
                 .clickable {
                     // context.openLinkInBrowser(post.link ?: return@clickable)
