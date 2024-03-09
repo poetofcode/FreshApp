@@ -25,65 +25,9 @@ interface NetworkingFactory {
 }
 
 class NetworkingFactoryImpl : NetworkingFactory {
-
-        private val bearerTokenStorage = mutableListOf<BearerTokens>()
-
-        private val client by lazy {
-
-            fun calculateToken(path: String, remoteToken: String, salt: String) : String {
-                return (path.toSha1() + remoteToken.toSha1() + salt.toSha1()).toSha1()
-            }
-
-            bearerTokenStorage.add(BearerTokens("", ""))
-
-            HttpClient(CIO) {
-                install(Logging) {
-                    logger = Logger.DEFAULT
-                    level = LogLevel.ALL
-                    // filter { request ->
-                    //    request.url.host.contains("ktor.io")
-                    // }
-                    sanitizeHeader { header -> header == HttpHeaders.Authorization }
-                }
-    
-                install(ContentNegotiation) {
-                    json(Json {
-                        prettyPrint = true
-                        isLenient = true
-                        ignoreUnknownKeys = true
-                    })
-                }
-
-                install(Auth) {
-                    bearer {
-                        loadTokens {
-                            bearerTokenStorage.last()
-                        }
-
-                        refreshTokens { // this: RefreshTokensParams
-                            try {
-                                val tokenResponse: DataResponse<TokenResponse> = client.post("http://91.215.153.157:8080/site/token").body()
-                                val remoteToken : String = tokenResponse.result.token!!
-
-                                val newToken : String = run {
-                                    val path = response.request.url.encodedPath
-                                    val t = calculateToken(path, remoteToken, "secret-api-key")
-                                    t
-                                }
-                                bearerTokenStorage.add(BearerTokens(newToken, remoteToken))
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
-                            }
-
-                            bearerTokenStorage.last()
-                        }
-                    }
-                }
-            }
-        }
     
     override fun createHttpClient(): HttpClient {
-        return client
+        return HttpClientFactory().createClient()
     }
 
     override fun createApi(): FreshApi {
