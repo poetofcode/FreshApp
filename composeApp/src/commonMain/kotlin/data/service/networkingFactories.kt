@@ -1,20 +1,6 @@
 package data.service
 
-import data.entity.DataResponse
-import data.entity.TokenResponse
-import data.utils.toSha1
 import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
 
 interface NetworkingFactory {
 
@@ -28,14 +14,22 @@ class NetworkingFactoryImpl : NetworkingFactory {
     
     override fun createHttpClient(): HttpClient {
         return HttpClientFactory(
-            baseUrl = "http://91.215.153.157:8080",
-            apiKey = "secret-api-key"
+            baseUrl = BASE_URL,
+            apiKey = API_KEY
         ).createClient()
     }
 
     override fun createApi(): FreshApi {
-        return FreshApi(createHttpClient())
+        return FreshApi(
+            httpClient = createHttpClient(),
+            baseUrl = BASE_URL
+        )
     }
 
+    private companion object {
+        // TODO вынести в buildConfig
+        const val BASE_URL = "http://91.215.153.157:8080"
+        const val API_KEY = "secret-api-key"
+    }
 
 }
