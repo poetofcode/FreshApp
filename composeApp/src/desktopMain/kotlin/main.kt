@@ -40,7 +40,7 @@ fun main() = application {
 //    }
 
 
-    Window(onCloseRequest = ::exitApplication) {
+    Window(onCloseRequest = ::exitApplication, title = "FreshApp") {
         var restartRequired by remember { mutableStateOf(false) }
         var downloading by remember { mutableStateOf(0F) }
         var initialized by remember { mutableStateOf(false) }
@@ -74,8 +74,14 @@ fun main() = application {
             if (initialized) {
                 // MainWebView()
                 // Text(text = "Main Web Vieww")
-                val state = rememberWebViewState("https://habr.com")
-                WebView(state = state, modifier = Modifier.fillMaxSize())
+                // val state = rememberWebViewState("https://habr.com")
+                // WebView(state = state, modifier = Modifier.fillMaxSize())
+
+                App(Config(
+                    viewModelStore = vmStoreImpl,
+                    repositoryFactory = repositoryFactory,
+                ))
+
             } else {
                  Text(text = "Downloading $downloading%")
             }
