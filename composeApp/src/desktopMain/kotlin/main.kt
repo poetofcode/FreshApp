@@ -72,11 +72,6 @@ fun main() = application {
             Text(text = "Restart required.")
         } else {
             if (initialized) {
-                // MainWebView()
-                // Text(text = "Main Web Vieww")
-                // val state = rememberWebViewState("https://habr.com")
-                // WebView(state = state, modifier = Modifier.fillMaxSize())
-
                 App(Config(
                     viewModelStore = vmStoreImpl,
                     repositoryFactory = repositoryFactory,

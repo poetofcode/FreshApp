@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.rememberWebViewState
 import presentation.navigation.BaseScreen
 import presentation.navigation.NavigateBackEffect
 import presentation.navigation.NavigateEffect
@@ -31,7 +33,8 @@ class PostDetailsScreen(
     @Composable
     override fun Content() {
         Box(Modifier.fillMaxSize()) {
-            Text(text = "Detail screen")
+            val state = rememberWebViewState(postUrl)
+            WebView(state = state, modifier = Modifier.fillMaxSize())
 
             OutlinedButton(
                 modifier = Modifier.align(Alignment.TopStart).background(Color.Transparent).padding(10.dp),
