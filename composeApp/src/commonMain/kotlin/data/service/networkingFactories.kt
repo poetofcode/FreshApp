@@ -2,6 +2,7 @@ package data.service
 
 import data.entity.DataResponse
 import data.entity.TokenResponse
+import data.utils.toSha1
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -28,6 +29,11 @@ class NetworkingFactoryImpl : NetworkingFactory {
         private val bearerTokenStorage = mutableListOf<BearerTokens>()
 
         private val client by lazy {
+
+            fun calculateToken(path: String, remoteToken: String, salt: String) : String {
+                return (path.toSha1() + remoteToken.toSha1() + salt.toSha1()).toSha1()
+            }
+
             bearerTokenStorage.add(BearerTokens("", ""))
 
             HttpClient(CIO) {
@@ -63,8 +69,17 @@ class NetworkingFactoryImpl : NetworkingFactory {
 
                                 println("RemoteTokem: $remoteToken")
 
+
                                 val newToken : String = run {
-                                    "1234567"
+                                    val path = response.request.url.encodedPath
+
+                                    println("MyLog Path: $path")
+
+                                    val t = calculateToken(path, remoteToken, "secret-api-key")
+
+                                    println("MyLog calculated token: ${t}")
+
+                                    t
                                 }
                                 bearerTokenStorage.add(BearerTokens(newToken, remoteToken))
                             } catch (e: Throwable) {
