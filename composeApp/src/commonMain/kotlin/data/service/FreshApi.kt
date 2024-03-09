@@ -12,23 +12,26 @@ class FreshApi(
     val baseUrl: String
 ) {
 
-    suspend fun fetchFeed(): ResultResponse<FeedResponse> {
+    suspend fun fetchFeed(): ResultResponse<FeedResponse> = parseRequestResult<FeedResponse> {
+        httpClient.get("/site/fresh/feed".buildEndpoint(baseUrl))
+    }
+
+
+    private suspend inline fun <reified T : Any> parseRequestResult(doRequest: () -> HttpResponse): ResultResponse<T> {
         var response: HttpResponse? = null
-
-        suspend fun HttpResponse.tryParseFailure(): FailureResponse<FeedResponse>? = try {
-            body<FailureResponse<FeedResponse>>()
-        } catch (e: Throwable) {
-            null
-        }
-
-        val parsed: ResultResponse<FeedResponse> = try {
-            response = httpClient.get("/site/fresh/feed".buildEndpoint(baseUrl))
-            response.body<DataResponse<FeedResponse>>()
+        val parsed: ResultResponse<T> = try {
+            response = doRequest()
+            response.body<DataResponse<T>>()
         } catch (e: Throwable) {
             response?.tryParseFailure() ?: ExceptionResponse(e)
         }
-
         return parsed
+    }
+
+    private suspend inline fun <reified T : Any> HttpResponse.tryParseFailure(): FailureResponse<T>? = try {
+        body<FailureResponse<T>>()
+    } catch (e: Throwable) {
+        null
     }
 
 }
