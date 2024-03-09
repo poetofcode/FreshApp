@@ -1,8 +1,6 @@
-package presentation.factories
+package data.repository
 
 import data.mock.MockFeedRepository
-import data.repository.FeedRepository
-import data.repository.FeedRepositoryImpl
 import data.service.FreshApi
 
 interface RepositoryFactory {

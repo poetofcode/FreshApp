@@ -1,6 +1,7 @@
 package presentation.factories
 
 import data.repository.FeedRepository
+import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
 import presentation.screens.home_tab_screen.HomeTabViewModel
 

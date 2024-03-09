@@ -1,6 +1,6 @@
 package presentation.base
 
-import presentation.factories.RepositoryFactory
+import data.repository.RepositoryFactory
 
 data class Config(
 
@@ -8,4 +8,4 @@ data class Config(
 
     val repositoryFactory: RepositoryFactory,
 
-)
+    )
