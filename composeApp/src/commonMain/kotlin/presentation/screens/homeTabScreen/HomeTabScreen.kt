@@ -26,6 +26,8 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
     @Composable
     override fun Content() {
         Navigator(modifier = Modifier.fillMaxSize(), state = navState)
+
+        // val nav
     }
 
 }
