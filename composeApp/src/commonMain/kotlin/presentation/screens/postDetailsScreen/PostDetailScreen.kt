@@ -2,6 +2,7 @@ package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.OutlinedButton
@@ -32,17 +33,17 @@ class PostDetailsScreen(
 
     @Composable
     override fun Content() {
-        Box(Modifier.fillMaxSize()) {
-            val state = rememberWebViewState(postUrl)
-            WebView(state = state, modifier = Modifier.fillMaxSize())
-
+        Column(Modifier.fillMaxSize()) {
             OutlinedButton(
-                modifier = Modifier.align(Alignment.TopStart).background(Color.Transparent).padding(10.dp),
+                modifier = Modifier.background(Color.Transparent).padding(10.dp),
                 onClick = {
                     SharedMemory.effectFlow.tryEmit(NavigateBackEffect)
                 }) {
                 Text(text = "←", fontSize = 24.sp)
             }
+
+            val state = rememberWebViewState(postUrl)
+            WebView(state = state, modifier = Modifier.fillMaxSize())
         }
     }
 
