@@ -2,7 +2,7 @@ package data.repository
 
 import data.service.FreshApi
 import domain.model.PostModel
-import repository.resultOrError
+import data.repository.resultOrError
 
 interface FeedRepository {
 
@@ -14,7 +14,7 @@ class FeedRepositoryImpl(val api: FreshApi) : FeedRepository {
 
     override suspend fun fetchFeed(): List<PostModel> {
         val resultResponse = api.fetchFeed()
-        return resultResponse.resultOrError()?.posts?.map { post ->
+        return resultResponse.resultOrError().posts?.map { post ->
                 PostModel(
                     title = post.title.orEmpty(),
                     image = post.image,

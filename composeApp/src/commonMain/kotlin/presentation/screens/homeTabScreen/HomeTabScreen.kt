@@ -1,4 +1,4 @@
-package presentation.screens.home_tab_screen
+package presentation.screens.homeTabScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import domain.model.PostModel
 import presentation.Tabs
 import presentation.navigation.BaseScreen
+import presentation.screens.home_tab_screen.HomeTabViewModel
 import specific.AsyncImage
 
 class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
