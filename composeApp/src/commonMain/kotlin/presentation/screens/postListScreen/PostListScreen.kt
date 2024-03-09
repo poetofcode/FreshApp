@@ -102,7 +102,9 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
         Column(
             modifier = Modifier
                 .clickable {
-                    SharedMemory.effectFlow.tryEmit(NavigateEffect(PostDetailsScreen()))
+                    SharedMemory.effectFlow.tryEmit(NavigateEffect(PostDetailsScreen(
+                        postUrl = post.link
+                    )))
                 }
                 .padding(vertical = 5.dp)
                 .fillMaxWidth()

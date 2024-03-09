@@ -29,7 +29,6 @@ class PostListViewModel(
             } catch (e: Throwable) {
                 state.value = state.value.copy(readyState = ExceptionResource(e))
                 e.printStackTrace()
-                println("EXCEPTION HANDLED: $e")
             }
         }
     }
