@@ -1,9 +1,14 @@
-package data.model
+package data.entity
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class FeedResponse(
     var result: String? = null,
     var posts: List<Post>? = null
 ) {
+
+    @Serializable
     data class Post(
         var title: String? = null,
         var image: String? = null,

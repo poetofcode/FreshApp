@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -33,12 +34,23 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             api("org.jetbrains.skiko:skiko:0.7.58")
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.negotiation)
+            implementation(libs.ktor.client.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.auth)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation("ch.qos.logback:logback-classic:1.5.2")
         }
     }
 }
+
+//repositories {
+//    mavenCentral()
+//}
 
 android {
     namespace = "com.poetofcode.freshapp"

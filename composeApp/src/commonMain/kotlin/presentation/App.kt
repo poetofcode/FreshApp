@@ -16,7 +16,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
-import presentation.screens.home_tab_screen.HomeTabScreen
+import presentation.screens.homeTabScreen.HomeTabScreen
 
 
 @OptIn(ExperimentalResourceApi::class)

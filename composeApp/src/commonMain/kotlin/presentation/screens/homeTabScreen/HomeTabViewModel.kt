@@ -1,6 +1,7 @@
 package presentation.screens.home_tab_screen
 
 import data.repository.FeedRepository
+import data.service.FreshApi
 import domain.model.PostModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,12 @@ class HomeTabViewModel(
 
     fun fetchFeed() {
         viewModelScope.launch {
-            posts.value = feedRepository.fetchFeed()
+            try {
+                posts.value = feedRepository.fetchFeed()
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                println("EXCEPTION HANDLED: $e")
+            }
         }
     }
 
