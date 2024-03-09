@@ -62,23 +62,12 @@ class NetworkingFactoryImpl : NetworkingFactory {
 
                         refreshTokens { // this: RefreshTokensParams
                             try {
-                                println("Refresh Token Invoke Request")
-
                                 val tokenResponse: DataResponse<TokenResponse> = client.post("http://91.215.153.157:8080/site/token").body()
                                 val remoteToken : String = tokenResponse.result.token!!
 
-                                println("RemoteTokem: $remoteToken")
-
-
                                 val newToken : String = run {
                                     val path = response.request.url.encodedPath
-
-                                    println("MyLog Path: $path")
-
                                     val t = calculateToken(path, remoteToken, "secret-api-key")
-
-                                    println("MyLog calculated token: ${t}")
-
                                     t
                                 }
                                 bearerTokenStorage.add(BearerTokens(newToken, remoteToken))
