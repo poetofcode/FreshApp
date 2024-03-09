@@ -27,7 +27,10 @@ interface NetworkingFactory {
 class NetworkingFactoryImpl : NetworkingFactory {
     
     override fun createHttpClient(): HttpClient {
-        return HttpClientFactory().createClient()
+        return HttpClientFactory(
+            baseUrl = "http://91.215.153.157:8080",
+            apiKey = "secret-api-key"
+        ).createClient()
     }
 
     override fun createApi(): FreshApi {

@@ -2,6 +2,7 @@ package data.service
 
 import data.entity.DataResponse
 import data.entity.TokenResponse
+import data.utils.buildEndpoint
 import data.utils.toSha1
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -16,7 +17,10 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-class HttpClientFactory() {
+class HttpClientFactory(
+    val baseUrl: String,
+    val apiKey: String,
+) {
     
     fun createClient() : HttpClient {
         val bearerTokenStorage = mutableListOf<BearerTokens>()
@@ -53,12 +57,12 @@ class HttpClientFactory() {
 
                     refreshTokens { // this: RefreshTokensParams
                         try {
-                            val tokenResponse: DataResponse<TokenResponse> = client.post("http://91.215.153.157:8080/site/token").body()
+                            val tokenResponse: DataResponse<TokenResponse> = client.post("/site/token".buildEndpoint(baseUrl)).body()
                             val remoteToken : String = tokenResponse.result.token!!
 
                             val newToken : String = run {
                                 val path = response.request.url.encodedPath
-                                val t = calculateToken(path, remoteToken, "secret-api-key")
+                                val t = calculateToken(path, remoteToken, apiKey)
                                 t
                             }
                             bearerTokenStorage.add(BearerTokens(newToken, remoteToken))
