@@ -18,7 +18,12 @@ class HomeTabViewModel(
 
     fun fetchFeed() {
         viewModelScope.launch {
-            posts.value = feedRepository.fetchFeed()
+            try {
+                posts.value = feedRepository.fetchFeed()
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                println("EXCEPTION HANDLED: $e")
+            }
         }
     }
 
