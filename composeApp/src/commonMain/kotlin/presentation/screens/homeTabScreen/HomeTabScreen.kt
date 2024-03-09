@@ -74,9 +74,11 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
             }
 
             if (readyState !is LoadingResource) {
-                OutlinedButton(modifier = Modifier.align(Alignment.TopEnd).background(Color.Transparent).padding(10.dp), onClick = {
-                    viewModel.fetchFeed()
-                }) {
+                OutlinedButton(
+                    modifier = Modifier.align(Alignment.TopEnd).background(Color.Transparent).padding(10.dp),
+                    onClick = {
+                        viewModel.fetchFeed()
+                    }) {
                     Text(text = "🔁", fontSize = 24.sp)
                 }
             }
