@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,8 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
 import presentation.Tabs
+import presentation.model.CompleteResource
+import presentation.model.ExceptionResource
+import presentation.model.IdleResource
+import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
-import presentation.screens.home_tab_screen.HomeTabViewModel
+import presentation.screens.homeTabScreen.HomeTabViewModel
 import specific.AsyncImage
 
 class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
@@ -35,13 +40,37 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
 //    }
 
     @Composable
-    override fun Content() {
+    override fun Content() = with(viewModel.state.value) {
         LaunchedEffect(Unit) {
             viewModel.fetchFeed()
         }
-        val posts by viewModel.posts.collectAsState()
 
         // Navigator(modifier = Modifier.fillMaxSize(), state = navState)
+        when (readyState) {
+            is CompleteResource -> Posts(posts)
+
+            is ExceptionResource -> {
+                Column(
+                    Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Ошибка загрузки", color = Color.Red)
+                    Spacer(Modifier.size(10.dp))
+                    Text(text = "${readyState.exception}")
+                }
+            }
+
+            else -> {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun Posts(posts: List<PostModel>) {
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             LazyColumn(
                 modifier = Modifier.padding(),

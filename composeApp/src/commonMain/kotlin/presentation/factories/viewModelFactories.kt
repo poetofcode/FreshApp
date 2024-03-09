@@ -3,7 +3,7 @@ package presentation.factories
 import data.repository.FeedRepository
 import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
-import presentation.screens.home_tab_screen.HomeTabViewModel
+import presentation.screens.homeTabScreen.HomeTabViewModel
 
 class HomeTabViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<HomeTabViewModel> {
     override fun createViewModel(): HomeTabViewModel {
