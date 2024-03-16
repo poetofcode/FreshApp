@@ -33,9 +33,8 @@ import kotlin.reflect.KProperty
 
 
 @Serializable
-data class Generic<T>(
-    val data: T? = null,
-    val extensions: Map<String, @kotlinx.serialization.Serializable(with = AnySerializer::class) Any>? = null
+data class PreferencesInfo(
+    val preferences: Map<String, @kotlinx.serialization.Serializable(with = AnySerializer::class) Any>? = null
 )
 
 object AnySerializer : KSerializer<Any> {
@@ -141,7 +140,7 @@ class DesktopPersistentStorage(
         } catch (e: Throwable) {
             "{}"
         }
-        val map = json.decodeFromString<Generic<Unit>>(content).extensions?.toMutableMap() ?: mutableMapOf()
+        val map = json.decodeFromString<PreferencesInfo>(content).preferences?.toMutableMap() ?: mutableMapOf()
         map.toMap().toMutableMap()
     }
 
@@ -149,33 +148,34 @@ class DesktopPersistentStorage(
     override fun save(key: String, param: Any) {
         map[key] = param
 
-        val str = json.encodeToString(Generic<Unit>(Unit, map))
+        val str = json.encodeToString(PreferencesInfo(map))
         contentPorvider.saveContent(str)
     }
 
     override fun fetch(key: String): Any? {
         return map[key]
     }
-
-    operator inline fun <reified T : Any> getValue(nothing: Nothing?, property: KProperty<*>): T? {
-        val properyName = property.name
-        val res = fetch(properyName)
-        return when (T::class) {
-            String::class -> res?.toString() as? T
-            Int::class -> res?.toString()?.toIntOrNull() as? T
-
-            else -> null
-        }
-    }
-
-    operator inline fun <reified T : Any> setValue(nothing: Nothing?, property: KProperty<*>, value: T?) {
-        val propertyName = property.name
-        value?.let {
-            this.save(propertyName, value)
-        }
-    }
-
 }
+
+
+inline operator fun <reified T : Any> PersistentStorage.getValue(nothing: Nothing?, property: KProperty<*>): T? {
+    val properyName = property.name
+    val res = fetch(properyName)
+    return when (T::class) {
+        String::class -> res?.toString() as? T
+        Int::class -> res?.toString()?.toIntOrNull() as? T
+
+        else -> null
+    }
+}
+
+inline operator fun <reified T : Any> PersistentStorage.setValue(nothing: Nothing?, property: KProperty<*>, value: T?) {
+    val propertyName = property.name
+    value?.let {
+        this.save(propertyName, value)
+    }
+}
+
 
 
 fun main() = application {
