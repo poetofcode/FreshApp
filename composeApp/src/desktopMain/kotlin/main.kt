@@ -26,6 +26,10 @@ import java.io.File
 import kotlin.math.max
 
 
+const val DEFAULT_WINDOW_WIDTH = 600
+const val DEFAULT_WINDOW_HEIGHT = 400
+
+
 fun main() = application {
     // val repositoryFactory = MockRepositoryFactory()
     val networkingFactory: NetworkingFactory = NetworkingFactoryImpl()
@@ -50,16 +54,20 @@ fun main() = application {
     var windowHeight: Int? by storage
 
     val windowState = rememberWindowState(
-        size = DpSize(windowWidth?.dp ?: 400.dp, windowHeight?.dp ?: 300.dp),
+        size = DpSize(
+            windowWidth?.dp ?: DEFAULT_WINDOW_WIDTH.dp,
+            windowHeight?.dp ?: DEFAULT_WINDOW_HEIGHT.dp),
         position = WindowPosition(300.dp, 300.dp)
     )
 
     LaunchedEffect(windowState) {
         snapshotFlow {
             windowState.size
-        }.onEach { snap ->
-            windowWidth = snap.width.value.toInt()
-            windowHeight = snap.height.value.toInt()
+        }.onEach {
+            with(it) {
+                windowWidth = width.value.toInt()
+                windowHeight = height.value.toInt()
+            }
         }.launchIn(this)
     }
 
