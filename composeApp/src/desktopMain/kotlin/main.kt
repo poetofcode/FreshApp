@@ -154,18 +154,12 @@ class DesktopPersistentStorage(
     }
 
     override fun fetch(key: String): Any? {
-        println("MAP: $map")
-        return map[key].apply {
-            println("map[$key] = $this@map")
-        }
+        return map[key]
     }
 
     operator inline fun <reified T : Any> getValue(nothing: Nothing?, property: KProperty<*>): T? {
         val properyName = property.name
         val res = fetch(properyName)
-        res?.let {
-            println("RES: $res, clazz: ${res::class.java.typeName}")
-        }
         return when (T::class) {
             String::class -> res?.toString() as? T
             Int::class -> res?.toString()?.toIntOrNull() as? T
@@ -175,7 +169,6 @@ class DesktopPersistentStorage(
     }
 
     operator inline fun <reified T : Any> setValue(nothing: Nothing?, property: KProperty<*>, value: T?) {
-        // println("$value has been assigned to '${property.name}' in $thisRef.")
         val propertyName = property.name
         value?.let {
             this.save(propertyName, value)
@@ -183,17 +176,6 @@ class DesktopPersistentStorage(
     }
 
 }
-
-
-//private operator fun DesktopPersistentStorage.setValue(nothing: Nothing?, property: KProperty<*>, i: Int?) {
-//    TODO("Not yet implemented")
-//}
-//
-//private operator fun DesktopPersistentStorage.getValue(nothing: Nothing?, property: KProperty<*>): T? {
-//    println("TypeName: ${T::class.java}, string:class = ${String::class.java}")
-//    val properyName = property.name
-//    return this.fetch(properyName) as T
-//}
 
 
 fun main() = application {
@@ -209,12 +191,6 @@ fun main() = application {
         vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
     )
 
-
-//    val map : Map<String, Any?> = mapOf()
-//
-//    val storage: String by map
-
-
     val fileProvider = FileContentProvider(
         fileName = "config.json",
         relativePath = "appcache",
@@ -222,26 +198,13 @@ fun main() = application {
 
     val storage = DesktopPersistentStorage(fileProvider)
 
-    // val windowWidth: Int = storage.get("window_width")
-    // val windowHeight: Int = storage.get("window_height")
-
     var windowWidth: Int? by storage
     var windowHeight: Int? by storage
-
-    // storage.save("windowHeight", 100)
-
-    // storage.save("my_param", "SOME VALUE")
-    // val fetched = storage.fetch("my_param")
-    println("FETCHED: $windowHeight")
-
-
-    // println("windowsWidth: $windowWidth")
 
     val windowState = rememberWindowState(
         size = DpSize(windowWidth?.dp ?: 400.dp, windowHeight?.dp ?: 300.dp),
         position = WindowPosition(300.dp, 300.dp)
     )
-
 
     LaunchedEffect(windowState) {
         snapshotFlow {
