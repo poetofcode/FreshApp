@@ -20,3 +20,6 @@ composeApp/kcef-bundle
 composeApp/cache
 composeApp/DawnCache
 composeApp/GPUCache
+composeApp/appcache
+
+*.log
