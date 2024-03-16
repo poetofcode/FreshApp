@@ -144,6 +144,7 @@ inline operator fun <reified T : Any> PersistentStorage.getValue(nothing: Nothin
     return when (T::class) {
         String::class -> res?.toString() as? T
         Int::class -> res?.toString()?.toIntOrNull() as? T
+        Boolean::class -> res?.toString()?.toBooleanStrictOrNull() as? T
 
         else -> null
     }

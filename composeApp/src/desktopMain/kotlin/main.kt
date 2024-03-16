@@ -39,12 +39,12 @@ fun main() = application {
         vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
     )
 
-    val fileProvider = FileContentProvider(
-        fileName = "config.json",
-        relativePath = "appcache",
+    val storage = ContentBasedPersistentStorage(
+        FileContentProvider(
+            fileName = "config.json",
+            relativePath = "appcache",
+        )
     )
-
-    val storage = ContentBasedPersistentStorage(fileProvider)
 
     var windowWidth: Int? by storage
     var windowHeight: Int? by storage
