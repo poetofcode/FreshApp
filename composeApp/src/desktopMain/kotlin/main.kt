@@ -2,10 +2,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.window.*
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
@@ -28,7 +25,8 @@ import kotlin.math.max
 
 const val DEFAULT_WINDOW_WIDTH = 600
 const val DEFAULT_WINDOW_HEIGHT = 400
-
+const val DEFAULT_POSITION_X = 300
+const val DEFAULT_POSITION_Y = 300
 
 fun main() = application {
     // val repositoryFactory = MockRepositoryFactory()
@@ -52,12 +50,19 @@ fun main() = application {
 
     var windowWidth: Int? by storage
     var windowHeight: Int? by storage
+    var positionX: Int? by storage
+    var positionY: Int? by storage
+    var isMaximized: Boolean? by storage
 
     val windowState = rememberWindowState(
         size = DpSize(
             windowWidth?.dp ?: DEFAULT_WINDOW_WIDTH.dp,
             windowHeight?.dp ?: DEFAULT_WINDOW_HEIGHT.dp),
-        position = WindowPosition(300.dp, 300.dp)
+        position = WindowPosition(
+            positionX?.dp ?: DEFAULT_POSITION_X.dp,
+            positionY?.dp ?: DEFAULT_POSITION_Y.dp
+        ),
+        placement = if (isMaximized == true) WindowPlacement.Maximized else WindowPlacement.Floating
     )
 
     LaunchedEffect(windowState) {
@@ -67,7 +72,28 @@ fun main() = application {
             with(it) {
                 windowWidth = width.value.toInt()
                 windowHeight = height.value.toInt()
+                if (width.value < DEFAULT_WINDOW_WIDTH) {
+                    windowState.size = DpSize(DEFAULT_WINDOW_WIDTH.dp, height)
+                }
+                if (height.value < DEFAULT_WINDOW_HEIGHT) {
+                    windowState.size = DpSize(height, DEFAULT_WINDOW_HEIGHT.dp)
+                }
             }
+        }.launchIn(this)
+
+        snapshotFlow {
+            windowState.position
+        }.onEach {
+            with(it) {
+                positionX = x.value.toInt()
+                positionY = y.value.toInt()
+            }
+        }.launchIn(this)
+
+        snapshotFlow {
+            windowState.placement
+        }.onEach {
+            isMaximized = it == WindowPlacement.Maximized
         }.launchIn(this)
     }
 
