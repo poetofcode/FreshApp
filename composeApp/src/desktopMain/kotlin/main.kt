@@ -70,8 +70,10 @@ fun main() = application {
             windowState.size
         }.onEach {
             with(it) {
-                windowWidth = width.value.toInt()
-                windowHeight = height.value.toInt()
+                if (windowState.placement == WindowPlacement.Floating) {
+                    windowWidth = width.value.toInt()
+                    windowHeight = height.value.toInt()
+                }
                 if (width.value < DEFAULT_WINDOW_WIDTH) {
                     windowState.size = DpSize(DEFAULT_WINDOW_WIDTH.dp, height)
                 }
@@ -85,8 +87,10 @@ fun main() = application {
             windowState.position
         }.onEach {
             with(it) {
-                positionX = x.value.toInt()
-                positionY = y.value.toInt()
+                if (windowState.placement == WindowPlacement.Floating) {
+                    positionX = x.value.toInt()
+                    positionY = y.value.toInt()
+                }
             }
         }.launchIn(this)
 
