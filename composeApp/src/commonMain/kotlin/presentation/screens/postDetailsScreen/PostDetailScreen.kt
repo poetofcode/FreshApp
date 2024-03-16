@@ -93,7 +93,7 @@ class PostDetailsScreen(
 
                 desktopWebSettings.apply {
                     offScreenRendering = false
-                // transparent = false
+                    // transparent = false
                 }
             }
             onDispose { }
@@ -105,22 +105,20 @@ class PostDetailsScreen(
         MaterialTheme {
             Column {
                 TopAppBar(
-                    title = { Text(text = "WebView Sample") },
+                    title = { Text(text = state.pageTitle ?: state.lastLoadedUrl ?: "Загрузка..") },
                     navigationIcon = {
-                        // if (navigator.canGoBack) {
-                            IconButton(onClick = {
-                                if (!navigator.canGoBack) {
-                                    SharedMemory.effectFlow.tryEmit(NavigateBackEffect)
-                                } else {
-                                    navigator.navigateBack()
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowBack,
-                                    contentDescription = "Back",
-                                )
+                        IconButton(onClick = {
+                            if (!navigator.canGoBack) {
+                                SharedMemory.effectFlow.tryEmit(NavigateBackEffect)
+                            } else {
+                                navigator.navigateBack()
                             }
-                        // }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                            )
+                        }
                     },
                 )
 
@@ -167,9 +165,7 @@ class PostDetailsScreen(
 
                 WebView(
                     state = state,
-                    modifier =
-                    Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     navigator = navigator,
                 )
             }
