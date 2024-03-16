@@ -46,7 +46,7 @@ class PostDetailsScreen(
             DisposableEffect(Unit) {
                 webViewState.webSettings.apply {
                     isJavaScriptEnabled = true
-                    zoomLevel = 1.5
+                    zoomLevel = 1.2
                     // customUserAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1) AppleWebKit/625.20 (KHTML, like Gecko) Version/14.3.43 Safari/625.20"
                     backgroundColor = Color.White
 
