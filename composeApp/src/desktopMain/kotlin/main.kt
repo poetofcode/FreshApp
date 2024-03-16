@@ -1,11 +1,11 @@
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
-import com.multiplatform.webview.web.WebView
-import com.multiplatform.webview.web.rememberWebViewState
+import androidx.compose.ui.window.rememberWindowState
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import presentation.App
 import presentation.base.Config
 import presentation.base.ViewModelStore
-import presentation.factories.*
+import presentation.factories.viewModelFactories
 import java.io.File
 import kotlin.math.max
 
@@ -32,15 +32,12 @@ fun main() = application {
         vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
     )
 
-//    Window(onCloseRequest = ::exitApplication, title = "FreshApp") {
-//        App(Config(
-//            viewModelStore = vmStoreImpl,
-//            repositoryFactory = repositoryFactory,
-//        ))
-//    }
+    val windowState = rememberWindowState(
+        size = DpSize(400.dp, 250.dp),
+        position = WindowPosition(300.dp, 300.dp)
+    )
 
-
-    Window(onCloseRequest = ::exitApplication, title = "FreshApp") {
+    Window(state = windowState, onCloseRequest = ::exitApplication, title = "FreshApp") {
         var restartRequired by remember { mutableStateOf(false) }
         var downloading by remember { mutableStateOf(0F) }
         var initialized by remember { mutableStateOf(false) }
