@@ -27,6 +27,11 @@ import presentation.screens.profileTabScreen.ProfileTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
 
 
+const val VERTICAL_PANEL_SIZE = 60
+const val VERTICAL_ICON_SIZE = 30
+const val HORIZONTAL_PANEL_SIZE = 60
+const val HORIZONTAL_ICON_SIZE = 50
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
@@ -48,7 +53,12 @@ fun App(config: Config) {
                 },
                 itemContent = { tab ->
                     val isSelected = selectedTab.value == tab
-                    Box(Modifier.size(30.dp, 30.dp), contentAlignment = Alignment.Center) {
+                    val iconSize = if (config.deviceType.isMobile) {
+                        HORIZONTAL_ICON_SIZE.dp
+                    } else {
+                        VERTICAL_ICON_SIZE.dp
+                    }
+                    Box(Modifier.size(iconSize), contentAlignment = Alignment.Center) {
                         val icon = when (tab) {
                             HOME -> Res.drawable.ic_home_tab
                             PROFILE -> Res.drawable.ic_profile_tab
@@ -99,7 +109,10 @@ fun AppLayout(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().background(Color.LightGray),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(HORIZONTAL_ICON_SIZE.dp)
+                    .background(Color.LightGray),
                 horizontalArrangement = Arrangement.Center
             ) {
                 menu.tabs.forEach { tab ->
@@ -114,7 +127,10 @@ fun AppLayout(
             modifier = modifier.fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight().background(Color.LightGray),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(VERTICAL_PANEL_SIZE.dp)
+                    .background(Color.LightGray),
             ) {
                 menu.tabs.forEach { tab ->
                     Box(
