@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -44,40 +44,51 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
             viewModel.fetchFeed()
         }
 
-        // Navigator(modifier = Modifier.fillMaxSize(), state = navState)
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            when (readyState) {
-                is CompleteResource -> Posts(posts)
+        MaterialTheme {
+            Column {
+                TopAppBar(
+                    title = { Text(text = "Лента") },
+                    navigationIcon = {},
+                    actions = {
+                        if (readyState !is LoadingResource) {
+                            IconButton(onClick = {
+                                viewModel.fetchFeed()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = "Reload",
+                                )
+                            }
+                        }
+                    }
+                )
 
-                is ExceptionResource -> {
-                    Column(
-                        Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = "Ошибка загрузки", color = Color.Red)
-                        Spacer(Modifier.size(10.dp))
-                        Text(text = "${readyState.exception}")
+                Box(
+                    modifier = Modifier.fillMaxWidth().weight(1f)
+                ) {
+                    when (readyState) {
+                        is CompleteResource -> Posts(posts)
+
+                        is ExceptionResource -> {
+                            Column(
+                                Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Ошибка загрузки", color = Color.Red)
+                                Spacer(Modifier.size(10.dp))
+                                Text(text = "${readyState.exception}")
+                            }
+                        }
+
+                        else -> {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator()
+                            }
+                        }
                     }
                 }
 
-                else -> {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                }
-            }
-
-            if (readyState !is LoadingResource) {
-                OutlinedButton(
-                    modifier = Modifier.align(Alignment.TopEnd).background(Color.Transparent).padding(10.dp),
-                    onClick = {
-                        viewModel.fetchFeed()
-                    }) {
-                    Text(text = "🔁", fontSize = 24.sp)
-                }
             }
         }
     }
@@ -102,9 +113,13 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
         Column(
             modifier = Modifier
                 .clickable {
-                    SharedMemory.effectFlow.tryEmit(NavigateEffect(PostDetailsScreen(
-                        postUrl = post.link
-                    )))
+                    SharedMemory.effectFlow.tryEmit(
+                        NavigateEffect(
+                            PostDetailsScreen(
+                                postUrl = post.link
+                            )
+                        )
+                    )
                 }
                 .padding(vertical = 5.dp)
                 .fillMaxWidth()
