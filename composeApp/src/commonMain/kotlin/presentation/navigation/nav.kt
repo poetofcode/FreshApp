@@ -3,28 +3,30 @@ package presentation.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import presentation.base.ViewModel
 import presentation.base.ViewModelStore
 
 
 typealias AnyScreen = BaseScreen<*>
 
-interface Screen<T: ViewModel> {
+interface Screen<T : ViewModel> {
     val id: String
-    
+
     val viewModel: T
 
     @Composable
     fun Content()
 }
 
-abstract class BaseScreen<T: ViewModel> : Screen<T> {
+abstract class BaseScreen<T : ViewModel> : Screen<T> {
 
     protected lateinit var viewModelStore: ViewModelStore
 
@@ -35,12 +37,12 @@ abstract class BaseScreen<T: ViewModel> : Screen<T> {
 }
 
 interface NavState {
-    val screens : State<List<AnyScreen>>
+    val screens: State<List<AnyScreen>>
 
     fun push(screen: AnyScreen)
 
     fun pop()
-    
+
     fun moveToFront(screenId: String)
 }
 
@@ -83,9 +85,13 @@ fun Navigator(
 ) {
     Box(modifier) {
         val screens = state.screens.value
-        screens.forEach { screen ->
-            Box(Modifier.fillMaxSize().background(Color.White))
-            screen.Content()
-        }
+//        screens.forEach { screen ->
+//            Box(Modifier.fillMaxSize().background(Color.White))
+//            Box(modifier = if (screen == screens.last()) Modifier.fillMaxSize() else Modifier.size(0.dp, 0.dp)) {
+//                screen.Content()
+//            }
+//        }
+
+        screens.lastOrNull()?.Content()
     }
 }
