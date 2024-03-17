@@ -1,6 +1,7 @@
 package presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import presentation.base.Config
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import presentation.navigation.NavState
 
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
@@ -26,17 +28,14 @@ fun App(config: Config) {
     MaterialTheme {
         val navState = remember { NavStateImpl(viewModelStore = config.viewModelStore) }
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Navigator(
-                modifier = Modifier.weight(1f),
-                state = navState
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth().background(Color.LightGray),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Tabs.entries.forEach { tab ->
+        AppLayout(
+            deviceType = config.deviceType,
+            menu = Menu(
+                tabs = Tabs.entries,
+                onTabClick = { tab ->
+                    navState.moveToFront(tab.key)
+                },
+                itemContent = { tab, isSelected ->
                     Button(
                         modifier = Modifier.padding(20.dp),
                         onClick = {
@@ -50,7 +49,12 @@ fun App(config: Config) {
                         Text(text = text)
                     }
                 }
-            }
+            ),
+        ) {
+            Navigator(
+                modifier = Modifier.fillMaxWidth(),
+                state = navState
+            )
         }
 
         LaunchedEffect(Unit) {
@@ -60,6 +64,42 @@ fun App(config: Config) {
         }
     }
 }
+
+@Composable
+fun AppLayout(
+    deviceType: Config.DeviceTypes,
+    menu: Menu,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit = {},
+) {
+    if (/* deviceType.isMobile */ true) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(Modifier.weight(1f)) {
+                content()
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth().background(Color.LightGray),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                menu.tabs.forEach { tab ->
+                    Box(Modifier.clickable { menu.onTabClick(tab) }) {
+                        menu.itemContent(tab, false)
+                    }
+                }
+            }
+        }
+    } else {
+
+    }
+}
+
+data class Menu(
+    val tabs: List<Tabs>,
+    val onTabClick: (Tabs) -> Unit,
+    val itemContent: @Composable (tab: Tabs, isSelected: Boolean) -> Unit
+)
+
 
 enum class Tabs(val key: String) {
     HOME("tab_home"),
