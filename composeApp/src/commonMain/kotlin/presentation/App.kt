@@ -73,7 +73,10 @@ fun AppLayout(
     content: @Composable () -> Unit = {},
 ) {
     if (deviceType.isMobile) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box(Modifier.weight(1f)) {
                 content()
             }
@@ -90,7 +93,9 @@ fun AppLayout(
             }
         }
     } else {
-        Row(Modifier.fillMaxSize()) {
+        Row(
+            modifier = modifier.fillMaxSize()
+        ) {
             Column(
                 modifier = Modifier.fillMaxHeight().background(Color.LightGray),
             ) {
