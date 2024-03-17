@@ -37,44 +37,6 @@ class PostDetailsScreen(
 
     @Composable
     override fun Content() {
-        /*
-        Column(Modifier.fillMaxSize()) {
-            OutlinedButton(
-                modifier = Modifier.background(Color.Transparent).padding(10.dp),
-                onClick = {
-                    SharedMemory.effectFlow.tryEmit(NavigateBackEffect)
-                }) {
-                Text(text = "←", fontSize = 24.sp)
-            }
-
-            val webViewState = rememberWebViewState(postUrl)
-            WebView(state = webViewState, modifier = Modifier.fillMaxSize())
-
-            DisposableEffect(Unit) {
-                webViewState.webSettings.apply {
-                    isJavaScriptEnabled = true
-                    zoomLevel = 1.2
-                    // customUserAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1) AppleWebKit/625.20 (KHTML, like Gecko) Version/14.3.43 Safari/625.20"
-                    backgroundColor = Color.White
-
-                    androidWebSettings.apply {
-                        isAlgorithmicDarkeningAllowed = true
-                        safeBrowsingEnabled = true
-                        supportZoom = true
-                        domStorageEnabled = true
-                    }
-
-                    desktopWebSettings.apply {
-                        offScreenRendering = false
-                        // transparent = false
-                    }
-                }
-                onDispose { }
-            }
-        }
-        */
-
-
         val initialUrl = postUrl
         val state = rememberWebViewState(url = initialUrl)
         DisposableEffect(Unit) {
@@ -129,8 +91,7 @@ class PostDetailsScreen(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Error",
                                 colorFilter = ColorFilter.tint(Color.Red),
-                                modifier =
-                                Modifier
+                                modifier = Modifier
                                     .align(Alignment.CenterEnd)
                                     .padding(8.dp),
                             )
@@ -140,6 +101,7 @@ class PostDetailsScreen(
                             value = textFieldValue ?: "",
                             onValueChange = { textFieldValue = it },
                             modifier = Modifier.fillMaxWidth(),
+                            maxLines = 1,
                         )
                     }
 
