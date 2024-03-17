@@ -3,11 +3,13 @@ package presentation.factories
 import data.repository.FeedRepository
 import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
-import presentation.screens.home_tab_screen.HomeTabViewModel
+import presentation.screens.homeTabScreen.HomeTabViewModel
+import presentation.screens.postDetailsScreen.PostDetailsViewModel
+import presentation.screens.postListScreen.PostListViewModel
 
-class HomeTabViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<HomeTabViewModel> {
+class HomeTabViewModelFactory() : ViewModelFactory<HomeTabViewModel> {
     override fun createViewModel(): HomeTabViewModel {
-        return HomeTabViewModel(feedRepository = feedRepository)
+        return HomeTabViewModel()
     }
 
     override val vmTypeName: String
@@ -15,8 +17,31 @@ class HomeTabViewModelFactory(val feedRepository: FeedRepository) : ViewModelFac
 
 }
 
+class PostListViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<PostListViewModel> {
+    override fun createViewModel(): PostListViewModel {
+        return PostListViewModel(feedRepository = feedRepository)
+    }
+
+    override val vmTypeName: String
+        get() = PostListViewModel::class.java.typeName
+
+}
+
+class PostDetailsViewModelFactory() : ViewModelFactory<PostDetailsViewModel> {
+    override fun createViewModel(): PostDetailsViewModel {
+        return PostDetailsViewModel()
+    }
+
+    override val vmTypeName: String
+        get() = PostDetailsViewModel::class.java.typeName
+
+}
+
+
 fun viewModelFactories(
     repositoryFactory: RepositoryFactory
-) = listOf(
-    HomeTabViewModelFactory(repositoryFactory.createFeedRepository())
+) = listOf<ViewModelFactory<*>>(
+    HomeTabViewModelFactory(),
+    PostListViewModelFactory(repositoryFactory.createFeedRepository()),
+    PostDetailsViewModelFactory(),
 )
