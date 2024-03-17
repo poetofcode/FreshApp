@@ -135,6 +135,7 @@ fun main() = application {
             if (initialized) {
                 App(
                     Config(
+                        deviceType = Config.DeviceTypes.DESKTOP,
                         viewModelStore = vmStoreImpl,
                         repositoryFactory = repositoryFactory,
                     )
