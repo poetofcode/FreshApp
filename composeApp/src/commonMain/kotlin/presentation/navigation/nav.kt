@@ -4,13 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import presentation.LocalMainAppState
 import presentation.base.ViewModel
 import presentation.base.ViewModelStore
 
@@ -30,8 +28,22 @@ abstract class BaseScreen<T : ViewModel> : Screen<T> {
 
     protected lateinit var viewModelStore: ViewModelStore
 
+    protected open val isMenuVisible: Boolean = false
+
+    @Composable
+    protected fun setMainMenuVisibility() {
+        val appState = LocalMainAppState.current
+        appState.isMenuVisible.value = isMenuVisible
+    }
+
     fun setVMStore(viewModelStore: ViewModelStore) {
         this.viewModelStore = viewModelStore
+    }
+
+    @Composable
+    fun PrepareContent() {
+        setMainMenuVisibility()
+        Content()
     }
 
 }
@@ -92,6 +104,6 @@ fun Navigator(
 //            }
 //        }
 
-        screens.lastOrNull()?.Content()
+        screens.lastOrNull()?.PrepareContent()
     }
 }

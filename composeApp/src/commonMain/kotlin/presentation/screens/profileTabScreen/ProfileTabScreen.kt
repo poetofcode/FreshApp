@@ -18,6 +18,8 @@ class ProfileTabScreen : BaseScreen<ProfileTabViewModel>() {
     override val viewModel: ProfileTabViewModel
         get() = viewModelStore.getViewModel<ProfileTabViewModel>(id) 
 
+    override val isMenuVisible: Boolean = true
+
     @Composable
     override fun Content() {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

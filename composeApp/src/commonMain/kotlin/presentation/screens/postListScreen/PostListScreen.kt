@@ -34,6 +34,8 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
     override val viewModel: PostListViewModel
         get() = viewModelStore.getViewModel<PostListViewModel>(id)
 
+    override val isMenuVisible: Boolean = true
+
 //    private val navState = NavStateImpl().apply {
 //        // push(PostListScreen())
 //    }

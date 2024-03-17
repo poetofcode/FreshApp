@@ -15,16 +15,16 @@ import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_fav_tab
 import freshapp.composeapp.generated.resources.ic_home_tab
 import freshapp.composeapp.generated.resources.ic_profile_tab
-import presentation.base.Config
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.Tabs.*
+import presentation.base.Config
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
 import presentation.screens.bookmarkTabScreen.BookmarkTabScreen
-import presentation.screens.profileTabScreen.ProfileTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
+import presentation.screens.profileTabScreen.ProfileTabScreen
 
 
 const val VERTICAL_PANEL_SIZE = 60
@@ -32,62 +32,74 @@ const val VERTICAL_ICON_SIZE = 30
 const val HORIZONTAL_PANEL_SIZE = 60
 const val HORIZONTAL_ICON_SIZE = 50
 
+data class MainAppState(
+    val isMenuVisible: MutableState<Boolean> = mutableStateOf(false)
+)
+
+val LocalMainAppState = staticCompositionLocalOf<MainAppState> {
+    throw RuntimeException("LocalMainAppState not set")
+}
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
 fun App(config: Config) {
-    MaterialTheme {
-        val selectedTab = remember { mutableStateOf<Tabs>(Tabs.HOME) }
-        val navState = remember { NavStateImpl(viewModelStore = config.viewModelStore).apply {
-            push(HomeTabScreen())
-            push(BookmarkTabScreen())
-            push(ProfileTabScreen())
-        } }
-
-        AppLayout(
-            deviceType = config.deviceType,
-            menu = Menu(
-                tabs = Tabs.entries,
-                onTabClick = { tab ->
-                    selectedTab.value = tab
-                },
-                itemContent = { tab ->
-                    val isSelected = selectedTab.value == tab
-                    val iconSize = if (config.deviceType.isMobile) {
-                        HORIZONTAL_ICON_SIZE.dp
-                    } else {
-                        VERTICAL_ICON_SIZE.dp
-                    }
-                    Box(Modifier.size(iconSize), contentAlignment = Alignment.Center) {
-                        val icon = when (tab) {
-                            HOME -> Res.drawable.ic_home_tab
-                            PROFILE -> Res.drawable.ic_profile_tab
-                            BOOKMARK -> Res.drawable.ic_fav_tab
-                        }
-
-                        Image(
-                            painter = painterResource(icon),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(
-                                if (isSelected) {
-                                    MaterialTheme.colors.primary
-                                } else {
-                                    Color.Gray
-                                }
-                            )
-                        )
-                    }
+    CompositionLocalProvider(LocalMainAppState provides MainAppState()) {
+        MaterialTheme {
+            val selectedTab = remember { mutableStateOf<Tabs>(Tabs.HOME) }
+            val navState = remember {
+                NavStateImpl(viewModelStore = config.viewModelStore).apply {
+                    push(HomeTabScreen())
+                    push(BookmarkTabScreen())
+                    push(ProfileTabScreen())
                 }
-            ),
-        ) {
-            Navigator(
-                modifier = Modifier.fillMaxWidth(),
-                state = navState
-            )
-        }
+            }
 
-        LaunchedEffect(selectedTab.value) {
-            navState.moveToFront(selectedTab.value.key)
+            AppLayout(
+                deviceType = config.deviceType,
+                menu = Menu(
+                    tabs = Tabs.entries,
+                    onTabClick = { tab ->
+                        selectedTab.value = tab
+                    },
+                    itemContent = { tab ->
+                        val isSelected = selectedTab.value == tab
+                        val iconSize = if (config.deviceType.isMobile) {
+                            HORIZONTAL_ICON_SIZE.dp
+                        } else {
+                            VERTICAL_ICON_SIZE.dp
+                        }
+                        Box(Modifier.size(iconSize), contentAlignment = Alignment.Center) {
+                            val icon = when (tab) {
+                                HOME -> Res.drawable.ic_home_tab
+                                PROFILE -> Res.drawable.ic_profile_tab
+                                BOOKMARK -> Res.drawable.ic_fav_tab
+                            }
+
+                            Image(
+                                painter = painterResource(icon),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(
+                                    if (isSelected) {
+                                        MaterialTheme.colors.primary
+                                    } else {
+                                        Color.Gray
+                                    }
+                                )
+                            )
+                        }
+                    }
+                ),
+            ) {
+                Navigator(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = navState
+                )
+            }
+
+            LaunchedEffect(selectedTab.value) {
+                navState.moveToFront(selectedTab.value.key)
+            }
         }
     }
 }
@@ -99,6 +111,8 @@ fun AppLayout(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {
+    val isMenuVisible = LocalMainAppState.current.isMenuVisible.value
+
     if (deviceType.isMobile) {
         Column(
             modifier = modifier,
@@ -108,20 +122,22 @@ fun AppLayout(
                 content()
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    modifier = Modifier.height(HORIZONTAL_PANEL_SIZE.dp),
-                    horizontalArrangement = Arrangement.spacedBy((HORIZONTAL_ICON_SIZE/3).dp),
-                    verticalAlignment = Alignment.CenterVertically
+            if (isMenuVisible) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.LightGray),
+                    contentAlignment = Alignment.Center
                 ) {
-                    menu.tabs.forEach { tab ->
-                        Box(Modifier.clickable { menu.onTabClick(tab) }) {
-                            menu.itemContent(tab)
+                    Row(
+                        modifier = Modifier.height(HORIZONTAL_PANEL_SIZE.dp),
+                        horizontalArrangement = Arrangement.spacedBy((HORIZONTAL_ICON_SIZE / 3).dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        menu.tabs.forEach { tab ->
+                            Box(Modifier.clickable { menu.onTabClick(tab) }) {
+                                menu.itemContent(tab)
+                            }
                         }
                     }
                 }
