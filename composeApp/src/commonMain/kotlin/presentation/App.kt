@@ -4,16 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.compose_multiplatform
+import freshapp.composeapp.generated.resources.ic_fav_tab
 import freshapp.composeapp.generated.resources.ic_home_tab
 import freshapp.composeapp.generated.resources.ic_profile_tab
 import presentation.base.Config
@@ -21,11 +19,11 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.Tabs.*
-import presentation.navigation.NavState
 
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
-import presentation.screens.ProfileTabScreen
+import presentation.screens.bookmarkTabScreen.BookmarkTabScreen
+import presentation.screens.profileTabScreen.ProfileTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
 
 
@@ -37,6 +35,7 @@ fun App(config: Config) {
         val selectedTab = remember { mutableStateOf<Tabs>(Tabs.HOME) }
         val navState = remember { NavStateImpl(viewModelStore = config.viewModelStore).apply {
             push(HomeTabScreen())
+            push(BookmarkTabScreen())
             push(ProfileTabScreen())
         } }
 
@@ -53,6 +52,7 @@ fun App(config: Config) {
                         val icon = when (tab) {
                             HOME -> Res.drawable.ic_home_tab
                             PROFILE -> Res.drawable.ic_profile_tab
+                            BOOKMARK -> Res.drawable.ic_fav_tab
                         }
                         Image(
                             painter = painterResource(icon),
@@ -134,5 +134,6 @@ data class Menu(
 
 enum class Tabs(val key: String) {
     HOME("tab_home"),
+    BOOKMARK("tab_bookmark"),
     PROFILE("tab_profile"),
 }

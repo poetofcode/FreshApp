@@ -1,4 +1,4 @@
-package presentation.screens.profileTabScreen
+package presentation.screens.bookmarkTabScreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,23 +11,23 @@ import presentation.base.BaseViewModel
 import presentation.navigation.BaseScreen
 
 
-class ProfileTabScreen : BaseScreen<ProfileTabViewModel>() {
+class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
     override val id: String
-        get() = Tabs.PROFILE.key
-    
-    override val viewModel: ProfileTabViewModel
-        get() = viewModelStore.getViewModel<ProfileTabViewModel>(id) 
+        get() = Tabs.BOOKMARK.key
+
+    override val viewModel: BookmarkTabViewModel
+        get() = viewModelStore.getViewModel<BookmarkTabViewModel>(id) 
 
     @Composable
     override fun Content() {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "TODO: О приложении")
+            Text(text = "TODO: Избранное")
         }
     }
 
 }
 
 
-class ProfileTabViewModel : BaseViewModel() {
+class BookmarkTabViewModel : BaseViewModel() {
 
 }
