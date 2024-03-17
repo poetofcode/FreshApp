@@ -108,16 +108,21 @@ fun AppLayout(
                 content()
             }
 
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(HORIZONTAL_ICON_SIZE.dp)
                     .background(Color.LightGray),
-                horizontalArrangement = Arrangement.Center
+                contentAlignment = Alignment.Center
             ) {
-                menu.tabs.forEach { tab ->
-                    Box(Modifier.clickable { menu.onTabClick(tab) }) {
-                        menu.itemContent(tab)
+                Row(
+                    modifier = Modifier.height(HORIZONTAL_PANEL_SIZE.dp),
+                    horizontalArrangement = Arrangement.spacedBy((HORIZONTAL_ICON_SIZE/3).dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    menu.tabs.forEach { tab ->
+                        Box(Modifier.clickable { menu.onTabClick(tab) }) {
+                            menu.itemContent(tab)
+                        }
                     }
                 }
             }
