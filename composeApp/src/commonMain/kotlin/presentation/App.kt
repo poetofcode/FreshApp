@@ -40,15 +40,14 @@ fun App(config: Config) {
         } }
 
         AppLayout(
-            selectedTab = selectedTab,
             deviceType = config.deviceType,
             menu = Menu(
                 tabs = Tabs.entries,
                 onTabClick = { tab ->
                     selectedTab.value = tab
                 },
-                itemContent = { tab, isSelected ->
-                    // val isSelected = selectedTab.value == tab
+                itemContent = { tab ->
+                    val isSelected = selectedTab.value == tab
                     Box(Modifier.size(30.dp, 30.dp), contentAlignment = Alignment.Center) {
                         val icon = when (tab) {
                             HOME -> Res.drawable.ic_home_tab
@@ -77,7 +76,7 @@ fun App(config: Config) {
             )
         }
 
-        LaunchedEffect(selectedTab) {
+        LaunchedEffect(selectedTab.value) {
             navState.moveToFront(selectedTab.value.key)
         }
     }
@@ -85,7 +84,6 @@ fun App(config: Config) {
 
 @Composable
 fun AppLayout(
-    selectedTab: State<Tabs>,
     deviceType: Config.DeviceTypes,
     menu: Menu,
     modifier: Modifier = Modifier,
@@ -106,7 +104,7 @@ fun AppLayout(
             ) {
                 menu.tabs.forEach { tab ->
                     Box(Modifier.clickable { menu.onTabClick(tab) }) {
-                        menu.itemContent(tab, false)
+                        menu.itemContent(tab)
                     }
                 }
             }
@@ -123,7 +121,7 @@ fun AppLayout(
                         modifier = Modifier.clickable { menu.onTabClick(tab) }.size(60.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        menu.itemContent(tab, selectedTab.value == tab)
+                        menu.itemContent(tab)
                     }
                 }
             }
@@ -138,7 +136,7 @@ fun AppLayout(
 data class Menu(
     val tabs: List<Tabs>,
     val onTabClick: (Tabs) -> Unit,
-    val itemContent: @Composable (tab: Tabs, isSelected: Boolean) -> Unit
+    val itemContent: @Composable (tab: Tabs) -> Unit
 )
 
 
