@@ -25,6 +25,7 @@ import presentation.navigation.NavState
 
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
+import presentation.screens.ProfileTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
 
 
@@ -33,7 +34,11 @@ import presentation.screens.homeTabScreen.HomeTabScreen
 @Preview
 fun App(config: Config) {
     MaterialTheme {
-        val navState = remember { NavStateImpl(viewModelStore = config.viewModelStore) }
+        val selectedTab = remember { mutableStateOf<Tabs>(Tabs.HOME) }
+        val navState = remember { NavStateImpl(viewModelStore = config.viewModelStore).apply {
+            push(HomeTabScreen())
+            push(ProfileTabScreen())
+        } }
 
         AppLayout(
             deviceType = config.deviceType,
@@ -42,7 +47,8 @@ fun App(config: Config) {
                 onTabClick = { tab ->
                     navState.moveToFront(tab.key)
                 },
-                itemContent = { tab, isSelected ->
+                itemContent = { tab, _ ->
+
                     Box(Modifier.size(30.dp, 30.dp), contentAlignment = Alignment.Center) {
                         val icon = when (tab) {
                             HOME -> Res.drawable.ic_home_tab
@@ -53,21 +59,6 @@ fun App(config: Config) {
                             contentDescription = null
                         )
                     }
-
-                    /*
-                    Button(
-                        modifier = Modifier.padding(20.dp),
-                        onClick = {
-                            navState.moveToFront(tab.key)
-                        }
-                    ) {
-                        val text = when (tab) {
-                            Tabs.HOME -> "Лента"
-                            Tabs.PROFILE -> "Профиль"
-                        }
-                        Text(text = text)
-                    }
-                    */
                 }
             ),
         ) {
@@ -77,10 +68,8 @@ fun App(config: Config) {
             )
         }
 
-        LaunchedEffect(Unit) {
-            navState.push(HomeTabScreen())
-            // navState.push(ProfileTabScreen())
-            navState.moveToFront(HOME.key)
+        LaunchedEffect(selectedTab) {
+            navState.moveToFront(selectedTab.value.key)
         }
     }
 }
