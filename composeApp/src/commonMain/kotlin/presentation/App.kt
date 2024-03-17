@@ -45,7 +45,6 @@ fun App(config: Config) {
             menu = Menu(
                 tabs = Tabs.entries,
                 onTabClick = { tab ->
-                    // navState.moveToFront(tab.key)
                     selectedTab.value = tab
                 },
                 itemContent = { tab, isSelected ->
@@ -56,8 +55,6 @@ fun App(config: Config) {
                             PROFILE -> Res.drawable.ic_profile_tab
                             BOOKMARK -> Res.drawable.ic_fav_tab
                         }
-
-                        println("isSelected = $isSelected")
 
                         Image(
                             painter = painterResource(icon),
