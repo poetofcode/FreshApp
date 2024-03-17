@@ -72,7 +72,7 @@ fun AppLayout(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {
-    if (/* deviceType.isMobile */ true) {
+    if (deviceType.isMobile) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(Modifier.weight(1f)) {
                 content()
@@ -90,7 +90,21 @@ fun AppLayout(
             }
         }
     } else {
+        Row(Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier.fillMaxHeight().background(Color.LightGray),
+            ) {
+                menu.tabs.forEach { tab ->
+                    Box(Modifier.clickable { menu.onTabClick(tab) }) {
+                        menu.itemContent(tab, false)
+                    }
+                }
+            }
 
+            Box(Modifier.weight(1f)) {
+                content()
+            }
+        }
     }
 }
 
