@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_fav_tab
@@ -19,7 +20,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.Tabs.*
-
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
 import presentation.screens.bookmarkTabScreen.BookmarkTabScreen
@@ -40,23 +40,35 @@ fun App(config: Config) {
         } }
 
         AppLayout(
+            selectedTab = selectedTab,
             deviceType = config.deviceType,
             menu = Menu(
                 tabs = Tabs.entries,
                 onTabClick = { tab ->
-                    navState.moveToFront(tab.key)
+                    // navState.moveToFront(tab.key)
+                    selectedTab.value = tab
                 },
-                itemContent = { tab, _ ->
-
+                itemContent = { tab, isSelected ->
+                    // val isSelected = selectedTab.value == tab
                     Box(Modifier.size(30.dp, 30.dp), contentAlignment = Alignment.Center) {
                         val icon = when (tab) {
                             HOME -> Res.drawable.ic_home_tab
                             PROFILE -> Res.drawable.ic_profile_tab
                             BOOKMARK -> Res.drawable.ic_fav_tab
                         }
+
+                        println("isSelected = $isSelected")
+
                         Image(
                             painter = painterResource(icon),
-                            contentDescription = null
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(
+                                if (isSelected) {
+                                    MaterialTheme.colors.primary
+                                } else {
+                                    Color.Gray
+                                }
+                            )
                         )
                     }
                 }
@@ -76,6 +88,7 @@ fun App(config: Config) {
 
 @Composable
 fun AppLayout(
+    selectedTab: State<Tabs>,
     deviceType: Config.DeviceTypes,
     menu: Menu,
     modifier: Modifier = Modifier,
@@ -113,7 +126,7 @@ fun AppLayout(
                         modifier = Modifier.clickable { menu.onTabClick(tab) }.size(60.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        menu.itemContent(tab, false)
+                        menu.itemContent(tab, selectedTab.value == tab)
                     }
                 }
             }
