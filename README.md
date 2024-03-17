@@ -11,6 +11,11 @@ Build dist:
 Read more: https://github.com/JetBrains/compose-multiplatform/blob/master/tutorials/Native_distributions_and_local_execution/README.md
 
 
+## TODO List
+
+* Apply ImageLoader lib: https://github.com/qdsfdhvh/compose-imageloader ()other libs: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-images-resources.html#remote-files)
+
+
 ## Links
 
 * Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…

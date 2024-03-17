@@ -25,6 +25,8 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
         }
     }
 
+    override val isMenuVisible: Boolean = true
+
     @Composable
     override fun Content() {
         LaunchedEffect(Unit) {

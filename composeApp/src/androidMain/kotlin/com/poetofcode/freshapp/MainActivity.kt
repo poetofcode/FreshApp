@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             App(
                 Config(
+                    deviceType = Config.DeviceTypes.ANDROID,
                     viewModelStore = vmStoreImpl,
                     repositoryFactory = repositoryFactory,
                 )
