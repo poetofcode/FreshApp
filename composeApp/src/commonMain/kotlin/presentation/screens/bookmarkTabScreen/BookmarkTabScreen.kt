@@ -14,11 +14,11 @@ import presentation.navigation.BaseScreen
 
 
 class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
-    override val id: String
+    override val screenId: String
         get() = Tabs.BOOKMARK.key
 
     override val viewModel: BookmarkTabViewModel
-        get() = viewModelStore.getViewModel<BookmarkTabViewModel>(id) 
+        get() = viewModelStore.getViewModel<BookmarkTabViewModel>(screenId) 
 
     override val isMenuVisible: Boolean = true
     

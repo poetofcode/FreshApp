@@ -26,13 +26,10 @@ import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
 import specific.AsyncImage
 
-class PostListScreen() : BaseScreen<PostListViewModel>() {
-
-    override val id: String
-        get() = "PostListScreen"
+class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override val viewModel: PostListViewModel
-        get() = viewModelStore.getViewModel<PostListViewModel>(id)
+        get() = viewModelStore.getViewModel<PostListViewModel>(screenId)
 
     override val isMenuVisible: Boolean = true
 

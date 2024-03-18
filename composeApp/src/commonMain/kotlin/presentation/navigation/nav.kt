@@ -13,7 +13,7 @@ import presentation.base.ViewModelStore
 typealias AnyScreen = BaseScreen<*>
 
 interface Screen<T : ViewModel> {
-    val id: String
+    val screenId: String
 
     val viewModel: T
 
@@ -24,6 +24,9 @@ interface Screen<T : ViewModel> {
 abstract class BaseScreen<T : ViewModel> : Screen<T> {
 
     protected lateinit var viewModelStore: ViewModelStore
+
+    override val screenId: String
+        get() = this::class.java.typeName
 
     protected open val isMenuVisible: Boolean = false
 
@@ -79,9 +82,9 @@ class NavStateImpl(val viewModelStore: ViewModelStore) : NavState {
     override fun moveToFront(screenId: String) {
         var currScreens = _screens.value.toMutableList()
         currScreens.firstOrNull {
-            it.id == screenId
+            it.screenId == screenId
         }?.let { found ->
-            currScreens = currScreens.filterNot { it.id == screenId }.toMutableList()
+            currScreens = currScreens.filterNot { it.screenId == screenId }.toMutableList()
             currScreens.add(found)
             _screens.value = currScreens
         }
