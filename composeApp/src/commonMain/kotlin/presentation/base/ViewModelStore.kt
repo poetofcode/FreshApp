@@ -19,7 +19,6 @@ class ViewModelStore(
             factory.vmTypeName == T::class.java.typeName
         }?.let { found ->
             createdVm = found.createViewModel() as T
-            (createdVm as? BaseViewModel)?.setCoroutineScope(coroutineScope)
             viewModels[key] = createdVm as T
         }
         return createdVm ?: throw Exception("ViewModelFactory not found")

@@ -14,14 +14,15 @@ class PostListViewModel(
     data class State(
         val posts: List<PostModel> = emptyList(),
         val readyState: Resource<Unit> = IdleResource,
-        )
+    )
 
     val state = mutableStateOf(State())
 
+    init {
+        fetchFeed()
+    }
+
     fun fetchFeed() {
-        if (state.value.readyState is CompleteResource) {
-            return
-        }
         viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
