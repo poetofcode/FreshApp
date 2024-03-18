@@ -1,7 +1,6 @@
 package presentation.base
 
 import data.repository.RepositoryFactory
-import presentation.viewModelCoroutineScopeProvider
 
 data class Config(
 
@@ -11,11 +10,7 @@ data class Config(
 
     val repositoryFactory: RepositoryFactory,
 
-    ) {
-
-    init {
-        viewModelCoroutineScopeProvider.scope = viewModelStore.coroutineScope
-    }
+) {
 
     enum class DeviceTypes(val isMobile: Boolean) {
         ANDROID(true),

@@ -1,11 +1,16 @@
 package presentation.base
 
 import kotlinx.coroutines.CoroutineScope
+import presentation.viewModelCoroutineScopeProvider
 
 class ViewModelStore(
     val coroutineScope: CoroutineScope,
     val vmFactories: List<ViewModelFactory<*>>
 ) {
+
+    init {
+        viewModelCoroutineScopeProvider.scope = coroutineScope
+    }
     
     val viewModels: MutableMap<String, ViewModel> = mutableMapOf()
 
