@@ -37,6 +37,8 @@ class PostDetailsScreen(
 
     @Composable
     override fun Content() {
+        viewModel.doNothing()
+
         val initialUrl = postUrl
         val state = rememberWebViewState(url = initialUrl)
         DisposableEffect(Unit) {

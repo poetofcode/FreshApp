@@ -20,7 +20,7 @@ class ViewModelStore(
         }
 
         var createdVm: T? = null
-        vmFactories.first { factory ->
+        vmFactories.firstOrNull { factory ->
             factory.vmTypeName == T::class.java.typeName
         }?.let { found ->
             createdVm = found.createViewModel() as T
@@ -30,7 +30,7 @@ class ViewModelStore(
     }
     
     fun removeViewModel(viewModel: ViewModel) {
-        // TODO
+        viewModels.values.removeIf { it == viewModel }
     }
     
 }

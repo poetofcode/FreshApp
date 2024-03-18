@@ -19,6 +19,8 @@ class PostListViewModel(
     val state = mutableStateOf(State())
 
     init {
+        println("PostListViewModel: init")
+
         fetchFeed()
     }
 

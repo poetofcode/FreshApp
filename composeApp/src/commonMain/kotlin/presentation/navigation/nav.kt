@@ -1,13 +1,10 @@
 package presentation.navigation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import presentation.LocalMainAppState
 import presentation.base.ViewModel
 import presentation.base.ViewModelStore
@@ -73,6 +70,9 @@ class NavStateImpl(val viewModelStore: ViewModelStore) : NavState {
         if (_screens.value.size <= 1) {
             return
         }
+        _screens.value.lastOrNull()?.let { topScreen ->
+            viewModelStore.removeViewModel(topScreen.viewModel)
+        }
         _screens.value = _screens.value.subList(0, _screens.value.size - 1)
     }
 
@@ -97,16 +97,6 @@ fun Navigator(
 ) {
     Box(modifier) {
         val screens = state.screens.value
-        /*
-        screens.forEach { screen ->
-            Box(Modifier.fillMaxSize().background(Color.White))
-            screen.PrepareContent()
-            // Box(modifier = if (screen == screens.last()) Modifier.fillMaxSize() else Modifier.size(100.dp, 100.dp)) {
-                // screen.PrepareContent()
-            // }
-        }
-        */
-        
         screens.lastOrNull()?.PrepareContent()
     }
 }
