@@ -15,3 +15,9 @@ abstract class BaseViewModel : ViewModel {
     }
 
 }
+
+class EmptyViewModel : BaseViewModel() {
+    companion object {
+        val INSTANCE = EmptyViewModel()
+    }
+}
