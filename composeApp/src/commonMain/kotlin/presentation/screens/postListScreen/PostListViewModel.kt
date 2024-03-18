@@ -19,6 +19,9 @@ class PostListViewModel(
     val state = mutableStateOf(State())
 
     fun fetchFeed() {
+        if (state.value.readyState is CompleteResource) {
+            return
+        }
         viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)

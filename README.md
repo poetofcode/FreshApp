@@ -15,6 +15,8 @@ Read more: https://github.com/JetBrains/compose-multiplatform/blob/master/tutori
 
 * Apply ImageLoader lib: https://github.com/qdsfdhvh/compose-imageloader ()other libs: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-images-resources.html#remote-files)
 
+* Add scrollbars on desktop: https://foso.github.io/Jetpack-Compose-Playground/desktop/general/scrollbar/
+
 
 ## Links
 

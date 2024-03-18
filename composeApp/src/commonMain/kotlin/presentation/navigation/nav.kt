@@ -97,13 +97,16 @@ fun Navigator(
 ) {
     Box(modifier) {
         val screens = state.screens.value
-//        screens.forEach { screen ->
-//            Box(Modifier.fillMaxSize().background(Color.White))
-//            Box(modifier = if (screen == screens.last()) Modifier.fillMaxSize() else Modifier.size(0.dp, 0.dp)) {
-//                screen.Content()
-//            }
-//        }
-
+        /*
+        screens.forEach { screen ->
+            Box(Modifier.fillMaxSize().background(Color.White))
+            screen.PrepareContent()
+            // Box(modifier = if (screen == screens.last()) Modifier.fillMaxSize() else Modifier.size(100.dp, 100.dp)) {
+                // screen.PrepareContent()
+            // }
+        }
+        */
+        
         screens.lastOrNull()?.PrepareContent()
     }
 }
