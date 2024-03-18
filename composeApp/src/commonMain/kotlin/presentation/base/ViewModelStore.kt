@@ -14,7 +14,9 @@ class ViewModelStore(
     
     val viewModels: MutableMap<String, ViewModel> = mutableMapOf()
 
-    inline fun <reified T: ViewModel> getViewModel(key: String) : T {
+    inline fun <reified T: ViewModel> getViewModel(_key: String = String()) : T {
+        val key = _key.takeIf { it.isNotBlank() } ?: T::class.java.typeName
+
         if (viewModels.containsKey(key)) {
             return viewModels[key] as? T ?: throw Exception("ViewModelFactory unknown exception")
         }

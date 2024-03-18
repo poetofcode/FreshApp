@@ -28,7 +28,7 @@ class PostDetailsScreen(
         get() = "PostDetailsScreen"
 
     override val viewModel: PostDetailsViewModel
-        get() = viewModelStore.getViewModel<PostDetailsViewModel>(screenId)
+        get() = viewModelStore.getViewModel<PostDetailsViewModel>()
 
 
     @Composable

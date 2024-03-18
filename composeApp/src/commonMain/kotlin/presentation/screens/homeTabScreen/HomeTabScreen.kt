@@ -15,7 +15,7 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
         get() = Tabs.HOME.key
 
     override val viewModel: HomeTabViewModel
-        get() = viewModelStore.getViewModel<HomeTabViewModel>(screenId)
+        get() = viewModelStore.getViewModel<HomeTabViewModel>()
 
     private val navState by lazy {
         NavStateImpl(viewModelStore).apply {

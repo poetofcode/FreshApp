@@ -16,7 +16,7 @@ class ProfileTabScreen : BaseScreen<ProfileTabViewModel>() {
         get() = Tabs.PROFILE.key
     
     override val viewModel: ProfileTabViewModel
-        get() = viewModelStore.getViewModel<ProfileTabViewModel>(screenId) 
+        get() = viewModelStore.getViewModel<ProfileTabViewModel>() 
 
     override val isMenuVisible: Boolean = true
 
