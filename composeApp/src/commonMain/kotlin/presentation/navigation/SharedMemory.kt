@@ -8,6 +8,9 @@ data class NavigateEffect(val screen: BaseScreen<*>) : Effect
 
 data object NavigateBackEffect : Effect
 
+data class BackHandleEffect(
+    val cb: () -> Boolean
+) : Effect
 
 object SharedMemory {
     

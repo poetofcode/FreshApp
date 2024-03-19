@@ -9,10 +9,15 @@ import androidx.lifecycle.lifecycleScope
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import presentation.App
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.*
+import presentation.navigation.BackHandleEffect
+import presentation.navigation.SharedMemory
 
 
 class MainActivity : ComponentActivity() {
@@ -23,6 +28,7 @@ class MainActivity : ComponentActivity() {
         api = networkingFactory.createApi()
     )
 
+    private var backHandleCallback: (() -> Boolean)? = null
 
     val vmStoreImpl = ViewModelStore(
         coroutineScope = lifecycleScope,
@@ -43,7 +49,28 @@ class MainActivity : ComponentActivity() {
                 )
             )
         }
+
+        lifecycleScope.launch {
+            SharedMemory.effectFlow
+                .onEach { effect ->
+                    if (effect is BackHandleEffect) {
+                        backHandleCallback = effect.cb
+                    }
+                }.launchIn(this)
+        }
     }
+
+    override fun onBackPressed() {
+        backHandleCallback?.let { cb ->
+            if (cb()) {
+                return
+            } else {
+                return@let
+            }
+        }
+        super.onBackPressed()
+    }
+
 }
 
 @Preview

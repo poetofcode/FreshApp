@@ -37,6 +37,8 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
                     is NavigateEffect -> {
                         navState.push(effect.screen)
                     }
+
+                    else -> Unit
                 }
             }
         }
