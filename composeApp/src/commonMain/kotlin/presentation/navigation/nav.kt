@@ -1,13 +1,10 @@
 package presentation.navigation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import presentation.LocalMainAppState
 import presentation.base.ViewModel
 import presentation.base.ViewModelStore
@@ -16,7 +13,7 @@ import presentation.base.ViewModelStore
 typealias AnyScreen = BaseScreen<*>
 
 interface Screen<T : ViewModel> {
-    val id: String
+    val screenId: String
 
     val viewModel: T
 
@@ -27,6 +24,9 @@ interface Screen<T : ViewModel> {
 abstract class BaseScreen<T : ViewModel> : Screen<T> {
 
     protected lateinit var viewModelStore: ViewModelStore
+
+    override val screenId: String
+        get() = this::class.java.typeName
 
     protected open val isMenuVisible: Boolean = false
 
@@ -73,15 +73,18 @@ class NavStateImpl(val viewModelStore: ViewModelStore) : NavState {
         if (_screens.value.size <= 1) {
             return
         }
+        _screens.value.lastOrNull()?.let { topScreen ->
+            viewModelStore.removeViewModel(topScreen.viewModel)
+        }
         _screens.value = _screens.value.subList(0, _screens.value.size - 1)
     }
 
     override fun moveToFront(screenId: String) {
         var currScreens = _screens.value.toMutableList()
         currScreens.firstOrNull {
-            it.id == screenId
+            it.screenId == screenId
         }?.let { found ->
-            currScreens = currScreens.filterNot { it.id == screenId }.toMutableList()
+            currScreens = currScreens.filterNot { it.screenId == screenId }.toMutableList()
             currScreens.add(found)
             _screens.value = currScreens
         }
@@ -97,13 +100,6 @@ fun Navigator(
 ) {
     Box(modifier) {
         val screens = state.screens.value
-//        screens.forEach { screen ->
-//            Box(Modifier.fillMaxSize().background(Color.White))
-//            Box(modifier = if (screen == screens.last()) Modifier.fillMaxSize() else Modifier.size(0.dp, 0.dp)) {
-//                screen.Content()
-//            }
-//        }
-
         screens.lastOrNull()?.PrepareContent()
     }
 }

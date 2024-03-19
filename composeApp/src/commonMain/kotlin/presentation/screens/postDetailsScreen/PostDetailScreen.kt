@@ -1,7 +1,6 @@
 package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,8 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.multiplatform.webview.util.KLogSeverity
 import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
@@ -22,17 +19,16 @@ import com.multiplatform.webview.web.rememberWebViewState
 import presentation.navigation.BaseScreen
 import presentation.navigation.NavigateBackEffect
 import presentation.navigation.SharedMemory
-import java.awt.Image
 
 class PostDetailsScreen(
     val postUrl: String
 ) : BaseScreen<PostDetailsViewModel>() {
 
-    override val id: String
+    override val screenId: String
         get() = "PostDetailsScreen"
 
     override val viewModel: PostDetailsViewModel
-        get() = viewModelStore.getViewModel<PostDetailsViewModel>(id)
+        get() = viewModelStore.getViewModel<PostDetailsViewModel>()
 
 
     @Composable

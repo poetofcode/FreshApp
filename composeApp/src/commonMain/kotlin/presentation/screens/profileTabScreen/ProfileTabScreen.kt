@@ -12,11 +12,11 @@ import presentation.navigation.BaseScreen
 
 
 class ProfileTabScreen : BaseScreen<ProfileTabViewModel>() {
-    override val id: String
+    override val screenId: String
         get() = Tabs.PROFILE.key
     
     override val viewModel: ProfileTabViewModel
-        get() = viewModelStore.getViewModel<ProfileTabViewModel>(id) 
+        get() = viewModelStore.getViewModel<ProfileTabViewModel>() 
 
     override val isMenuVisible: Boolean = true
 

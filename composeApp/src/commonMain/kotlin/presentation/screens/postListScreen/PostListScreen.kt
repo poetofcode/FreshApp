@@ -4,13 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,26 +26,18 @@ import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
 import specific.AsyncImage
 
-class PostListScreen() : BaseScreen<PostListViewModel>() {
-
-    override val id: String
-        get() = "PostListScreen"
+class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override val viewModel: PostListViewModel
-        get() = viewModelStore.getViewModel<PostListViewModel>(id)
+        get() = viewModelStore.getViewModel<PostListViewModel>(screenId)
 
     override val isMenuVisible: Boolean = true
 
-//    private val navState = NavStateImpl().apply {
-//        // push(PostListScreen())
-//    }
+    private val listState = LazyListState()
+
 
     @Composable
     override fun Content() = with(viewModel.state.value) {
-        LaunchedEffect(Unit) {
-            viewModel.fetchFeed()
-        }
-
         MaterialTheme {
             Column {
                 TopAppBar(
@@ -99,6 +91,7 @@ class PostListScreen() : BaseScreen<PostListViewModel>() {
     private fun Posts(posts: List<PostModel>) {
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             LazyColumn(
+                state = listState,
                 modifier = Modifier.padding(),
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {

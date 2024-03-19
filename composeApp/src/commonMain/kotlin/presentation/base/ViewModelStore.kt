@@ -1,32 +1,38 @@
 package presentation.base
 
 import kotlinx.coroutines.CoroutineScope
+import presentation.viewModelCoroutineScopeProvider
 
 class ViewModelStore(
     val coroutineScope: CoroutineScope,
     val vmFactories: List<ViewModelFactory<*>>
 ) {
+
+    init {
+        viewModelCoroutineScopeProvider.scope = coroutineScope
+    }
     
     val viewModels: MutableMap<String, ViewModel> = mutableMapOf()
 
-    inline fun <reified T: ViewModel> getViewModel(key: String) : T {
+    inline fun <reified T: ViewModel> getViewModel(_key: String = String()) : T {
+        val key = _key.takeIf { it.isNotBlank() } ?: T::class.java.typeName
+
         if (viewModels.containsKey(key)) {
             return viewModels[key] as? T ?: throw Exception("ViewModelFactory unknown exception")
         }
 
         var createdVm: T? = null
-        vmFactories.first { factory ->
+        vmFactories.firstOrNull { factory ->
             factory.vmTypeName == T::class.java.typeName
         }?.let { found ->
             createdVm = found.createViewModel() as T
-            (createdVm as? BaseViewModel)?.setCoroutineScope(coroutineScope)
             viewModels[key] = createdVm as T
         }
         return createdVm ?: throw Exception("ViewModelFactory not found")
     }
     
     fun removeViewModel(viewModel: ViewModel) {
-        // TODO
+        viewModels.values.removeIf { it == viewModel }
     }
     
 }

@@ -6,19 +6,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import presentation.LocalMainAppState
-import presentation.MainAppState
 import presentation.Tabs
 import presentation.base.BaseViewModel
+import presentation.base.EmptyViewModel
 import presentation.navigation.BaseScreen
 
 
-class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
-    override val id: String
+class BookmarkTabScreen : BaseScreen<EmptyViewModel>() {
+    override val screenId: String
         get() = Tabs.BOOKMARK.key
 
-    override val viewModel: BookmarkTabViewModel
-        get() = viewModelStore.getViewModel<BookmarkTabViewModel>(id) 
+    override val viewModel: EmptyViewModel
+        get() = EmptyViewModel.INSTANCE
 
     override val isMenuVisible: Boolean = true
     
@@ -28,10 +27,5 @@ class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
             Text(text = "TODO: Избранное")
         }
     }
-
-}
-
-
-class BookmarkTabViewModel : BaseViewModel() {
 
 }

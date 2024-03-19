@@ -4,4 +4,9 @@ import presentation.base.BaseViewModel
 
 class PostDetailsViewModel : BaseViewModel() {
 
+    init {
+    }
+
+    fun doNothing() {}
+
 }

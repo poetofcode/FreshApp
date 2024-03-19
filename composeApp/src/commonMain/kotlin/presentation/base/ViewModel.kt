@@ -1,6 +1,7 @@
 package presentation.base
 
 import kotlinx.coroutines.CoroutineScope
+import presentation.viewModelCoroutineScopeProvider
 
 interface ViewModel {
 
@@ -9,10 +10,14 @@ interface ViewModel {
 
 abstract class BaseViewModel : ViewModel {
 
-    protected lateinit var viewModelScope: CoroutineScope
-
-    fun setCoroutineScope(scope: CoroutineScope) {
-        viewModelScope = scope
+    protected val viewModelScope: CoroutineScope by lazy {
+        viewModelCoroutineScopeProvider.scope
     }
 
+}
+
+class EmptyViewModel : BaseViewModel() {
+    companion object {
+        val INSTANCE = EmptyViewModel()
+    }
 }

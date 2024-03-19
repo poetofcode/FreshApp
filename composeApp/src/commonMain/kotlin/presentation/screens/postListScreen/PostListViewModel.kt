@@ -14,9 +14,13 @@ class PostListViewModel(
     data class State(
         val posts: List<PostModel> = emptyList(),
         val readyState: Resource<Unit> = IdleResource,
-        )
+    )
 
     val state = mutableStateOf(State())
+
+    init {
+        fetchFeed()
+    }
 
     fun fetchFeed() {
         viewModelScope.launch {

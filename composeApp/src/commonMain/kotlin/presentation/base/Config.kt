@@ -10,7 +10,7 @@ data class Config(
 
     val repositoryFactory: RepositoryFactory,
 
-    ) {
+) {
 
     enum class DeviceTypes(val isMobile: Boolean) {
         ANDROID(true),
