@@ -36,9 +36,10 @@ class PostDetailsScreen(
 
         fun onBackClick() : Boolean {
             if (navigator.canGoBack) {
-                return false
+                navigator.navigateBack()
+            } else {
+                viewModel.onBackClick()
             }
-            viewModel.onBackClick()
             return true
         }
 
