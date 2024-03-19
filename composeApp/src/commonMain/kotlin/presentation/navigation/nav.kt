@@ -1,13 +1,13 @@
 package presentation.navigation
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
 import presentation.LocalMainAppState
 import presentation.base.ViewModel
 import presentation.base.ViewModelStore
+import specific.BackHandler
 
 
 typealias AnyScreen = BaseScreen<*>
@@ -42,9 +42,14 @@ abstract class BaseScreen<T : ViewModel> : Screen<T> {
 
     @Composable
     fun PrepareContent() {
+        val scope = rememberCoroutineScope()
+        scope.launch {
+            SharedMemory.effectFlow.emit(SetBackHandlerEffect { false })
+        }
         setMainMenuVisibility()
         Content()
     }
+
 
 }
 
