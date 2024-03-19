@@ -16,16 +16,15 @@ import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
+import presentation.navigation.SetBackHandlerEffect
 import presentation.navigation.BaseScreen
 import presentation.navigation.NavigateBackEffect
 import presentation.navigation.SharedMemory
+import specific.BackHandler
 
 class PostDetailsScreen(
     val postUrl: String
 ) : BaseScreen<PostDetailsViewModel>() {
-
-    override val screenId: String
-        get() = "PostDetailsScreen"
 
     override val viewModel: PostDetailsViewModel
         get() = viewModelStore.getViewModel<PostDetailsViewModel>()
@@ -33,6 +32,11 @@ class PostDetailsScreen(
 
     @Composable
     override fun Content() {
+        BackHandler {
+            viewModel.onBackClick()
+            true
+        }
+
         val initialUrl = postUrl
         val state = rememberWebViewState(url = initialUrl)
         DisposableEffect(Unit) {

@@ -1,6 +1,9 @@
 package presentation.screens.postDetailsScreen
 
+import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
+import presentation.navigation.NavigateBackEffect
+import presentation.navigation.SharedMemory
 
 class PostDetailsViewModel : BaseViewModel() {
 
@@ -8,5 +11,10 @@ class PostDetailsViewModel : BaseViewModel() {
     }
 
     fun doNothing() {}
+
+    fun onBackClick() = viewModelScope.launch {
+        SharedMemory.effectFlow.emit(NavigateBackEffect)
+    }
+
 
 }

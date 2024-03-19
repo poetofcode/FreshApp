@@ -8,7 +8,7 @@ data class NavigateEffect(val screen: BaseScreen<*>) : Effect
 
 data object NavigateBackEffect : Effect
 
-data class BackHandleEffect(
+data class SetBackHandlerEffect(
     val cb: () -> Boolean
 ) : Effect
 

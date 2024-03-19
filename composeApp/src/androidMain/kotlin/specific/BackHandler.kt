@@ -3,7 +3,7 @@ package specific
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
-import presentation.navigation.BackHandleEffect
+import presentation.navigation.SetBackHandlerEffect
 import presentation.navigation.SharedMemory
 
 
@@ -13,6 +13,6 @@ actual fun BackHandler(
 ) {
     val scope = rememberCoroutineScope()
     scope.launch {
-        SharedMemory.effectFlow.emit(BackHandleEffect(cb))
+        SharedMemory.effectFlow.emit(SetBackHandlerEffect(cb))
     }
 }

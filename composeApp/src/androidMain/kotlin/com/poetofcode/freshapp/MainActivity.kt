@@ -16,7 +16,7 @@ import presentation.App
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.*
-import presentation.navigation.BackHandleEffect
+import presentation.navigation.SetBackHandlerEffect
 import presentation.navigation.SharedMemory
 
 
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             SharedMemory.effectFlow
                 .onEach { effect ->
-                    if (effect is BackHandleEffect) {
+                    if (effect is SetBackHandlerEffect) {
                         backHandleCallback = effect.cb
                     }
                 }.launchIn(this)
