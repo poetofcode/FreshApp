@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 actual fun BackHandler(
-    cb: @Composable () -> Boolean,
+    cb: () -> Boolean,
 ) {
     // Do nothing
 }
