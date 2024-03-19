@@ -32,10 +32,17 @@ class PostDetailsScreen(
 
     @Composable
     override fun Content() {
-        BackHandler {
+        val navigator = rememberWebViewNavigator()
+
+        fun onBackClick() : Boolean {
+            if (navigator.canGoBack) {
+                return false
+            }
             viewModel.onBackClick()
-            true
+            return true
         }
+
+        BackHandler { onBackClick() }
 
         val initialUrl = postUrl
         val state = rememberWebViewState(url = initialUrl)
@@ -60,7 +67,7 @@ class PostDetailsScreen(
             }
             onDispose { }
         }
-        val navigator = rememberWebViewNavigator()
+
         var textFieldValue by remember(state.lastLoadedUrl) {
             mutableStateOf(state.lastLoadedUrl)
         }
@@ -69,13 +76,7 @@ class PostDetailsScreen(
                 TopAppBar(
                     title = { Text(text = state.pageTitle ?: state.lastLoadedUrl ?: "Загрузка..") },
                     navigationIcon = {
-                        IconButton(onClick = {
-                            if (!navigator.canGoBack) {
-                                SharedMemory.effectFlow.tryEmit(NavigateBackEffect)
-                            } else {
-                                navigator.navigateBack()
-                            }
-                        }) {
+                        IconButton(onClick = { onBackClick() }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "Back",
