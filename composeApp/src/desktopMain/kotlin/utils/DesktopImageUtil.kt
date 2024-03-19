@@ -76,7 +76,7 @@ internal class DesktopImageUtil {
 }
 
 internal suspend fun loadNetworkImage(link: String): ImageBitmap = withContext(Dispatchers.IO) {
-    val url = URL(link)
+    val url = URL(link.replace("/webp", "/png"))        // Fix for DTF (webp -> png format)
     val connection = url.openConnection() as HttpURLConnection
     connection.connect()
 
