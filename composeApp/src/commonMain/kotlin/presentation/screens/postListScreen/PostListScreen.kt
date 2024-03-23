@@ -10,18 +10,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
-import jdk.jfr.ContentType
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
@@ -100,7 +94,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         ) {
             LazyColumn(
                 state = listState,
-                modifier = Modifier.fillMaxHeight().padding().weight(1f).nestedScroll(nestedScrollConnection),
+                modifier = Modifier.fillMaxHeight().padding().weight(1f),
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(posts) { post ->
@@ -108,8 +102,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 }
             }
             VerticalScrollbar(
-                modifier = Modifier.width(20.dp)//.align(Alignment.CenterEnd)
-                    .fillMaxHeight(),
+                modifier = Modifier.width(20.dp).fillMaxHeight(),
                 adapter = rememberScrollbarAdapter(listState)
             )
         }
