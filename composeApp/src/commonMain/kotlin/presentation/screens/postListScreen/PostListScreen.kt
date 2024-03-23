@@ -1,7 +1,6 @@
 package presentation.screens.postListScreen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -57,9 +56,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     }
                 )
 
-                Box(
-                    modifier = Modifier.fillMaxWidth().weight(1f)
-                ) {
+                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
                         is CompleteResource -> Posts(posts)
 
@@ -87,18 +84,27 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun Posts(posts: List<PostModel>) {
-        Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
             LazyColumn(
                 state = listState,
-                modifier = Modifier.padding(),
+                modifier = Modifier.fillMaxHeight().padding().weight(1f),
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(posts) { post ->
                     Post(post = post)
                 }
             }
+            VerticalScrollbar(
+                modifier = Modifier.width(20.dp).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(listState)
+            )
         }
     }
 
