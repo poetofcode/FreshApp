@@ -1,5 +1,7 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -27,23 +29,30 @@ internal class DesktopImageUtil {
         val scope = rememberCoroutineScope()
         val imageBitmapState = remember { mutableStateOf<Resource<ImageBitmap>>(IdleResource) }
 
-        when (val bitmap = imageBitmapState.value) {
-            is CompleteResource -> {
-                Image(
-                    bitmap = bitmap.result,
-                    ""
-                )
-            }
-
-            IdleResource, LoadingResource -> {
-                Box(Modifier.padding(20.dp)) {
-                    Text(text = "Загрузка", color = Color.Blue)
+        Box(modifier = Modifier.height(250.dp)) {
+            when (val bitmap = imageBitmapState.value) {
+                is CompleteResource -> {
+                    //Box(modifier = Modifier.height(bitmap.result.height.dp)) {
+                        Image(
+                            bitmap = bitmap.result,
+                            "",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    //}
                 }
-            }
 
-            is ExceptionResource -> {
-                Box(Modifier.padding(20.dp)) {
-                    Text(text = "Ошибка", color = Color.Red)
+                IdleResource, LoadingResource -> {
+                    //Box(modifier = Modifier.height(bitmap.result.height.dp)) {
+                        Box(Modifier.padding(20.dp).fillMaxSize()) {
+                            Text(text = "Загрузка", color = Color.Blue)
+                        }
+                    //}
+                }
+
+                is ExceptionResource -> {
+                    Box(Modifier.padding(20.dp).fillMaxSize()) {
+                        Text(text = "Ошибка", color = Color.Red)
+                    }
                 }
             }
         }
