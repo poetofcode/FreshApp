@@ -1,7 +1,6 @@
 package presentation.screens.postListScreen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -11,12 +10,18 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
+import jdk.jfr.ContentType
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
@@ -57,9 +62,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     }
                 )
 
-                Box(
-                    modifier = Modifier.fillMaxWidth().weight(1f)
-                ) {
+                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
                         is CompleteResource -> Posts(posts)
 
@@ -87,18 +90,28 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun Posts(posts: List<PostModel>) {
-        Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
             LazyColumn(
                 state = listState,
-                modifier = Modifier.padding(),
+                modifier = Modifier.fillMaxHeight().padding().weight(1f).nestedScroll(nestedScrollConnection),
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(posts) { post ->
                     Post(post = post)
                 }
             }
+            VerticalScrollbar(
+                modifier = Modifier.width(20.dp)//.align(Alignment.CenterEnd)
+                    .fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(listState)
+            )
         }
     }
 
