@@ -1,7 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -25,28 +24,24 @@ internal class DesktopImageUtil {
     private val cache = mutableMapOf<String, Resource<ImageBitmap>>()
 
     @Composable
-    fun AsyncImage(url: String) {
+    fun AsyncImage(url: String, modifier: Modifier) {
         val scope = rememberCoroutineScope()
         val imageBitmapState = remember { mutableStateOf<Resource<ImageBitmap>>(IdleResource) }
 
-        Box(modifier = Modifier.height(250.dp)) {
+        Box(modifier = modifier) {
             when (val bitmap = imageBitmapState.value) {
                 is CompleteResource -> {
-                    //Box(modifier = Modifier.height(bitmap.result.height.dp)) {
                         Image(
                             bitmap = bitmap.result,
                             "",
                             modifier = Modifier.fillMaxSize()
                         )
-                    //}
                 }
 
                 IdleResource, LoadingResource -> {
-                    //Box(modifier = Modifier.height(bitmap.result.height.dp)) {
                         Box(Modifier.padding(20.dp).fillMaxSize()) {
                             Text(text = "Загрузка", color = Color.Blue)
                         }
-                    //}
                 }
 
                 is ExceptionResource -> {
