@@ -24,6 +24,9 @@ import presentation.navigation.NavigateEffect
 import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
 import specific.AsyncImage
+import specific.ScrollBar
+import specific.ScrollBarOrientation
+import specific.ScrollableComponentState
 
 class PostListScreen : BaseScreen<PostListViewModel>() {
 
@@ -101,9 +104,11 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     Post(post = post)
                 }
             }
-            VerticalScrollbar(
-                modifier = Modifier.width(20.dp).fillMaxHeight(),
-                adapter = rememberScrollbarAdapter(listState)
+
+            ScrollBar(
+                modifier =  Modifier.width(20.dp).fillMaxHeight(),
+                orientation = ScrollBarOrientation.VERTICAL,
+                state = ScrollableComponentState.LazyListComponentState(listState)
             )
         }
     }
