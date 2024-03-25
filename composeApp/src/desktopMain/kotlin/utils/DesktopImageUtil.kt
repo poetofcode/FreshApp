@@ -1,5 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -23,27 +24,30 @@ internal class DesktopImageUtil {
     private val cache = mutableMapOf<String, Resource<ImageBitmap>>()
 
     @Composable
-    fun AsyncImage(url: String) {
+    fun AsyncImage(url: String, modifier: Modifier) {
         val scope = rememberCoroutineScope()
         val imageBitmapState = remember { mutableStateOf<Resource<ImageBitmap>>(IdleResource) }
 
-        when (val bitmap = imageBitmapState.value) {
-            is CompleteResource -> {
-                Image(
-                    bitmap = bitmap.result,
-                    ""
-                )
-            }
-
-            IdleResource, LoadingResource -> {
-                Box(Modifier.padding(20.dp)) {
-                    Text(text = "Загрузка", color = Color.Blue)
+        Box(modifier = modifier) {
+            when (val bitmap = imageBitmapState.value) {
+                is CompleteResource -> {
+                        Image(
+                            bitmap = bitmap.result,
+                            "",
+                            modifier = Modifier.fillMaxSize()
+                        )
                 }
-            }
 
-            is ExceptionResource -> {
-                Box(Modifier.padding(20.dp)) {
-                    Text(text = "Ошибка", color = Color.Red)
+                IdleResource, LoadingResource -> {
+                        Box(Modifier.padding(20.dp).fillMaxSize()) {
+                            Text(text = "Загрузка", color = Color.Blue)
+                        }
+                }
+
+                is ExceptionResource -> {
+                    Box(Modifier.padding(20.dp).fillMaxSize()) {
+                        Text(text = "Ошибка", color = Color.Red)
+                    }
                 }
             }
         }

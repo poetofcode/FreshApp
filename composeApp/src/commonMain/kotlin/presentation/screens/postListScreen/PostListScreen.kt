@@ -137,7 +137,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         ) {
             post.image?.let { imageUrl ->
                 AsyncImage(
-                    modifier = Modifier,
+                    modifier = Modifier.height(250.dp),
                     url = imageUrl,
                     loadingView = {},
                     errorView = {}

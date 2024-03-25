@@ -13,5 +13,5 @@ actual fun AsyncImage(
     loadingView: @Composable () -> Unit,
     errorView: @Composable () -> Unit,
 ) {
-    imageUtil.AsyncImage(url)
+    imageUtil.AsyncImage(url, modifier)
 }
