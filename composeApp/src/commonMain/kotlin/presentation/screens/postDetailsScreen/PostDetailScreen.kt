@@ -51,7 +51,13 @@ class PostDetailsScreen(
             state.webSettings.apply {
                 isJavaScriptEnabled = true
                 zoomLevel = 1.2
+
+                // Mobile
+                customUserAgentString = "Mozilla/5.0 (Linux; Android 14; SM-N960U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.80 Mobile Safari/537.36"
+
+                // PC
                 // customUserAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1) AppleWebKit/625.20 (KHTML, like Gecko) Version/14.3.43 Safari/625.20"
+                
                 backgroundColor = Color.White
 
                 androidWebSettings.apply {
