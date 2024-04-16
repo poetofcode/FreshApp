@@ -2,20 +2,45 @@ package presentation.screens.postListScreen
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
+import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
@@ -28,6 +53,7 @@ import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
 
+@OptIn(ExperimentalResourceApi::class)
 class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override val viewModel: PostListViewModel
@@ -135,14 +161,31 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 )
                 .padding(8.dp)
         ) {
-            post.image?.let { imageUrl ->
-                AsyncImage(
-                    modifier = Modifier.height(250.dp),
-                    url = imageUrl,
-                    loadingView = {},
-                    errorView = {}
-                )
+            Box(modifier = Modifier.fillMaxSize(),
+                contentAlignment = Center) {
+
+                Box {
+                    post.image?.let { imageUrl ->
+                        AsyncImage(
+                            modifier = Modifier.height(250.dp),
+                            url = imageUrl,
+                            loadingView = {},
+                            errorView = {}
+                        )
+                    }
+                }
+
+                Box(modifier = Modifier.align(alignment = TopEnd),
+                    contentAlignment = TopEnd ) {
+                    val icon = Res.drawable.ic_cell_fav_disabled
+                    Image(
+                        painter = painterResource(icon),
+                        contentDescription = null
+                    )
+                }
+
             }
+
             Spacer(modifier = Modifier.size(8.dp))
             Text(text = post.title.orEmpty(), fontSize = 16.sp)
         }
