@@ -113,7 +113,6 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun Posts(posts: List<PostModel>) {
         Row(
@@ -161,28 +160,26 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 )
                 .padding(8.dp)
         ) {
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Center) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Center
+            ) {
 
-                Box {
-                    post.image?.let { imageUrl ->
-                        AsyncImage(
-                            modifier = Modifier.height(250.dp),
-                            url = imageUrl,
-                            loadingView = {},
-                            errorView = {}
-                        )
-                    }
-                }
-
-                Box(modifier = Modifier.align(alignment = TopEnd),
-                    contentAlignment = TopEnd ) {
-                    val icon = Res.drawable.ic_cell_fav_disabled
-                    Image(
-                        painter = painterResource(icon),
-                        contentDescription = null
+                post.image?.let { imageUrl ->
+                    AsyncImage(
+                        modifier = Modifier.height(250.dp),
+                        url = imageUrl,
+                        loadingView = {},
+                        errorView = {}
                     )
                 }
+
+                val icon = Res.drawable.ic_cell_fav_disabled
+                Image(
+                    modifier = Modifier.align(alignment = TopEnd),
+                    painter = painterResource(icon),
+                    contentDescription = null
+                )
 
             }
 
