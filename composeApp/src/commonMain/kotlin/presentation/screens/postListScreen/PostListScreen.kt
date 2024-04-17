@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import domain.model.PostModel
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
+import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.model.CompleteResource
@@ -174,10 +176,15 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     )
                 }
 
-                val icon = Res.drawable.ic_cell_fav_disabled
+                val favIcon = if (post.isFavorite) {
+                    Res.drawable.ic_cell_fav_enabled
+                } else {
+                    Res.drawable.ic_cell_fav_disabled
+                }
+
                 Image(
                     modifier = Modifier.align(alignment = TopEnd),
-                    painter = painterResource(icon),
+                    painter = painterResource(favIcon),
                     contentDescription = null
                 )
 

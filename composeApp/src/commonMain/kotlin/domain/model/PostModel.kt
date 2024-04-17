@@ -4,5 +4,6 @@ data class PostModel(
     var title: String,
     var image: String?,
     var link: String,
-    var commentsCount: String
+    var commentsCount: String,
+    var isFavorite: Boolean = true
 )
