@@ -1,7 +1,5 @@
 package presentation.screens.postListScreen
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +29,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.TopEnd
@@ -40,7 +42,6 @@ import domain.model.PostModel
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.model.CompleteResource
@@ -176,14 +177,19 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     )
                 }
 
-                val favIcon = if (post.isFavorite) {
+                val isFavState = remember{mutableStateOf(post.isFavorite)}
+                val favIcon = if (isFavState.value) {
                     Res.drawable.ic_cell_fav_enabled
                 } else {
                     Res.drawable.ic_cell_fav_disabled
                 }
 
                 Image(
-                    modifier = Modifier.align(alignment = TopEnd),
+                    modifier = Modifier.align(alignment = TopEnd)
+                        .clickable {
+                            post.isFavorite = !post.isFavorite
+                            isFavState.value = post.isFavorite
+                        },
                     painter = painterResource(favIcon),
                     contentDescription = null
                 )
