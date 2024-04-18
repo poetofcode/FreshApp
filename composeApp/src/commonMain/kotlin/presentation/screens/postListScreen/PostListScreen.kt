@@ -29,8 +29,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.TopEnd
@@ -55,9 +53,6 @@ import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalResourceApi::class)
 class PostListScreen : BaseScreen<PostListViewModel>() {
@@ -172,7 +167,6 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Center
             ) {
-
                 post.image?.let { imageUrl ->
                     AsyncImage(
                         modifier = Modifier.height(250.dp),
@@ -182,36 +176,20 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     )
                 }
 
-                //val isFavState = remember{mutableStateOf(post.isFavorite)}
-                //val favIcon = if (isFavState.value) {
                 val favIcon = if (post.isFavorite) {
                     Res.drawable.ic_cell_fav_enabled
                 } else {
                     Res.drawable.ic_cell_fav_disabled
                 }
 
-                //val that = this
-                //val scope = rememberCoroutineScope()
-
                 Image(
                     modifier = Modifier.align(alignment = TopEnd)
                         .clickable {
-                            post.isFavorite = !post.isFavorite
-                            //isFavState.value = post.isFavorite
-                            viewModel.updatePostFavorite(post)
-
-//                                scope.SideEffect {
-//                                    viewModel.updatePostFavorite(post)
-//                                }
-//                                scope.launch {
-//                                    viewModel.updatePostFavorite(post)
-//                                }
-
+                            viewModel.updatePostFavorite(post.link, !post.isFavorite)
                         },
                     painter = painterResource(favIcon),
                     contentDescription = null
                 )
-
             }
 
             Spacer(modifier = Modifier.size(8.dp))

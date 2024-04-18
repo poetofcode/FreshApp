@@ -1,12 +1,15 @@
 package presentation.screens.postListScreen
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import data.repository.FeedRepository
 import domain.model.PostModel
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
-import presentation.model.*
+import presentation.model.CompleteResource
+import presentation.model.ExceptionResource
+import presentation.model.IdleResource
+import presentation.model.LoadingResource
+import presentation.model.Resource
 
 class PostListViewModel(
     val feedRepository: FeedRepository
@@ -38,9 +41,12 @@ class PostListViewModel(
         }
     }
 
-    fun updatePostFavorite(post: PostModel) {
+    fun updatePostFavorite(link: String, isFavorite: Boolean) {
         val posts = state.value.posts.map {
-            if (it.link == post.link) post else it
+            if (it.link == link) {
+                it.copy(isFavorite = isFavorite)
+            }
+            else it
         }
 
         state.value = state.value.copy(posts = posts)
