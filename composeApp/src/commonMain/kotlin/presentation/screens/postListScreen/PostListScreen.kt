@@ -55,6 +55,9 @@ import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalResourceApi::class)
 class PostListScreen : BaseScreen<PostListViewModel>() {
@@ -69,6 +72,8 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     override fun Content() = with(viewModel.state.value) {
+
+
         MaterialTheme {
             Column {
                 TopAppBar(
@@ -177,18 +182,31 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     )
                 }
 
-                val isFavState = remember{mutableStateOf(post.isFavorite)}
-                val favIcon = if (isFavState.value) {
+                //val isFavState = remember{mutableStateOf(post.isFavorite)}
+                //val favIcon = if (isFavState.value) {
+                val favIcon = if (post.isFavorite) {
                     Res.drawable.ic_cell_fav_enabled
                 } else {
                     Res.drawable.ic_cell_fav_disabled
                 }
 
+                //val that = this
+                //val scope = rememberCoroutineScope()
+
                 Image(
                     modifier = Modifier.align(alignment = TopEnd)
                         .clickable {
                             post.isFavorite = !post.isFavorite
-                            isFavState.value = post.isFavorite
+                            //isFavState.value = post.isFavorite
+                            viewModel.updatePostFavorite(post)
+
+//                                scope.SideEffect {
+//                                    viewModel.updatePostFavorite(post)
+//                                }
+//                                scope.launch {
+//                                    viewModel.updatePostFavorite(post)
+//                                }
+
                         },
                     painter = painterResource(favIcon),
                     contentDescription = null

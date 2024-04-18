@@ -1,6 +1,7 @@
 package presentation.screens.postListScreen
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import data.repository.FeedRepository
 import domain.model.PostModel
 import kotlinx.coroutines.launch
@@ -35,6 +36,14 @@ class PostListViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun updatePostFavorite(post: PostModel) {
+        val posts = state.value.posts.map {
+            if (it.link == post.link) post else it
+        }
+
+        state.value = state.value.copy(posts = posts)
     }
 
 }
