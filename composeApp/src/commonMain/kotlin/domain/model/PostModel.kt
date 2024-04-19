@@ -6,4 +6,9 @@ data class PostModel(
     var link: String,
     var commentsCount: String,
     var isFavorite: Boolean = false
-)
+) {
+
+    val id: String
+        get() = link
+
+}

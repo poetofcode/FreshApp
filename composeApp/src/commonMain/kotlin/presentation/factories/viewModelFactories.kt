@@ -1,8 +1,10 @@
 package presentation.factories
 
+import data.repository.BookmarkRepository
 import data.repository.FeedRepository
 import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
+import presentation.screens.bookmarkTabScreen.BookmarkTabViewModel
 import presentation.screens.homeTabScreen.HomeTabViewModel
 import presentation.screens.postDetailsScreen.PostDetailsViewModel
 import presentation.screens.postListScreen.PostListViewModel
@@ -17,9 +19,11 @@ class HomeTabViewModelFactory() : ViewModelFactory<HomeTabViewModel> {
 
 }
 
-class PostListViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<PostListViewModel> {
+class PostListViewModelFactory(val feedRepository: FeedRepository,
+                               val bookmarRepository: BookmarkRepository)
+    : ViewModelFactory<PostListViewModel> {
     override fun createViewModel(): PostListViewModel {
-        return PostListViewModel(feedRepository = feedRepository)
+        return PostListViewModel(feedRepository = feedRepository, bookmarkRepository = bookmarRepository)
     }
 
     override val vmTypeName: String
@@ -37,11 +41,26 @@ class PostDetailsViewModelFactory() : ViewModelFactory<PostDetailsViewModel> {
 
 }
 
+class BookmarkTabViewModelFactory(val bookmarkRepository: BookmarkRepository)
+    : ViewModelFactory<BookmarkTabViewModel> {
+    override fun createViewModel(): BookmarkTabViewModel {
+        return BookmarkTabViewModel(bookmarkRepository = bookmarkRepository)
+    }
+
+    override val vmTypeName: String
+        get() = BookmarkTabViewModel::class.java.typeName
+
+}
 
 fun viewModelFactories(
     repositoryFactory: RepositoryFactory
-) = listOf<ViewModelFactory<*>>(
-    HomeTabViewModelFactory(),
-    PostListViewModelFactory(repositoryFactory.createFeedRepository()),
-    PostDetailsViewModelFactory(),
-)
+): List<ViewModelFactory<*>> {
+    val bookmarkRepository = repositoryFactory.createBookmarkRepository()
+    return listOf<ViewModelFactory<*>>(
+        HomeTabViewModelFactory(),
+        PostListViewModelFactory(repositoryFactory.createFeedRepository(),
+            bookmarkRepository),
+        PostDetailsViewModelFactory(),
+        BookmarkTabViewModelFactory(bookmarkRepository)
+    )
+}
