@@ -26,7 +26,7 @@ class BookmarkTabViewModel(val bookmarkRepository: BookmarkRepository)
     }
 
     fun fetchBookmarks() {
-        val posts = bookmarkRepository.getAll().toList()
+        val posts = bookmarkRepository.getAll()
         state.value = state.value.copy(posts = posts)
     }
 
