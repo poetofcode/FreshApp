@@ -48,6 +48,7 @@ class BookmarkTabViewModel(val bookmarkRepository: BookmarkRepository)
         }
 
         state.value = state.value.copy(posts = posts);
+        bookmarkRepository.remove(id)
 
         println("2 >>>>>>>>>")
         for(post in state.value.posts) {
