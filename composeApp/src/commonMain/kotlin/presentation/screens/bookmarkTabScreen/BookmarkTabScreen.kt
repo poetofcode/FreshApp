@@ -28,6 +28,7 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -93,18 +94,18 @@ class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
                 TopAppBar(
                     title = { Text(text = "Лента") },
                     navigationIcon = {},
-                    actions = {
-                        if (readyState !is LoadingResource) {
-                            IconButton(onClick = {
-                                viewModel.fetchBookmarks()
-                            }) {
-                                Icon(
-                                    imageVector = androidx.compose.material.icons.Icons.Default.Refresh,
-                                    contentDescription = "Reload",
-                                )
-                            }
-                        }
-                    }
+//                    actions = {
+//                        if (readyState !is LoadingResource) {
+//                            IconButton(onClick = {
+//                                viewModel.fetchBookmarks()
+//                            }) {
+//                                Icon(
+//                                    imageVector = androidx.compose.material.icons.Icons.Default.Refresh,
+//                                    contentDescription = "Reload",
+//                                )
+//                            }
+//                        }
+//                    }
                 )
 
                 Box(modifier = androidx.compose.ui.Modifier.fillMaxWidth().weight(1f)) {
@@ -206,6 +207,17 @@ class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
                         errorView = {}
                     )
                 }
+
+                TextButton(onClick = {
+                    //>>>>>>>>>>>>>>>>>
+                    println(">>>>>>>>>>>>>>>>>>>>>>>>>>")
+                    viewModel.removeBookmark(post.id)
+                },
+                    modifier = Modifier.align(alignment = Alignment.TopEnd)) {
+                    Text(text = "Удалить", color = Color.Red)
+                }
+
+
 
 //                val favIcon = Res.drawable.ic_cell_fav_enabled
 //

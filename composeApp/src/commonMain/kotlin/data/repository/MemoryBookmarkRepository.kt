@@ -16,6 +16,6 @@ class MemoryBookmarkRepository : BookmarkRepository {
         }
     }
 
-    override fun getAll(): Array<PostModel> = posts.toTypedArray()
+    override fun getAll(): List<PostModel> = posts
 
 }

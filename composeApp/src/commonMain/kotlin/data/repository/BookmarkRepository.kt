@@ -6,5 +6,5 @@ interface BookmarkRepository {
     fun add(post: PostModel)
     fun remove(id: String)
 
-    fun getAll(): Array<PostModel>
+    fun getAll(): List<PostModel>
 }

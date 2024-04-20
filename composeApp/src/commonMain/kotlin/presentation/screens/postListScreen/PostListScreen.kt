@@ -147,6 +147,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         Column(
             modifier = Modifier
                 .clickable {
+                    //>>>>>>>>
                     SharedMemory.effectFlow.tryEmit(
                         NavigateEffect(
                             PostDetailsScreen(
