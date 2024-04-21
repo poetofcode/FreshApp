@@ -1,6 +1,5 @@
 package presentation.screens.bookmarkTabScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,55 +19,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.multiplatform.webview.web.LoadingState
-import com.multiplatform.webview.web.WebView
-import com.multiplatform.webview.web.rememberWebViewNavigator
-import com.multiplatform.webview.web.rememberWebViewState
 import domain.model.PostModel
-import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
-import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
-import org.jetbrains.compose.resources.painterResource
 import presentation.Tabs
-import presentation.base.BaseViewModel
-import presentation.base.EmptyViewModel
-import presentation.model.CompleteResource
-import presentation.model.ExceptionResource
-import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
 import presentation.navigation.NavigateEffect
 import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
 import specific.AsyncImage
-import specific.BackHandler
 import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
@@ -89,6 +57,13 @@ class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
         LaunchedEffect(key1 = null) {
             viewModel.fetchBookmarks()
         }
+
+//        val coroutineScope = rememberCoroutineScope()
+//        LaunchedEffect(key1 = Unit) {
+//            coroutineScope.launch() {
+//                viewModel.fetchBookmarks()
+//            }
+//        }
 
         MaterialTheme {
             Column {
@@ -210,8 +185,6 @@ class BookmarkTabScreen : BaseScreen<BookmarkTabViewModel>() {
                 }
 
                 TextButton(onClick = {
-                    //>>>>>>>>>>>>>>>>>
-                    println(">>>>>>>>>>>>>>>>>>>>>>>>>>")
                     viewModel.removeBookmark(post.id)
                 },
                     modifier = Modifier.align(alignment = Alignment.TopEnd)) {

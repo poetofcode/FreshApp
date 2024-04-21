@@ -21,9 +21,9 @@ class BookmarkTabViewModel(val bookmarkRepository: BookmarkRepository)
 
     val state = mutableStateOf(State())
 
-    init {
-        fetchBookmarks()
-    }
+//    init {
+//        fetchBookmarks()
+//    }
 
     fun fetchBookmarks() {
         val posts = bookmarkRepository.getAll()
@@ -31,30 +31,19 @@ class BookmarkTabViewModel(val bookmarkRepository: BookmarkRepository)
     }
 
     fun removeBookmark(id: String) {
-//        val posts: List<PostModel> = state.value.posts.mapNotNull {
-//            if (it.id != id) {
-//                it
-//            }
-//            null
-//        }
-
         println("1 >>>>>>>>>")
-        for(post in state.value.posts) {
-            println("id $post.id")
+        for (post in state.value.posts) {
+            println("$post")
         }
 
-        val posts = state.value.posts.filter {
-            it.id != id
-        }
-
-        state.value = state.value.copy(posts = posts);
-        bookmarkRepository.remove(id)
+        val updatedPosts = bookmarkRepository.remove(id)
 
         println("2 >>>>>>>>>")
-        for(post in state.value.posts) {
-            println("id $post.id")
+        for (post in updatedPosts) {
+            println("$post")
         }
-    }
 
+        state.value = state.value.copy(posts = updatedPosts);
+    }
 
 }
