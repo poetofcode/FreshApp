@@ -130,7 +130,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             ScrollBar(
                 modifier =  Modifier.width(20.dp).fillMaxHeight(),
                 orientation = ScrollBarOrientation.VERTICAL,
-                state = ScrollableComponentState.LazyListComponentState(listState)
+                state = ScrollableComponentState.LazyGridComponentState(gridState)
             )
         }
     }

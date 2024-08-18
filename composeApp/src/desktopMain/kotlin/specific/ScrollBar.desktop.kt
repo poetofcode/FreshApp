@@ -19,6 +19,10 @@ actual fun ScrollBar(
             rememberScrollbarAdapter(state.state)
         } 
 
+        is ScrollableComponentState.LazyGridComponentState -> {
+            rememberScrollbarAdapter(state.state)
+        }
+
         else -> throw Exception("Not implemented")
     } 
     
