@@ -120,7 +120,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 modifier = Modifier.fillMaxHeight().padding().weight(1f),
                 state = gridState,
                 columns = GridCells.Adaptive(minSize = 300.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                userScrollEnabled = true,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(posts) { post ->
                     Post(post = post)
