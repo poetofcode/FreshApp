@@ -17,11 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -57,7 +56,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override val isMenuVisible: Boolean = true
 
-    private val listState = LazyListState()
+    private val gridState = LazyGridState()
 
     @Composable
     override fun Content() = with(viewModel.state.value) {
@@ -111,7 +110,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun Posts(posts: List<PostModel>) {
-        val gridState = rememberLazyGridState()
+
         Row(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
