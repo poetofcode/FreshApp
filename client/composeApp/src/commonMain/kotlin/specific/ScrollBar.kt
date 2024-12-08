@@ -1,6 +1,8 @@
 package specific
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -18,4 +20,8 @@ enum class ScrollBarOrientation {
 
 sealed interface ScrollableComponentState {
     data class LazyListComponentState(val state: LazyListState) : ScrollableComponentState
+
+    data class ColumnComponentState(val state: ScrollState) : ScrollableComponentState
+
+    data class LazyGridComponentState(val state: LazyGridState) : ScrollableComponentState
 }

@@ -7,14 +7,28 @@ import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonEncoder
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import kotlin.reflect.KProperty
 
+/*
+    Detecting the present annotations within the given object passed into a constructor
+    https://stackoverflow.com/questions/4365095/detecting-the-present-annotations-within-the-given-object-passed-into-a-construc
+
+    Serializer for class '...' is not found. Mark the class as @Serializable or provide the serializer explicitly
+    https://stackoverflow.com/questions/71988144/serializer-for-class-is-not-found-mark-the-class-as-serializable-or-prov
+ */
+
+private val json = JsonProvider.json
 
 @Serializable
 data class PreferencesInfo(
-    val preferences: Map<String, @kotlinx.serialization.Serializable(with = AnySerializer::class) Any>? = null
+    val preferences: Map<String, @Serializable(with = AnySerializer::class) Any>? = null
 )
 
 object AnySerializer : KSerializer<Any> {
@@ -81,7 +95,9 @@ class FileContentProvider(
         val cachePath = File("./", relativePath)
         cachePath.mkdirs()
         val stream = File("$cachePath/$fileName").bufferedReader()
-        return stream.use { it.readText() }
+        return try { stream.use { it.readText() } } catch (e: Throwable) {
+            String()
+        }
     }
 
     override fun saveContent(content: String) {
@@ -105,18 +121,12 @@ interface PersistentStorage {
 }
 
 class ContentBasedPersistentStorage(
-    private val contentPorvider: ContentProvider
+    private val contentProvider: ContentProvider
 ) : PersistentStorage {
-
-    private val json by lazy {
-        Json {
-            ignoreUnknownKeys = true
-        }
-    }
 
     private val map: MutableMap<String, Any> by lazy {
         val content = try {
-            contentPorvider.provideContent()
+            contentProvider.provideContent()
         } catch (e: Throwable) {
             "{}"
         }
@@ -129,7 +139,7 @@ class ContentBasedPersistentStorage(
         map[key] = param
 
         val str = json.encodeToString(PreferencesInfo(map))
-        contentPorvider.saveContent(str)
+        contentProvider.saveContent(str)
     }
 
     override fun fetch(key: String): Any? {
@@ -138,7 +148,7 @@ class ContentBasedPersistentStorage(
 }
 
 
-inline operator fun <reified T : Any> PersistentStorage.getValue(nothing: Nothing?, property: KProperty<*>): T? {
+inline operator fun <reified T : Any> PersistentStorage.getValue(nothing: Any?, property: KProperty<*>): T? {
     val properyName = property.name
     val res = fetch(properyName)
     return when (T::class) {
@@ -150,7 +160,7 @@ inline operator fun <reified T : Any> PersistentStorage.getValue(nothing: Nothin
     }
 }
 
-inline operator fun <reified T : Any> PersistentStorage.setValue(nothing: Nothing?, property: KProperty<*>, value: T?) {
+inline operator fun <reified T : Any> PersistentStorage.setValue(nothing: Any?, property: KProperty<*>, value: T?) {
     val propertyName = property.name
     value?.let {
         this.save(propertyName, value)

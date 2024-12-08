@@ -12,9 +12,9 @@ class ViewModelStore(
         viewModelCoroutineScopeProvider.scope = coroutineScope
     }
     
-    val viewModels: MutableMap<String, ViewModel> = mutableMapOf()
+    val viewModels: MutableMap<String, ViewModel<*>> = mutableMapOf()
 
-    inline fun <reified T: ViewModel> getViewModel(_key: String = String()) : T {
+    inline fun <reified T: ViewModel<*>> getViewModel(_key: String = String()) : T {
         val key = _key.takeIf { it.isNotBlank() } ?: T::class.java.typeName
 
         if (viewModels.containsKey(key)) {
@@ -31,8 +31,13 @@ class ViewModelStore(
         return createdVm ?: throw Exception("ViewModelFactory not found")
     }
     
-    fun removeViewModel(viewModel: ViewModel) {
+    fun removeViewModel(viewModel: ViewModel<*>) {
         viewModels.values.removeIf { it == viewModel }
+        viewModel.onCleared()
     }
-    
+
+    fun clearAll() {
+        viewModels.forEach { it.value.onCleared() }
+    }
+
 }

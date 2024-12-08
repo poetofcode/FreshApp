@@ -1,14 +1,37 @@
 package presentation.screens.postListScreen
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,11 +46,13 @@ import presentation.navigation.BaseScreen
 import presentation.navigation.NavigateEffect
 import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
+import presentation.theme.AppTheme
 import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
 
+@ExperimentalMaterial3Api
 class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override val viewModel: PostListViewModel
@@ -35,12 +60,11 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override val isMenuVisible: Boolean = true
 
-    private val listState = LazyListState()
-
+    private val gridState = LazyGridState()
 
     @Composable
     override fun Content() = with(viewModel.state.value) {
-        MaterialTheme {
+        AppTheme {
             Column {
                 TopAppBar(
                     title = { Text(text = "Лента") },
@@ -90,15 +114,19 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun Posts(posts: List<PostModel>) {
+
         Row(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            LazyColumn(
-                state = listState,
+            LazyVerticalGrid(
                 modifier = Modifier.fillMaxHeight().padding().weight(1f),
-                contentPadding = PaddingValues(horizontal = 16.dp)
+                state = gridState,
+                columns = GridCells.Adaptive(minSize = 300.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                userScrollEnabled = true,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(posts) { post ->
                     Post(post = post)
@@ -108,13 +136,13 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             ScrollBar(
                 modifier =  Modifier.width(20.dp).fillMaxHeight(),
                 orientation = ScrollBarOrientation.VERTICAL,
-                state = ScrollableComponentState.LazyListComponentState(listState)
+                state = ScrollableComponentState.LazyGridComponentState(gridState)
             )
         }
     }
 
     @Composable
-    private fun Post(post: PostModel) {
+    private fun Post(post: PostModel) = Surface {
         // val context = LocalContext.current
         Column(
             modifier = Modifier
@@ -129,8 +157,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 }
                 .padding(vertical = 5.dp)
                 .fillMaxWidth()
+                .sizeIn(minHeight = 300.dp)
                 .background(
-                    color = Color.LightGray, // MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = RoundedCornerShape(10.dp)
                 )
                 .padding(8.dp)

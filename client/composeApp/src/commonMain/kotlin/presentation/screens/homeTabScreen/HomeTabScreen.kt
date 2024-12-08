@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package presentation.screens.homeTabScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -8,6 +11,7 @@ import kotlinx.coroutines.flow.collectLatest
 import presentation.Tabs
 import presentation.navigation.*
 import presentation.screens.postListScreen.PostListScreen
+
 
 class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
 
@@ -30,7 +34,7 @@ class HomeTabScreen() : BaseScreen<HomeTabViewModel>() {
         LaunchedEffect(Unit) {
             SharedMemory.effectFlow.collectLatest { effect ->
                 when (effect) {
-                    NavigateBackEffect -> {
+                    is NavigateBackEffect -> {
                         navState.pop()
                     }
 

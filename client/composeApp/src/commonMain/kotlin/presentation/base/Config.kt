@@ -1,6 +1,7 @@
 package presentation.base
 
 import data.repository.RepositoryFactory
+import data.utils.PersistentStorage
 
 data class Config(
 
@@ -10,11 +11,16 @@ data class Config(
 
     val repositoryFactory: RepositoryFactory,
 
+    val storage: PersistentStorage,
+
 ) {
 
-    enum class DeviceTypes(val isMobile: Boolean) {
-        ANDROID(true),
-        DESKTOP(false)
+    enum class DeviceTypes(
+        val isMobile: Boolean,
+        val title: String
+    ) {
+        ANDROID(true, "android"),
+        DESKTOP(false, "desktop")
     }
 
 }

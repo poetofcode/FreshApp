@@ -1,8 +1,13 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
+
 package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -16,11 +21,18 @@ import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
-import presentation.navigation.SetBackHandlerEffect
 import presentation.navigation.BaseScreen
-import presentation.navigation.NavigateBackEffect
-import presentation.navigation.SharedMemory
+import presentation.theme.AppTheme
 import specific.BackHandler
+
+/*
+ TODO Для Андроида:
+  https://stackoverflow.com/questions/69495413/jetpack-compose-force-switch-night-notnight-resources
+
+    Для Desktop: не нашёл пока способа переопределять системный флаг тёмной темы. В процессе..
+
+ */
+
 
 class PostDetailsScreen(
     val postUrl: String
@@ -47,6 +59,7 @@ class PostDetailsScreen(
 
         val initialUrl = postUrl
         val state = rememberWebViewState(url = initialUrl)
+        val surfaceColor = MaterialTheme.colorScheme.surfaceContainer
         DisposableEffect(Unit) {
             state.webSettings.apply {
                 isJavaScriptEnabled = true
@@ -58,10 +71,10 @@ class PostDetailsScreen(
                 // PC
                 // customUserAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1) AppleWebKit/625.20 (KHTML, like Gecko) Version/14.3.43 Safari/625.20"
                 
-                backgroundColor = Color.White
+                backgroundColor = surfaceColor
 
                 androidWebSettings.apply {
-                    isAlgorithmicDarkeningAllowed = true
+                    isAlgorithmicDarkeningAllowed = false
                     safeBrowsingEnabled = true
                     supportZoom = true
                     domStorageEnabled = true
@@ -78,7 +91,7 @@ class PostDetailsScreen(
         var textFieldValue by remember(state.lastLoadedUrl) {
             mutableStateOf(state.lastLoadedUrl)
         }
-        MaterialTheme {
+        AppTheme {
             Column {
                 TopAppBar(
                     title = { Text(text = state.pageTitle ?: state.lastLoadedUrl ?: "Загрузка..") },

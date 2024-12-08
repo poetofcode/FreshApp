@@ -1,33 +1,28 @@
 package data.service
 
-import data.entity.DataResponse
-import data.entity.TokenResponse
-import data.utils.buildEndpoint
-import data.utils.toSha1
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 class HttpClientFactory(
     val baseUrl: String,
-    val apiKey: String,
 ) {
     
     fun createClient() : HttpClient {
         val bearerTokenStorage = mutableListOf<BearerTokens>()
-        
-        fun calculateToken(path: String, remoteToken: String, salt: String) : String {
-            return (path.toSha1() + remoteToken.toSha1() + salt.toSha1()).toSha1()
-        }
+
+//        fun calculateToken(path: String, remoteToken: String, salt: String) : String {
+//            return (path.toSha1() + remoteToken.toSha1() + salt.toSha1()).toSha1()
+//        }
 
         bearerTokenStorage.add(BearerTokens("", ""))
 
@@ -49,31 +44,37 @@ class HttpClientFactory(
                 })
             }
 
-            install(Auth) {
-                bearer {
-                    loadTokens {
-                        bearerTokenStorage.last()
-                    }
-
-                    refreshTokens { // this: RefreshTokensParams
-                        try {
-                            val tokenResponse: DataResponse<TokenResponse> = client.post("/site/token".buildEndpoint(baseUrl)).body()
-                            val remoteToken : String = tokenResponse.result.token!!
-
-                            val newToken : String = run {
-                                val path = response.request.url.encodedPath
-                                val t = calculateToken(path, remoteToken, apiKey)
-                                t
-                            }
-                            bearerTokenStorage.add(BearerTokens(newToken, remoteToken))
-                        } catch (e: Throwable) {
-                            e.printStackTrace()
-                        }
-
-                        bearerTokenStorage.last()
-                    }
-                }
+            install(DefaultRequest) {
+                url(baseUrl)
             }
+
+//            install(Auth) {
+//                bearer {
+//                    loadTokens {
+//                        bearerTokenStorage.last()
+//                    }
+
+//                    refreshTokens { // this: RefreshTokensParams
+//                        try {
+//                            val tokenResponse: DataResponse<TokenResponse> = client.post("/site/token".buildEndpoint(baseUrl)).body()
+//                            val remoteToken : String = tokenResponse.result.token!!
+//
+//                            val newToken : String = run {
+//                                val path = response.request.url.encodedPath
+//                                val t = calculateToken(path, remoteToken, apiKey)
+//                                t
+//                            }
+//                            bearerTokenStorage.add(BearerTokens(newToken, remoteToken))
+//                        } catch (e: Throwable) {
+//                            e.printStackTrace()
+//                        }
+//
+//                        bearerTokenStorage.last()
+//                    }
+
+//                }
+//            }
+
         }
     }
     
