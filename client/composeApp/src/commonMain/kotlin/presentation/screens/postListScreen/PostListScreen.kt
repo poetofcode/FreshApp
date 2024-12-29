@@ -1,6 +1,7 @@
 package presentation.screens.postListScreen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,9 +37,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
+import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
+import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
@@ -46,12 +54,14 @@ import presentation.navigation.BaseScreen
 import presentation.navigation.NavigateEffect
 import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
+import presentation.theme.AppColors
 import presentation.theme.AppTheme
 import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
 
+@ExperimentalResourceApi
 @ExperimentalMaterial3Api
 class PostListScreen : BaseScreen<PostListViewModel>() {
 
@@ -134,7 +144,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             }
 
             ScrollBar(
-                modifier =  Modifier.width(20.dp).fillMaxHeight(),
+                modifier = Modifier.width(20.dp).fillMaxHeight(),
                 orientation = ScrollBarOrientation.VERTICAL,
                 state = ScrollableComponentState.LazyGridComponentState(gridState)
             )
@@ -174,6 +184,28 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(text = post.title.orEmpty(), fontSize = 16.sp)
+
+            // Bottom buttons (Fav and etc)
+            //
+            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
+
+                val isChecked = false
+                val icon = when (isChecked) {
+                    false -> Res.drawable.ic_cell_fav_disabled
+                    true -> Res.drawable.ic_cell_fav_enabled
+                }
+                val tintColor = when (isChecked) {
+                    true -> AppColors.favoriteRedColor
+                    false -> AppColors.iconMutedColor
+                }
+                Image(
+                    painter = painterResource(icon),
+                    contentDescription = null,
+                    contentScale = ContentScale.None,
+                    colorFilter = ColorFilter.tint(tintColor),
+                )
+            }
         }
     }
 
