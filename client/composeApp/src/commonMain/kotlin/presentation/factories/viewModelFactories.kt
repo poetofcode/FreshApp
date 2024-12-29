@@ -1,5 +1,6 @@
 package presentation.factories
 
+import data.repository.FavoriteRepository
 import data.repository.FeedRepository
 import data.repository.ProfileRepository
 import data.repository.RepositoryFactory
@@ -25,9 +26,15 @@ class HomeTabViewModelFactory() : ViewModelFactory<HomeTabViewModel> {
 }
 
 
-class PostListViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<PostListViewModel> {
+class PostListViewModelFactory(
+    val feedRepository: FeedRepository,
+    val favoriteRepository: FavoriteRepository,
+) : ViewModelFactory<PostListViewModel> {
     override fun createViewModel(): PostListViewModel {
-        return PostListViewModel(feedRepository = feedRepository)
+        return PostListViewModel(
+            feedRepository = feedRepository,
+            favoriteRepository = favoriteRepository,
+        )
     }
 
     override val vmTypeName: String
@@ -112,7 +119,10 @@ fun viewModelFactories(
         AuthViewModelFactory(profileRepository),
         RegViewModelFactory(profileRepository),
         NotificationsViewModelFactory(profileRepository),
-        PostListViewModelFactory(repositoryFactory.createFeedRepository()),
+        PostListViewModelFactory(
+            feedRepository = repositoryFactory.createFeedRepository(),
+            favoriteRepository = repositoryFactory.createFavoriteRepository(),
+        ),
         PostDetailsViewModelFactory(),
     )
 }
