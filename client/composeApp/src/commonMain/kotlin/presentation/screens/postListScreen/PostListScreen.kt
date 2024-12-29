@@ -199,12 +199,16 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     true -> AppColors.favoriteRedColor
                     false -> AppColors.iconMutedColor
                 }
-                Image(
-                    painter = painterResource(icon),
-                    contentDescription = null,
-                    contentScale = ContentScale.None,
-                    colorFilter = ColorFilter.tint(tintColor),
-                )
+                Box(modifier = Modifier.clickable {
+                    viewModel.onFavoriteClick(post)
+                }) {
+                    Image(
+                        painter = painterResource(icon),
+                        contentDescription = null,
+                        contentScale = ContentScale.None,
+                        colorFilter = ColorFilter.tint(tintColor),
+                    )
+                }
             }
         }
     }

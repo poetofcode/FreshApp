@@ -1,6 +1,5 @@
 package presentation.screens.postListScreen
 
-import androidx.compose.runtime.mutableStateOf
 import data.repository.FeedRepository
 import domain.model.PostModel
 import kotlinx.coroutines.launch
@@ -36,5 +35,9 @@ class PostListViewModel(
     }
 
     override fun onInitState(): State = State()
+
+    fun onFavoriteClick(post: PostModel) {
+
+    }
 
 }
