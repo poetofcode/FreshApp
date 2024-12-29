@@ -21,7 +21,8 @@ class FeedRepositoryImpl(val api: FreshApi) : FeedRepository {
                     title = post.title.orEmpty(),
                     image = post.image,
                     link = post.link.orEmpty(),
-                    commentsCount = post.commentsCount ?: "0"
+                    commentsCount = post.commentsCount ?: "0",
+                    isFavorite = false  // TODO implement
                 )
             }
     }

@@ -1,8 +1,9 @@
 package domain.model
 
 data class PostModel(
-    var title: String,
-    var image: String?,
-    var link: String,
-    var commentsCount: String
+    val title: String,
+    val image: String?,
+    val link: String,
+    val commentsCount: String,
+    val isFavorite: Boolean,
 )
