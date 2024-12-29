@@ -1,7 +1,6 @@
 package presentation.factories
 
 import data.repository.FeedRepository
-import data.repository.JokeRepository
 import data.repository.ProfileRepository
 import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
