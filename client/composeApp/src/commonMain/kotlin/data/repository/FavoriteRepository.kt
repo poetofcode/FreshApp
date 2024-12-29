@@ -10,14 +10,14 @@ interface FavoriteRepository {
 
 }
 
-class FavoriteRepositoryImpl : FavoriteRepository {
+class FavoriteLocalRepositoryImpl : FavoriteRepository {
 
     override suspend fun add(post: PostModel) {
-        TODO("Not yet implemented")
+
     }
 
     override suspend fun remove(id: String) {
-        TODO("Not yet implemented")
+
     }
 
 }

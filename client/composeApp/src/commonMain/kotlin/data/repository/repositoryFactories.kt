@@ -10,6 +10,8 @@ interface RepositoryFactory {
 
     fun createFeedRepository() : FeedRepository
 
+    fun createFavoriteRepository() : FavoriteRepository
+
 }
 
 class RepositoryFactoryImpl(
@@ -27,6 +29,10 @@ class RepositoryFactoryImpl(
 
     override fun createFeedRepository(): FeedRepository {
         return FeedRepositoryImpl(freshApi)
+    }
+
+    override fun createFavoriteRepository(): FavoriteRepository {
+        return FavoriteLocalRepositoryImpl()
     }
 
 }
