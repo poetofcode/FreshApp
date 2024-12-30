@@ -19,7 +19,7 @@ class RepositoryFactoryImpl(
     val api: MainApi,
     val freshApi: FreshApi,
     val profileStorage: ProfileStorage,
-    val storage: PersistentStorage,
+    val appDataStorage: PersistentStorage,
 ) : RepositoryFactory {
 
     override fun createProfileRepository(): ProfileRepository {
@@ -34,7 +34,7 @@ class RepositoryFactoryImpl(
     }
 
     override fun createFavoriteRepository(): FavoriteRepository {
-        return FavoriteLocalRepositoryImpl(storage = storage)
+        return FavoriteLocalRepositoryImpl(storage = appDataStorage)
     }
 
 }

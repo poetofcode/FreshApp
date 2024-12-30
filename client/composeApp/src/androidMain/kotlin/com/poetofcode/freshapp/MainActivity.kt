@@ -32,36 +32,42 @@ import specific.AndroidContentProvider
 
 class MainActivity : ComponentActivity() {
     // val repositoryFactory = MockRepositoryFactory()
-    val profileStorage = ProfileStorageImpl(
+    private val profileStorage = ProfileStorageImpl(
         AndroidContentProvider(
             fileName = "sessioncache.json",
             context = this,
         )
     )
 
-    val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
+    private val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
         profileStorage,
         Config.DeviceTypes.ANDROID,
     )
 
-    val persistentStorage = ContentBasedPersistentStorage(
+    private val configStorage = ContentBasedPersistentStorage(
         AndroidContentProvider(
             fileName = "config.json",
             context = this,
         )
     )
 
+    private val appDataStorage = ContentBasedPersistentStorage(
+        AndroidContentProvider(
+            fileName = "appdata.json",
+            context = this,
+        )
+    )
 
-    val repositoryFactory = RepositoryFactoryImpl(
+    private val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
         freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
-        storage = persistentStorage,
+        appDataStorage = appDataStorage,
     )
 
     private var backHandleCallback: (() -> Boolean)? = null
 
-    val vmStoreImpl = ViewModelStore(
+    private val vmStoreImpl = ViewModelStore(
         coroutineScope = lifecycleScope,
         vmFactories = viewModelFactories(
             repositoryFactory = repositoryFactory
@@ -96,7 +102,7 @@ class MainActivity : ComponentActivity() {
                         deviceType = Config.DeviceTypes.ANDROID,
                         viewModelStore = vmStoreImpl,
                         repositoryFactory = repositoryFactory,
-                        storage = persistentStorage
+                        storage = configStorage
                     ))
                 ) {
                     App()

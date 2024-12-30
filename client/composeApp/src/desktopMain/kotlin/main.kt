@@ -41,7 +41,6 @@ import presentation.TrayIcon
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
-import presentation.model.shared.OnReceivedTokenSharedEvent
 import presentation.model.shared.ShowDesktopNotificationSharedEvent
 import presentation.navigation.SharedMemory
 import java.io.File
@@ -66,9 +65,16 @@ fun main() = application {
         Config.DeviceTypes.DESKTOP,
     )
 
-    val storage = ContentBasedPersistentStorage(
+    val configStorage = ContentBasedPersistentStorage(
         FileContentProvider(
             fileName = "config.json",
+            relativePath = "appcache",
+        )
+    )
+
+    val appDataStorage = ContentBasedPersistentStorage(
+        FileContentProvider(
+            fileName = "appdata.json",
             relativePath = "appcache",
         )
     )
@@ -77,7 +83,7 @@ fun main() = application {
         api = networkingFactory.createApi(),
         freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
-        storage = storage,
+        appDataStorage = appDataStorage,
     )
 
     val vmStoreImpl = ViewModelStore(
@@ -85,11 +91,11 @@ fun main() = application {
         vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
     )
 
-    var windowWidth: Int? by storage
-    var windowHeight: Int? by storage
-    var positionX: Int? by storage
-    var positionY: Int? by storage
-    var isMaximized: Boolean? by storage
+    var windowWidth: Int? by configStorage
+    var windowHeight: Int? by configStorage
+    var positionX: Int? by configStorage
+    var positionY: Int? by configStorage
+    var isMaximized: Boolean? by configStorage
 
     val windowState = rememberWindowState(
         size = DpSize(
@@ -192,7 +198,7 @@ fun main() = application {
                         deviceType = Config.DeviceTypes.DESKTOP,
                         viewModelStore = vmStoreImpl,
                         repositoryFactory = repositoryFactory,
-                        storage = storage,
+                        storage = configStorage,
                     )),
                 ) {
                     App()

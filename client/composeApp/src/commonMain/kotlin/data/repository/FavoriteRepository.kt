@@ -23,6 +23,8 @@ class FavoriteLocalRepositoryImpl(
         // TODO по идее тут нужно подрубить FileProvider
         //
 
+        println("mylog Favorites posts: $favoritePosts")
+
         favoritePosts = favoritePosts.orEmpty() + listOf(post)
     }
 
