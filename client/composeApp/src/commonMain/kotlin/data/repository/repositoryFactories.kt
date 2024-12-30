@@ -2,6 +2,7 @@ package data.repository
 
 import data.service.FreshApi
 import data.service.MainApi
+import data.utils.PersistentStorage
 import data.utils.ProfileStorage
 
 interface RepositoryFactory {
@@ -18,6 +19,7 @@ class RepositoryFactoryImpl(
     val api: MainApi,
     val freshApi: FreshApi,
     val profileStorage: ProfileStorage,
+    val storage: PersistentStorage,
 ) : RepositoryFactory {
 
     override fun createProfileRepository(): ProfileRepository {
@@ -32,7 +34,7 @@ class RepositoryFactoryImpl(
     }
 
     override fun createFavoriteRepository(): FavoriteRepository {
-        return FavoriteLocalRepositoryImpl()
+        return FavoriteLocalRepositoryImpl(storage = storage)
     }
 
 }

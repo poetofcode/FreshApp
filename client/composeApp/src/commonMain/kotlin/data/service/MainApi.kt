@@ -33,16 +33,6 @@ class MainApi(
     private val appVersion: String,
 ) {
 
-    suspend fun fetchJokes() = parseRequestResult<JokesResponse> {
-        httpClient.get {
-            authBlock {
-                url {
-                    path("/api/v1/jokes")
-                }
-            }
-        }
-    }
-
     suspend fun createSession(requestBody: CreateSessionRequestBody): ResultResponse<CreateSessionResponse> =
         parseRequestResult<CreateSessionResponse> {
             httpClient.post {

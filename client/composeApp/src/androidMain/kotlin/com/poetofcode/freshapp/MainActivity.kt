@@ -44,10 +44,19 @@ class MainActivity : ComponentActivity() {
         Config.DeviceTypes.ANDROID,
     )
 
+    val persistentStorage = ContentBasedPersistentStorage(
+        AndroidContentProvider(
+            fileName = "config.json",
+            context = this,
+        )
+    )
+
+
     val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
         freshApi = networkingFactory.createFreshApi(),
-        profileStorage = profileStorage
+        profileStorage = profileStorage,
+        storage = persistentStorage,
     )
 
     private var backHandleCallback: (() -> Boolean)? = null
@@ -82,20 +91,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CompositionLocalProvider(
-                LocalMainAppState provides MainAppState(config = Config(
-                    deviceType = Config.DeviceTypes.ANDROID,
-                    viewModelStore = vmStoreImpl,
-                    repositoryFactory = repositoryFactory,
-                    storage = ContentBasedPersistentStorage(
-                        AndroidContentProvider(
-                            fileName = "config.json",
-                            context = this,
-                        )),
-                )
-                )
-            ) {
-                App()
-            }
+                LocalMainAppState provides MainAppState(
+                    config = Config(
+                        deviceType = Config.DeviceTypes.ANDROID,
+                        viewModelStore = vmStoreImpl,
+                        repositoryFactory = repositoryFactory,
+                        storage = persistentStorage
+                    ))
+                ) {
+                    App()
+                }
         }
 
         lifecycleScope.launch {

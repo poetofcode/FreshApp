@@ -66,22 +66,23 @@ fun main() = application {
         Config.DeviceTypes.DESKTOP,
     )
 
-    val repositoryFactory = RepositoryFactoryImpl(
-        api = networkingFactory.createApi(),
-        freshApi = networkingFactory.createFreshApi(),
-        profileStorage = profileStorage,
-    )
-
-    val vmStoreImpl = ViewModelStore(
-        coroutineScope = rememberCoroutineScope(),
-        vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
-    )
-
     val storage = ContentBasedPersistentStorage(
         FileContentProvider(
             fileName = "config.json",
             relativePath = "appcache",
         )
+    )
+
+    val repositoryFactory = RepositoryFactoryImpl(
+        api = networkingFactory.createApi(),
+        freshApi = networkingFactory.createFreshApi(),
+        profileStorage = profileStorage,
+        storage = storage,
+    )
+
+    val vmStoreImpl = ViewModelStore(
+        coroutineScope = rememberCoroutineScope(),
+        vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
     )
 
     var windowWidth: Int? by storage
