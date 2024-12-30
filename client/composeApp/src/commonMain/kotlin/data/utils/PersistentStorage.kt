@@ -28,7 +28,7 @@ private val json = JsonProvider.json
 
 @Serializable
 data class PreferencesInfo(
-    val preferences: Map<String, @Serializable(with = AnySerializer::class) Any>? = null
+    val root: Map<String, @Serializable(with = AnySerializer::class) Any>? = null
 )
 
 object AnySerializer : KSerializer<Any> {
@@ -130,7 +130,7 @@ class ContentBasedPersistentStorage(
         } catch (e: Throwable) {
             "{}"
         }
-        val map = json.decodeFromString<PreferencesInfo>(content).preferences?.toMutableMap() ?: mutableMapOf()
+        val map = json.decodeFromString<PreferencesInfo>(content).root?.toMutableMap() ?: mutableMapOf()
         map.toMap().toMutableMap()
     }
 
