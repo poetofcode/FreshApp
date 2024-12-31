@@ -38,7 +38,7 @@ data class PreferencesInfo(
 
 @Serializer(forClass = LocalDateTime::class)
 object DateSerializer : KSerializer<LocalDateTime> {
-    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
     override fun serialize(encoder: Encoder, value: LocalDateTime) {
         encoder.encodeString(value.format(formatter))
