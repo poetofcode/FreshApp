@@ -5,7 +5,6 @@ import data.entity.CreateSessionResponse
 import data.entity.DataResponse
 import data.entity.ExceptionResponse
 import data.entity.FailureResponse
-import data.entity.JokesResponse
 import data.entity.NotificationResponse
 import data.entity.ResultResponse
 import data.entity.SaveFirebasePushTokenRequestBody

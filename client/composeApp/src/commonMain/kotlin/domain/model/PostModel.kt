@@ -11,3 +11,4 @@ data class PostModel(
 ) {
     val id : String get() = link.toSha1()
 }
+
