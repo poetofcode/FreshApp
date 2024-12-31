@@ -3,7 +3,9 @@ package data.repository
 import data.utils.PersistentStorage
 import data.utils.getValue
 import data.utils.setValue
+import domain.model.FavoritePost
 import domain.model.PostModel
+import domain.model.toFavoritePost
 
 interface FavoriteRepository {
 
@@ -17,7 +19,7 @@ class FavoriteLocalRepositoryImpl(
     storage: PersistentStorage,
 ) : FavoriteRepository {
 
-    private var favoritePosts: List<PostModel>? by storage
+    private var favoritePosts: List<FavoritePost>? by storage
 
     override suspend fun add(post: PostModel) {
         // TODO по идее тут нужно подрубить FileProvider
@@ -25,7 +27,7 @@ class FavoriteLocalRepositoryImpl(
 
         println("mylog Favorites posts: $favoritePosts")
 
-        favoritePosts = favoritePosts.orEmpty() + listOf(post)
+        favoritePosts = favoritePosts.orEmpty() + listOf(post.toFavoritePost())
     }
 
     override suspend fun remove(id: String) {

@@ -16,6 +16,11 @@ import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import kotlin.reflect.KProperty
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializer
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 /*
     Detecting the present annotations within the given object passed into a constructor
     https://stackoverflow.com/questions/4365095/detecting-the-present-annotations-within-the-given-object-passed-into-a-construc
@@ -30,6 +35,19 @@ private val json = JsonProvider.json
 data class PreferencesInfo(
     val root: Map<String, @Serializable(with = AnySerializer::class) Any>? = null
 )
+
+@Serializer(forClass = LocalDateTime::class)
+object DateSerializer : KSerializer<LocalDateTime> {
+    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+    override fun serialize(encoder: Encoder, value: LocalDateTime) {
+        encoder.encodeString(value.format(formatter))
+    }
+
+    override fun deserialize(decoder: Decoder): LocalDateTime {
+        return LocalDateTime.parse(decoder.decodeString(), formatter)
+    }
+}
 
 object AnySerializer : KSerializer<Any> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Any")
