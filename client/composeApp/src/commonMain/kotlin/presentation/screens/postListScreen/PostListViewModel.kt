@@ -1,8 +1,11 @@
 package presentation.screens.postListScreen
 
+import data.repository.ChangeInfo
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
 import domain.model.PostModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
 import presentation.model.*
@@ -18,7 +21,31 @@ class PostListViewModel(
     )
 
     init {
+        observeFavoriteChanges()
         fetchFeed()
+    }
+
+    private fun observeFavoriteChanges() {
+        favoriteRepository.changesFlow
+            .onEach { change ->
+                when (change) {
+                    is ChangeInfo.AddedItem -> {
+                        reduce { copy(posts = posts.map {
+                            if (it.id == change.id) {
+                                it.copy(isFavorite = true)
+                            } else it
+                        }) }
+                    }
+                    is ChangeInfo.DeletedItem -> {
+                        reduce { copy(posts = posts.map {
+                            if (it.id == change.id) {
+                                it.copy(isFavorite = false)
+                            } else it
+                        }) }
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun fetchFeed() {
