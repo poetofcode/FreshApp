@@ -1,9 +1,6 @@
 package data.repository
 
-import data.utils.PersistentStorage
-import data.utils.getValue
-import data.utils.setValue
-import domain.model.FavoritePost
+import data.utils.AppDataStorage
 import domain.model.PostModel
 import domain.model.toFavoritePost
 
@@ -16,18 +13,21 @@ interface FavoriteRepository {
 }
 
 class FavoriteLocalRepositoryImpl(
-    storage: PersistentStorage,
+    private val storage: AppDataStorage,
 ) : FavoriteRepository {
 
-    private var favoritePosts: List<FavoritePost>? by storage
+    // private var favoritePosts = mutableListOf<PostModel>()
 
     override suspend fun add(post: PostModel) {
-        // TODO по идее тут нужно подрубить FileProvider
-        //
 
-        println("mylog Favorites posts: $favoritePosts")
+        // TODO возможно не загружать каждлый раз, а держать в кэше.
+        //      Проверить время жизни репозитория. Если он синглтон, то грузить только первый раз
 
-        favoritePosts = favoritePosts.orEmpty() + listOf(post.toFavoritePost())
+        val favoritePosts = storage.fetchFavorites().apply {
+            println("mylog Current favorites posts: $this")
+        }
+
+        storage.saveFavorites(favoritePosts + listOf(post.toFavoritePost()))
     }
 
     override suspend fun remove(id: String) {
