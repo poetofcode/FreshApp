@@ -3,8 +3,12 @@ package data.repository
 import data.utils.AppDataStorage
 import domain.model.PostModel
 import domain.model.toFavoritePost
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 interface FavoriteRepository {
+
+    val changesFlow : SharedFlow<ChangeInfo>
 
     suspend fun add(post: PostModel)
 
@@ -14,21 +18,33 @@ interface FavoriteRepository {
 
 }
 
+sealed interface ChangeInfo {
+    data class AddedItem(val id: String) : ChangeInfo
+    data class DeletedItem(val id: String) : ChangeInfo
+}
+
 class FavoriteLocalRepositoryImpl(
     private val storage: AppDataStorage,
 ) : FavoriteRepository {
+
+    private val mutableChangesFlow = MutableSharedFlow<ChangeInfo>(extraBufferCapacity = 1)
+
+    override val changesFlow: SharedFlow<ChangeInfo>
+        get() = mutableChangesFlow
 
     override suspend fun add(post: PostModel) {
         val favoritePosts = storage.fetchFavorites().filterNot {
             it.id == post.id
         }
         storage.saveFavorites(favoritePosts + listOf(post.toFavoritePost()))
+        mutableChangesFlow.emit(ChangeInfo.AddedItem(post.id))
     }
 
     override suspend fun remove(id: String) {
         storage.saveFavorites(storage.fetchFavorites().filterNot {
             it.id == id
         })
+        mutableChangesFlow.emit(ChangeInfo.DeletedItem(id))
     }
 
     override suspend fun filterFavoriteIds(ids: List<String>): List<String> {
