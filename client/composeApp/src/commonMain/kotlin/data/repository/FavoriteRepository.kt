@@ -16,21 +16,14 @@ class FavoriteLocalRepositoryImpl(
     private val storage: AppDataStorage,
 ) : FavoriteRepository {
 
-    // private var favoritePosts = mutableListOf<PostModel>()
-
     override suspend fun add(post: PostModel) {
-
-        // TODO возможно не загружать каждлый раз, а держать в кэше.
-        //      Проверить время жизни репозитория. Если он синглтон, то грузить только первый раз
-
-        val favoritePosts = storage.fetchFavorites().apply {
-            println("mylog Current favorites posts: $this")
-        }
-
+        val favoritePosts = storage.fetchFavorites()
         storage.saveFavorites(favoritePosts + listOf(post.toFavoritePost()))
     }
 
     override suspend fun remove(id: String) {
+        // TODO implement
+
         // favoritePosts = null
     }
 
