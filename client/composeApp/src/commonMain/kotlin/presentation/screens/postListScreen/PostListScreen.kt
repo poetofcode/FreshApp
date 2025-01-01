@@ -190,7 +190,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             Row(modifier = Modifier.padding(vertical = 8.dp)) {
                 Spacer(modifier = Modifier.weight(1f))
 
-                val isChecked = false
+                val isChecked = post.isFavorite
                 val icon = when (isChecked) {
                     false -> Res.drawable.ic_cell_fav_disabled
                     true -> Res.drawable.ic_cell_fav_enabled
