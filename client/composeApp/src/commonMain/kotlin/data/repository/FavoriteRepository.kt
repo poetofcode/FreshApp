@@ -10,6 +10,8 @@ interface FavoriteRepository {
 
     suspend fun remove(id: String)
 
+    suspend fun filterFavoriteIds(ids: List<String>) : List<String>
+
 }
 
 class FavoriteLocalRepositoryImpl(
@@ -27,6 +29,12 @@ class FavoriteLocalRepositoryImpl(
         storage.saveFavorites(storage.fetchFavorites().filterNot {
             it.id == id
         })
+    }
+
+    override suspend fun filterFavoriteIds(ids: List<String>): List<String> {
+        return storage.fetchFavorites()
+            .filter { ids.contains(it.id) }
+            .map { it.id }
     }
 
 }
