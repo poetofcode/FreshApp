@@ -22,6 +22,7 @@ import androidx.compose.ui.window.rememberWindowState
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import data.utils.AppDataStorageImpl
 import data.utils.ContentBasedPersistentStorage
 import data.utils.FileContentProvider
 import data.utils.ProfileStorageImpl
@@ -72,7 +73,7 @@ fun main() = application {
         )
     )
 
-    val appDataStorage = ContentBasedPersistentStorage(
+    val appDataStorage = AppDataStorageImpl(
         FileContentProvider(
             fileName = "appdata.json",
             relativePath = "appcache",

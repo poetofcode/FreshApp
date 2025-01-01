@@ -2,6 +2,7 @@ package data.repository
 
 import data.service.FreshApi
 import data.service.MainApi
+import data.utils.AppDataStorage
 import data.utils.PersistentStorage
 import data.utils.ProfileStorage
 
@@ -19,7 +20,7 @@ class RepositoryFactoryImpl(
     val api: MainApi,
     val freshApi: FreshApi,
     val profileStorage: ProfileStorage,
-    val appDataStorage: PersistentStorage,
+    val appDataStorage: AppDataStorage,
 ) : RepositoryFactory {
 
     override fun createProfileRepository(): ProfileRepository {
