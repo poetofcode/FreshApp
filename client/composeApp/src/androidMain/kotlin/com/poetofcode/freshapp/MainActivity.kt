@@ -13,6 +13,7 @@ import androidx.lifecycle.withStarted
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import data.utils.AppDataStorageImpl
 import data.utils.ContentBasedPersistentStorage
 import data.utils.ProfileStorageImpl
 import kotlinx.coroutines.flow.launchIn
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
         )
     )
 
-    private val appDataStorage = ContentBasedPersistentStorage(
+    private val appDataStorage = AppDataStorageImpl(
         AndroidContentProvider(
             fileName = "appdata.json",
             context = this,
