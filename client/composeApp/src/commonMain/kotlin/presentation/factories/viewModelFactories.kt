@@ -112,6 +112,7 @@ fun viewModelFactories(
     repositoryFactory: RepositoryFactory
 ): List<ViewModelFactory<*>> {
     val profileRepository = repositoryFactory.createProfileRepository()
+    val favoriteRepository = repositoryFactory.createFavoriteRepository()
     return listOf<ViewModelFactory<*>>(
         HomeTabViewModelFactory(),
         ProfileTabViewModelFactory(),
@@ -120,8 +121,8 @@ fun viewModelFactories(
         RegViewModelFactory(profileRepository),
         NotificationsViewModelFactory(profileRepository),
         PostListViewModelFactory(
-            feedRepository = repositoryFactory.createFeedRepository(),
-            favoriteRepository = repositoryFactory.createFavoriteRepository(),
+            feedRepository = repositoryFactory.createFeedRepository(favoriteRepository),
+            favoriteRepository = favoriteRepository,
         ),
         PostDetailsViewModelFactory(),
     )

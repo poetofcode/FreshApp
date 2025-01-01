@@ -9,10 +9,13 @@ interface FeedRepository {
 
 }
 
-class FeedRepositoryImpl(val api: FreshApi) : FeedRepository {
+class FeedRepositoryImpl(
+    private val api: FreshApi,
+    private val favoriteRepository: FavoriteRepository,
+) : FeedRepository {
 
     override suspend fun fetchFeed(): List<PostModel> {
-        return api.fetchFeed()
+        val posts = api.fetchFeed()
             .resultOrError()
             .posts
             .orEmpty()
@@ -25,6 +28,10 @@ class FeedRepositoryImpl(val api: FreshApi) : FeedRepository {
                     isFavorite = false  // TODO implement
                 )
             }
+        val favoriteIds = favoriteRepository.filterFavoriteIds(posts.map { it.id })
+        return posts.map {
+            it.copy(isFavorite = favoriteIds.contains(it.id))
+        }
     }
 
 }

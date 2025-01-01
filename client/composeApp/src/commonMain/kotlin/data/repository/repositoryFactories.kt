@@ -10,7 +10,7 @@ interface RepositoryFactory {
 
     fun createProfileRepository(): ProfileRepository
 
-    fun createFeedRepository() : FeedRepository
+    fun createFeedRepository(favoriteRepository: FavoriteRepository) : FeedRepository
 
     fun createFavoriteRepository() : FavoriteRepository
 
@@ -30,8 +30,8 @@ class RepositoryFactoryImpl(
         )
     }
 
-    override fun createFeedRepository(): FeedRepository {
-        return FeedRepositoryImpl(freshApi)
+    override fun createFeedRepository(favoriteRepository: FavoriteRepository): FeedRepository {
+        return FeedRepositoryImpl(freshApi, favoriteRepository)
     }
 
     override fun createFavoriteRepository(): FavoriteRepository {
