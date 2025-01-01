@@ -17,14 +17,16 @@ class FavoriteLocalRepositoryImpl(
 ) : FavoriteRepository {
 
     override suspend fun add(post: PostModel) {
-        val favoritePosts = storage.fetchFavorites()
+        val favoritePosts = storage.fetchFavorites().filterNot {
+            it.id == post.id
+        }
         storage.saveFavorites(favoritePosts + listOf(post.toFavoritePost()))
     }
 
     override suspend fun remove(id: String) {
-        // TODO implement
-
-        // favoritePosts = null
+        storage.saveFavorites(storage.fetchFavorites().filterNot {
+            it.id == id
+        })
     }
 
 }
