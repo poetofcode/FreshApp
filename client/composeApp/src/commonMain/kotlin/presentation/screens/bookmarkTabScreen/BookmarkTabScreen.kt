@@ -16,6 +16,7 @@ import presentation.navigation.NavigateBackEffect
 import presentation.navigation.NavigateEffect
 import presentation.navigation.Navigator
 import presentation.navigation.SharedMemory
+import presentation.screens.bookmarkListScreen.BookmarkListScreen
 
 
 class BookmarkTabScreen() : BaseScreen<BookmarkTabViewModel>() {
@@ -28,7 +29,7 @@ class BookmarkTabScreen() : BaseScreen<BookmarkTabViewModel>() {
 
     private val navState by lazy {
         NavStateImpl(viewModelStore).apply {
-            // push(PostListScreen())
+            push(BookmarkListScreen())
         }
     }
 

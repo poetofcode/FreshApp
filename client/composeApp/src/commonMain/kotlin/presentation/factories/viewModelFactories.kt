@@ -63,7 +63,7 @@ class BookmarkListViewModelFactory(
     }
 
     override val vmTypeName: String
-        get() = PostListViewModel::class.java.typeName
+        get() = BookmarkListViewModel::class.java.typeName
 
 }
 

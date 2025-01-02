@@ -33,10 +33,10 @@ import presentation.theme.AppTheme
 
 @ExperimentalResourceApi
 @ExperimentalMaterial3Api
-class BookmarkListScreen : BaseScreen<PostListViewModel>() {
+class BookmarkListScreen : BaseScreen<BookmarkListViewModel>() {
 
-    override val viewModel: PostListViewModel
-        get() = viewModelStore.getViewModel<PostListViewModel>(screenId)
+    override val viewModel: BookmarkListViewModel
+        get() = viewModelStore.getViewModel<BookmarkListViewModel>(screenId)
 
     override val isMenuVisible: Boolean = true
 
