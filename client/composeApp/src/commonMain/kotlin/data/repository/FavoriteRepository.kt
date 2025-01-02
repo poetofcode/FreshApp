@@ -3,6 +3,7 @@ package data.repository
 import data.utils.AppDataStorage
 import domain.model.PostModel
 import domain.model.toFavoritePost
+import domain.model.toPostModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -16,12 +17,29 @@ interface FavoriteRepository {
 
     suspend fun filterFavoriteIds(ids: List<String>) : List<String>
 
+    suspend fun fetch(input: FetchFavoriteInput = FetchFavoriteInput()) : PagedResource<PostModel>
+
 }
 
+// TODO move to domain/model/
 sealed interface ChangeInfo {
     data class AddedItem(val id: String) : ChangeInfo
     data class DeletedItem(val id: String) : ChangeInfo
 }
+
+// TODO move to domain/model/
+data class FetchFavoriteInput(
+    val query: String = "",
+    val limit: Int = 30,
+    val start: Int = 0,
+    val sort: String = "",
+)
+
+// TODO move to domain/model/
+data class PagedResource<T>(
+    val isListCompleted: Boolean,
+    val list: List<T>,
+)
 
 class FavoriteLocalRepositoryImpl(
     private val storage: AppDataStorage,
@@ -51,6 +69,14 @@ class FavoriteLocalRepositoryImpl(
         return storage.fetchFavorites()
             .filter { ids.contains(it.id) }
             .map { it.id }
+    }
+
+    override suspend fun fetch(input: FetchFavoriteInput) : PagedResource<PostModel> {
+        val favoritePosts = storage.fetchFavorites().map { it.toPostModel() }
+        return PagedResource(
+            isListCompleted = true,
+            list = favoritePosts,
+        )
     }
 
 }

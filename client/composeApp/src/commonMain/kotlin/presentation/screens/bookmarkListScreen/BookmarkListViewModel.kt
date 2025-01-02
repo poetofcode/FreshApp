@@ -56,7 +56,7 @@ class BookmarkListViewModel(
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
                 state.value = state.value.copy(
-                    // posts = feedRepository.fetchFeed(),
+                    posts = favoriteRepository.fetch().list,
                     readyState = CompleteResource(Unit)
                 )
             } catch (e: Throwable) {

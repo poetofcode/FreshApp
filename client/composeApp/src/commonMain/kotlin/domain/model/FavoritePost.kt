@@ -24,3 +24,13 @@ fun PostModel.toFavoritePost() : FavoritePost {
         createdAt = LocalDateTime.now(),
     )
 }
+
+fun FavoritePost.toPostModel() : PostModel {
+    return PostModel(
+        title = title,
+        image = image,
+        link = link,
+        commentsCount = "",
+        isFavorite = true,
+    )
+}
