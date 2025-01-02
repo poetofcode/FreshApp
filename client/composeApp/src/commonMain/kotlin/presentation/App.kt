@@ -41,6 +41,7 @@ import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import data.utils.getValue
 import data.utils.setValue
 import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_fav_tab
 import freshapp.composeapp.generated.resources.ic_home_24
 import freshapp.composeapp.generated.resources.ic_person_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -52,6 +53,7 @@ import presentation.base.Config
 import presentation.navigation.NavStateImpl
 import presentation.navigation.Navigator
 import presentation.navigation.NavigatorTag
+import presentation.screens.bookmarkTabScreen.BookmarkTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
 import presentation.screens.profileTabScreen.ProfileTabScreen
 import presentation.theme.AppTheme
@@ -109,6 +111,7 @@ fun App() {
             val navState = remember {
                 NavStateImpl(viewModelStore = config.viewModelStore).apply {
                     push(HomeTabScreen())
+                    push(BookmarkTabScreen())
                     push(ProfileTabScreen())
                 }
             }
@@ -130,6 +133,7 @@ fun App() {
                         Box(Modifier.size(iconSize), contentAlignment = Alignment.Center) {
                             val icon = when (tab) {
                                 HOME -> Res.drawable.ic_home_24
+                                Tabs.BOOKMARK -> Res.drawable.ic_fav_tab
                                 PROFILE -> Res.drawable.ic_person_24
                             }
 
@@ -288,5 +292,6 @@ data class Menu(
 
 enum class Tabs(val key: String) {
     HOME("tab_home"),
+    BOOKMARK("tab_bookmark"),
     PROFILE("tab_profile"),
 }
