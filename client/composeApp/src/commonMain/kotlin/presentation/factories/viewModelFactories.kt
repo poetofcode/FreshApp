@@ -6,6 +6,7 @@ import data.repository.ProfileRepository
 import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
 import presentation.screens.authScreen.AuthViewModel
+import presentation.screens.bookmarkListScreen.BookmarkListViewModel
 import presentation.screens.bookmarkTabScreen.BookmarkTabViewModel
 import presentation.screens.homeTabScreen.HomeTabViewModel
 import presentation.screens.notificationsScreen.NotificationsViewModel
@@ -43,6 +44,20 @@ class PostListViewModelFactory(
     override fun createViewModel(): PostListViewModel {
         return PostListViewModel(
             feedRepository = feedRepository,
+            favoriteRepository = favoriteRepository,
+        )
+    }
+
+    override val vmTypeName: String
+        get() = PostListViewModel::class.java.typeName
+
+}
+
+class BookmarkListViewModelFactory(
+    val favoriteRepository: FavoriteRepository,
+) : ViewModelFactory<BookmarkListViewModel> {
+    override fun createViewModel(): BookmarkListViewModel {
+        return BookmarkListViewModel(
             favoriteRepository = favoriteRepository,
         )
     }
@@ -133,6 +148,9 @@ fun viewModelFactories(
         NotificationsViewModelFactory(profileRepository),
         PostListViewModelFactory(
             feedRepository = repositoryFactory.createFeedRepository(favoriteRepository),
+            favoriteRepository = favoriteRepository,
+        ),
+        BookmarkListViewModelFactory(
             favoriteRepository = favoriteRepository,
         ),
         PostDetailsViewModelFactory(),
