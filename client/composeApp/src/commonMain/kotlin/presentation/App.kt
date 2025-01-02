@@ -1,7 +1,6 @@
 package presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +40,6 @@ import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import data.utils.getValue
 import data.utils.setValue
 import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.ic_fav_tab
 import freshapp.composeapp.generated.resources.ic_favorite_24
 import freshapp.composeapp.generated.resources.ic_home_24
 import freshapp.composeapp.generated.resources.ic_person_24
