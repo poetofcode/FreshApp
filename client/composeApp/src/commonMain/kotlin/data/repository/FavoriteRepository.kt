@@ -72,7 +72,9 @@ class FavoriteLocalRepositoryImpl(
     }
 
     override suspend fun fetch(input: FetchFavoriteInput) : PagedResource<PostModel> {
-        val favoritePosts = storage.fetchFavorites().map { it.toPostModel() }
+        val favoritePosts = storage.fetchFavorites().sortedByDescending {
+            it.createdAt
+        }.map { it.toPostModel() }
         return PagedResource(
             isListCompleted = true,
             list = favoritePosts,
