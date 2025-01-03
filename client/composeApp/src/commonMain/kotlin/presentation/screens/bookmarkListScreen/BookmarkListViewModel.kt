@@ -31,20 +31,10 @@ class BookmarkListViewModel(
     private fun observeFavoriteChanges() {
         favoriteRepository.changesFlow
             .onEach { change ->
+                println("mylog Observed from BookmarkScreen: $change")
                 when (change) {
-                    is ChangeInfo.AddedItem -> {
-                        reduce { copy(posts = posts.map {
-                            if (it.id == change.id) {
-                                it.copy(isFavorite = true)
-                            } else it
-                        }) }
-                    }
-                    is ChangeInfo.DeletedItem -> {
-                        reduce { copy(posts = posts.map {
-                            if (it.id == change.id) {
-                                it.copy(isFavorite = false)
-                            } else it
-                        }) }
+                    else -> {
+                        fetchFeed()
                     }
                 }
             }
