@@ -94,7 +94,6 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                                         )
                                     }
                                 }
-
                             }
                         }
 

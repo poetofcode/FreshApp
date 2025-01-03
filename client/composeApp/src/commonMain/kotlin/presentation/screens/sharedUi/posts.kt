@@ -145,11 +145,12 @@ fun PostButton(
     tintColor: Color? = null,
 ) {
     Box(modifier = Modifier.clickable {
-        // onFavoriteClick(post)
         onClick()
     }) {
+        val imageModifier = Modifier.height(21.dp)
         if (tintColor != null) {
             Image(
+                modifier = imageModifier,
                 painter = painterResource(iconRes),
                 contentDescription = null,
                 contentScale = ContentScale.None,
@@ -157,6 +158,7 @@ fun PostButton(
             )
         } else {
             Image(
+                modifier = imageModifier,
                 painter = painterResource(iconRes),
                 contentDescription = null,
                 contentScale = ContentScale.None,
