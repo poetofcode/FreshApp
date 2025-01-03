@@ -31,17 +31,17 @@ internal class DesktopImageUtil {
         Box(modifier = modifier) {
             when (val bitmap = imageBitmapState.value) {
                 is CompleteResource -> {
-                        Image(
-                            bitmap = bitmap.result,
-                            "",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                    Image(
+                        bitmap = bitmap.result,
+                        "",
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
 
                 IdleResource, LoadingResource -> {
-                        Box(Modifier.padding(20.dp).fillMaxSize()) {
-                            Text(text = "Загрузка", color = Color.Blue)
-                        }
+                    Box(Modifier.padding(20.dp).fillMaxSize()) {
+                        Text(text = "Загрузка", color = Color.Blue)
+                    }
                 }
 
                 is ExceptionResource -> {
@@ -52,31 +52,30 @@ internal class DesktopImageUtil {
             }
         }
 
-
-        LaunchedEffect(Unit) {
+        LaunchedEffect(url) {
             if (imageBitmapState.value is IdleResource) {
                 val cached = cache.get(url)
                 if (cached != null && cached !is IdleResource && cached !is ExceptionResource) {
                     imageBitmapState.value = cached
                     return@LaunchedEffect
                 }
+            }
 
-                scope.launch {
-                    imageBitmapState.value = LoadingResource
+            scope.launch {
+                imageBitmapState.value = LoadingResource
 
-                    imageBitmapState.value = try {
-                        val imageRes = loadNetworkImage(url)
-                        CompleteResource(imageRes)
-                    } catch (e: Throwable) {
-                        e.printStackTrace()
-                        ExceptionResource(e)
-                    }
-                    cache.put(url, imageBitmapState.value)
+                imageBitmapState.value = try {
+                    val imageRes = loadNetworkImage(url)
+                    CompleteResource(imageRes)
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                    ExceptionResource(e)
                 }
+                cache.put(url, imageBitmapState.value)
             }
         }
-
     }
+
 }
 
 internal suspend fun loadNetworkImage(link: String): ImageBitmap = withContext(Dispatchers.IO) {

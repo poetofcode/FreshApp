@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalResourceApi::class, ExperimentalResourceApi::class)
+@file:OptIn(ExperimentalResourceApi::class)
 
 package presentation.screens.sharedUi
 
