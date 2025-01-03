@@ -21,12 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
+import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
+import presentation.screens.sharedUi.Post
+import presentation.screens.sharedUi.PostButton
+import presentation.screens.sharedUi.PostButtonType
 import presentation.screens.sharedUi.Posts
+import presentation.theme.AppColors
 import presentation.theme.AppTheme
 
 @ExperimentalResourceApi
@@ -63,8 +70,32 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
-                        is CompleteResource -> Posts(posts, gridState, ) { post ->
-                            viewModel.onFavoriteClick(post)
+                        is CompleteResource -> Posts(posts, gridState) { post ->
+                            Post(
+                                post,
+                                buttons = listOf(PostButtonType.FAVORITE)
+                            ) { buttonType ->
+                                when (buttonType) {
+                                    PostButtonType.FAVORITE -> {
+                                        val isChecked = post.isFavorite
+                                        val icon = when (isChecked) {
+                                            false -> Res.drawable.ic_cell_fav_disabled
+                                            true -> Res.drawable.ic_cell_fav_enabled
+                                        }
+                                        val tintColor = when (isChecked) {
+                                            true -> AppColors.favoriteRedColor
+                                            false -> AppColors.iconMutedColor
+                                        }
+
+                                        PostButton(
+                                            iconRes = icon,
+                                            onClick = { viewModel.onFavoriteClick(post) },
+                                            tintColor = tintColor,
+                                        )
+                                    }
+                                }
+
+                            }
                         }
 
                         is ExceptionResource -> {

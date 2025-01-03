@@ -65,9 +65,8 @@ class BookmarkListScreen : BaseScreen<BookmarkListViewModel>() {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
-                        is CompleteResource -> Posts(posts, gridState) { post ->
-                            viewModel.onFavoriteClick(post)
-                        }
+                        is CompleteResource -> Posts(posts, gridState)
+
 
                         is ExceptionResource -> {
                             Column(

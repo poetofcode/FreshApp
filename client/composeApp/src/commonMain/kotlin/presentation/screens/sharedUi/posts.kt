@@ -30,20 +30,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
-import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
-import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.navigation.NavigateEffect
 import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
-import presentation.theme.AppColors
 import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
@@ -53,7 +51,7 @@ import specific.ScrollableComponentState
 fun Posts(
     posts: List<PostModel>,
     gridState: LazyGridState,
-    onFavoriteClick: (PostModel) -> Unit
+    postContent: @Composable (PostModel) -> Unit = { Post(it) },
 ) {
 
     Row(
@@ -70,7 +68,7 @@ fun Posts(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(posts) { post ->
-                Post(post = post, onFavoriteClick = onFavoriteClick)
+                postContent(post)
             }
         }
 
@@ -82,8 +80,17 @@ fun Posts(
     }
 }
 
+// TODO move to /domain/entities
+enum class PostButtonType {
+    FAVORITE
+}
+
 @Composable
-fun Post(post: PostModel, onFavoriteClick: (PostModel) -> Unit) = Surface {
+fun Post(
+    post: PostModel,
+    buttons: List<PostButtonType> = emptyList(),
+    buttonContent: @Composable (PostButtonType) -> Unit = {},
+) = Surface {
     // val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -118,28 +125,42 @@ fun Post(post: PostModel, onFavoriteClick: (PostModel) -> Unit) = Surface {
 
         // Bottom buttons (Fav and etc)
         //
-        Row(modifier = Modifier.padding(vertical = 8.dp)) {
-            Spacer(modifier = Modifier.weight(1f))
+        if (buttons.isNotEmpty()) {
+            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
 
-            val isChecked = post.isFavorite
-            val icon = when (isChecked) {
-                false -> Res.drawable.ic_cell_fav_disabled
-                true -> Res.drawable.ic_cell_fav_enabled
+                buttons.forEach { buttonType ->
+                    buttonContent(buttonType)
+                }
             }
-            val tintColor = when (isChecked) {
-                true -> AppColors.favoriteRedColor
-                false -> AppColors.iconMutedColor
-            }
-            Box(modifier = Modifier.clickable {
-                onFavoriteClick(post)
-            }) {
-                Image(
-                    painter = painterResource(icon),
-                    contentDescription = null,
-                    contentScale = ContentScale.None,
-                    colorFilter = ColorFilter.tint(tintColor),
-                )
-            }
+        }
+    }
+}
+
+
+@Composable
+fun PostButton(
+    iconRes: DrawableResource,
+    onClick: () -> Unit,
+    tintColor: Color? = null,
+) {
+    Box(modifier = Modifier.clickable {
+        // onFavoriteClick(post)
+        onClick()
+    }) {
+        if (tintColor != null) {
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                contentScale = ContentScale.None,
+                colorFilter = ColorFilter.tint(tintColor),
+            )
+        } else {
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                contentScale = ContentScale.None,
+            )
         }
     }
 }
