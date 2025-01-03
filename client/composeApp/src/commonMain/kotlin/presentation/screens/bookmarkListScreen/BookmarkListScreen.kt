@@ -79,7 +79,7 @@ class BookmarkListScreen : BaseScreen<BookmarkListViewModel>() {
                                     PostButtonType.FAVORITE -> {
                                         PostButton(
                                             iconRes = Res.drawable.ic_delete_24,
-                                            onClick = { viewModel.onFavoriteClick(post) },
+                                            onClick = { viewModel.onRemoveFavoriteClick(post) },
                                             tintColor = AppColors.iconMutedColor,
                                         )
                                     }

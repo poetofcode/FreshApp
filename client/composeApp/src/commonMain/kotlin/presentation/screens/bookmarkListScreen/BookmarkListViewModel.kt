@@ -68,14 +68,10 @@ class BookmarkListViewModel(
 
     override fun onInitState(): State = State()
 
-    fun onFavoriteClick(post: PostModel) {
+    fun onRemoveFavoriteClick(post: PostModel) {
         viewModelScope.launch {
             try {
-                if (post.isFavorite) {
-                    favoriteRepository.remove(post.id)
-                } else {
-                    favoriteRepository.add(post)
-                }
+                favoriteRepository.remove(post.id)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
