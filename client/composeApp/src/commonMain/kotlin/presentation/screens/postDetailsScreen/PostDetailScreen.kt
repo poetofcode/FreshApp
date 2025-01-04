@@ -1,7 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class
-)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package presentation.screens.postDetailsScreen
 
@@ -93,17 +90,31 @@ class PostDetailsScreen(
         }
         AppTheme {
             Column {
-                TopAppBar(
-                    title = { Text(text = state.pageTitle ?: state.lastLoadedUrl ?: "Загрузка..") },
-                    navigationIcon = {
-                        IconButton(onClick = { onBackClick() }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back",
-                            )
-                        }
-                    },
+//                TopAppBar(
+//                    title = { Text(text = state.pageTitle ?: state.lastLoadedUrl ?: "Загрузка..") },
+//                    navigationIcon = {
+//                        IconButton(onClick = { onBackClick() }) {
+//                            Icon(
+//                                imageVector = Icons.Default.ArrowBack,
+//                                contentDescription = "Back",
+//                            )
+//                        }
+//                    },
+//                )
+
+                WebView(
+                    state = state,
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    navigator = navigator,
                 )
+
+                val loadingState = state.loadingState
+                if (loadingState is LoadingState.Loading) {
+                    LinearProgressIndicator(
+                        progress = loadingState.progress,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
 
                 Row {
                     Box(modifier = Modifier.weight(1f)) {
@@ -137,20 +148,6 @@ class PostDetailsScreen(
                         Text("Go")
                     }
                 }
-
-                val loadingState = state.loadingState
-                if (loadingState is LoadingState.Loading) {
-                    LinearProgressIndicator(
-                        progress = loadingState.progress,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-
-                WebView(
-                    state = state,
-                    modifier = Modifier.fillMaxSize(),
-                    navigator = navigator,
-                )
             }
         }
 
