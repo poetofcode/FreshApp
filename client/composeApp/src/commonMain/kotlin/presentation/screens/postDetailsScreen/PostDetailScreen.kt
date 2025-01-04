@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ class PostDetailsScreen(
     override fun Content() {
         val navigator = rememberWebViewNavigator()
 
-        fun onBackClick() : Boolean {
+        fun onBackClick(): Boolean {
             if (navigator.canGoBack) {
                 navigator.navigateBack()
             } else {
@@ -63,11 +64,12 @@ class PostDetailsScreen(
                 zoomLevel = 1.2
 
                 // Mobile
-                customUserAgentString = "Mozilla/5.0 (Linux; Android 14; SM-N960U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.80 Mobile Safari/537.36"
+                customUserAgentString =
+                    "Mozilla/5.0 (Linux; Android 14; SM-N960U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.80 Mobile Safari/537.36"
 
                 // PC
                 // customUserAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1) AppleWebKit/625.20 (KHTML, like Gecko) Version/14.3.43 Safari/625.20"
-                
+
                 backgroundColor = surfaceColor
 
                 androidWebSettings.apply {
@@ -104,17 +106,19 @@ class PostDetailsScreen(
 
                 WebView(
                     state = state,
-                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     navigator = navigator,
                 )
 
                 val loadingState = state.loadingState
-                if (loadingState is LoadingState.Loading) {
-                    LinearProgressIndicator(
-                        progress = loadingState.progress,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
+                LinearProgressIndicator(
+                    progress = (loadingState as? LoadingState.Loading)?.progress ?: 0f,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(if (loadingState is LoadingState.Loading) 1f else 0f),
+                )
 
                 Row {
                     Box(modifier = Modifier.weight(1f)) {
