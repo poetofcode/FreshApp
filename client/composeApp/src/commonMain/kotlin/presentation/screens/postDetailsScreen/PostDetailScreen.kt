@@ -159,16 +159,16 @@ class PostDetailsScreen(
                     }
 
                     Box(modifier = Modifier.weight(1f)) {
-                        if (state.errorsForCurrentRequest.isNotEmpty()) {
-                            Image(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Error",
-                                colorFilter = ColorFilter.tint(Color.Red),
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .padding(8.dp),
-                            )
-                        }
+//                        if (state.errorsForCurrentRequest.isNotEmpty()) {
+//                            Image(
+//                                imageVector = Icons.Default.Close,
+//                                contentDescription = "Error",
+//                                colorFilter = ColorFilter.tint(Color.Red),
+//                                modifier = Modifier
+//                                    .align(Alignment.CenterEnd)
+//                                    .padding(8.dp),
+//                            )
+//                        }
 
                         OutlinedTextField(
                             value = textFieldValue ?: "",
