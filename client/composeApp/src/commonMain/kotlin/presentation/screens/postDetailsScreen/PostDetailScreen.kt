@@ -120,7 +120,16 @@ class PostDetailsScreen(
                         .alpha(if (loadingState is LoadingState.Loading) 1f else 0f),
                 )
 
+                // Url field at bottom of page
+                //
                 Row {
+                    IconButton(onClick = { onBackClick() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                    }
+
                     Box(modifier = Modifier.weight(1f)) {
                         if (state.errorsForCurrentRequest.isNotEmpty()) {
                             Image(
