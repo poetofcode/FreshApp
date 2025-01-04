@@ -41,9 +41,11 @@ import presentation.TrayIcon
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
+import presentation.model.shared.OnOpenExternalBrowserSharedEvent
 import presentation.model.shared.OnReceivedTokenSharedEvent
 import presentation.model.shared.ShowDesktopNotificationSharedEvent
 import presentation.navigation.SharedMemory
+import utils.openWebpage
 import java.io.File
 import kotlin.math.max
 
@@ -222,6 +224,10 @@ fun CoroutineScope.listenToSharedEvents(trayState: TrayState) = launch {
                         type = Notification.Type.Info
                     )
                 )
+            }
+
+            is OnOpenExternalBrowserSharedEvent -> {
+                openWebpage(event.url)
             }
         }
     }

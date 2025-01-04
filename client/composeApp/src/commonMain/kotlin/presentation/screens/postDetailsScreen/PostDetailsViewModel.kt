@@ -3,6 +3,7 @@ package presentation.screens.postDetailsScreen
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
 import presentation.base.postSharedEvent
+import presentation.model.shared.OnOpenExternalBrowserSharedEvent
 import presentation.model.shared.OnShareLinkSharedEvent
 import presentation.navigation.NavigateBackEffect
 import presentation.navigation.SharedMemory
@@ -24,5 +25,8 @@ class PostDetailsViewModel : BaseViewModel<Unit>() {
         postSharedEvent(OnShareLinkSharedEvent(url))
     }
 
+    fun onOpenExternalBrowser(url: String) {
+        postSharedEvent(OnOpenExternalBrowserSharedEvent(url))
+    }
 
 }
