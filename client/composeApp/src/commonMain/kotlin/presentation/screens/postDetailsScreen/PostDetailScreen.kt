@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,9 +37,18 @@ import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
+import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_open_in_new_24
+import freshapp.composeapp.generated.resources.ic_share_24
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.vectorResource
+import presentation.LocalMainAppState
+import presentation.base.Config
 import presentation.navigation.BaseScreen
 import presentation.theme.AppTheme
 import specific.BackHandler
+import specific.shareLink
 
 /*
  TODO Для Андроида:
@@ -57,6 +67,7 @@ class PostDetailsScreen(
         get() = viewModelStore.getViewModel<PostDetailsViewModel>()
 
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator = rememberWebViewNavigator()
@@ -183,6 +194,27 @@ class PostDetailsScreen(
                             modifier = Modifier.align(Alignment.CenterVertically),
                         ) {
                             Text("Go")
+                        }
+                    }
+
+                    val mainState = LocalMainAppState.current
+                    when (mainState.config.deviceType) {
+                        Config.DeviceTypes.ANDROID -> {
+                            IconButton(onClick = { shareLink(textFieldValue.orEmpty()) }) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_share_24),
+                                    contentDescription = "Share",
+                                )
+                            }
+                        }
+
+                        Config.DeviceTypes.DESKTOP -> {
+                            IconButton(onClick = { shareLink(textFieldValue.orEmpty()) }) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_open_in_new_24),
+                                    contentDescription = "Share",
+                                )
+                            }
                         }
                     }
                 }
