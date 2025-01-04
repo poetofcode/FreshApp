@@ -104,18 +104,6 @@ class PostDetailsScreen(
 
         AppTheme {
             Column {
-//                TopAppBar(
-//                    title = { Text(text = state.pageTitle ?: state.lastLoadedUrl ?: "Загрузка..") },
-//                    navigationIcon = {
-//                        IconButton(onClick = { onBackClick() }) {
-//                            Icon(
-//                                imageVector = Icons.Default.ArrowBack,
-//                                contentDescription = "Back",
-//                            )
-//                        }
-//                    },
-//                )
-
                 WebView(
                     state = state,
                     modifier = Modifier
