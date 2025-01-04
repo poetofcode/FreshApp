@@ -1,10 +1,10 @@
-package specific
+package com.poetofcode.freshapp.utils
 
+import android.content.Context
 import androidx.core.app.ShareCompat
-import com.poetofcode.freshapp.FreshApp
 
-actual fun shareLink(url: String) {
-    ShareCompat.IntentBuilder(FreshApp.instance)
+fun Context.shareLink(url: String) {
+    ShareCompat.IntentBuilder(this)
         .setType("text/plain")
         .setChooserTitle("Share URL")
         .setText(url)

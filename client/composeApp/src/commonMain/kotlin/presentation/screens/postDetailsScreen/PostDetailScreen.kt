@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,13 +41,13 @@ import freshapp.composeapp.generated.resources.ic_open_in_new_24
 import freshapp.composeapp.generated.resources.ic_share_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 import presentation.LocalMainAppState
 import presentation.base.Config
 import presentation.navigation.BaseScreen
+import presentation.navigation.postSideEffect
 import presentation.theme.AppTheme
 import specific.BackHandler
-import specific.shareLink
+
 
 /*
  TODO Для Андроида:
@@ -200,7 +199,7 @@ class PostDetailsScreen(
                     val mainState = LocalMainAppState.current
                     when (mainState.config.deviceType) {
                         Config.DeviceTypes.ANDROID -> {
-                            IconButton(onClick = { shareLink(textFieldValue.orEmpty()) }) {
+                            IconButton(onClick = { viewModel.onShareLink(textFieldValue.orEmpty()) }) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_share_24),
                                     contentDescription = "Share",
@@ -209,7 +208,7 @@ class PostDetailsScreen(
                         }
 
                         Config.DeviceTypes.DESKTOP -> {
-                            IconButton(onClick = { shareLink(textFieldValue.orEmpty()) }) {
+                            IconButton(onClick = { /* shareLink(textFieldValue.orEmpty()) */ }) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_open_in_new_24),
                                     contentDescription = "Share",

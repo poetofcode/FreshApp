@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
+import com.poetofcode.freshapp.utils.shareLink
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
@@ -25,6 +26,7 @@ import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
 import presentation.model.shared.OnReceivedTokenSharedEvent
+import presentation.model.shared.OnShareLinkSharedEvent
 import presentation.navigation.SetBackHandlerEffect
 import presentation.navigation.SharedMemory
 import specific.AndroidContentProvider
@@ -118,6 +120,10 @@ class MainActivity : ComponentActivity() {
                 when (event) {
                     is OnReceivedTokenSharedEvent -> {
                         saveTokenOnServer()
+                    }
+
+                    is OnShareLinkSharedEvent -> {
+                        shareLink(event.url)
                     }
                 }
             }
