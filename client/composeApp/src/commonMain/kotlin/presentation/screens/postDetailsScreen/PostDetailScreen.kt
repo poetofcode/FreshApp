@@ -3,6 +3,8 @@
 package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
@@ -90,6 +92,16 @@ class PostDetailsScreen(
         var textFieldValue by remember(state.lastLoadedUrl) {
             mutableStateOf(state.lastLoadedUrl)
         }
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val isFieldFocused by interactionSource.collectIsFocusedAsState()
+
+        var isSubmitVisible by remember { mutableStateOf(false) }
+
+        fun checkSubmitVisibility(textFieldCurrentValue: String) {
+            isSubmitVisible = textFieldCurrentValue != state.lastLoadedUrl
+        }
+
         AppTheme {
             Column {
 //                TopAppBar(
@@ -144,21 +156,27 @@ class PostDetailsScreen(
 
                         OutlinedTextField(
                             value = textFieldValue ?: "",
-                            onValueChange = { textFieldValue = it },
+                            onValueChange = {
+                                textFieldValue = it
+                                checkSubmitVisibility(it)
+                            },
                             modifier = Modifier.fillMaxWidth(),
+                            interactionSource = interactionSource,
                             maxLines = 1,
                         )
                     }
 
-                    Button(
-                        onClick = {
-                            textFieldValue?.let {
-                                navigator.loadUrl(it)
-                            }
-                        },
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                    ) {
-                        Text("Go")
+                    if (isSubmitVisible) {
+                        Button(
+                            onClick = {
+                                textFieldValue?.let {
+                                    navigator.loadUrl(it)
+                                }
+                            },
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                        ) {
+                            Text("Go")
+                        }
                     }
                 }
             }
