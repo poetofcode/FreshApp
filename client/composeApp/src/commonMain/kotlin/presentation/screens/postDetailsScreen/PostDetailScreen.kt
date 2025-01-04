@@ -94,7 +94,7 @@ class PostDetailsScreen(
         }
 
         val interactionSource = remember { MutableInteractionSource() }
-        val isFieldFocused by interactionSource.collectIsFocusedAsState()
+        // val isFieldFocused by interactionSource.collectIsFocusedAsState()
 
         var isSubmitVisible by remember { mutableStateOf(false) }
 
@@ -172,6 +172,7 @@ class PostDetailsScreen(
                                 textFieldValue?.let {
                                     navigator.loadUrl(it)
                                 }
+                                isSubmitVisible = false
                             },
                             modifier = Modifier.align(Alignment.CenterVertically),
                         ) {
