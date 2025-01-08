@@ -22,6 +22,7 @@ import androidx.compose.ui.window.rememberWindowState
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import data.utils.AppDataStorageImpl
 import data.utils.ContentBasedPersistentStorage
 import data.utils.FileContentProvider
 import data.utils.ProfileStorageImpl
@@ -41,7 +42,6 @@ import presentation.TrayIcon
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
-import presentation.model.shared.OnReceivedTokenSharedEvent
 import presentation.model.shared.ShowDesktopNotificationSharedEvent
 import presentation.navigation.SharedMemory
 import java.io.File
@@ -66,10 +66,25 @@ fun main() = application {
         Config.DeviceTypes.DESKTOP,
     )
 
+    val configStorage = ContentBasedPersistentStorage(
+        FileContentProvider(
+            fileName = "config.json",
+            relativePath = "appcache",
+        )
+    )
+
+    val appDataStorage = AppDataStorageImpl(
+        FileContentProvider(
+            fileName = "appdata.json",
+            relativePath = "appcache",
+        )
+    )
+
     val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
         freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
+        appDataStorage = appDataStorage,
     )
 
     val vmStoreImpl = ViewModelStore(
@@ -77,18 +92,11 @@ fun main() = application {
         vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
     )
 
-    val storage = ContentBasedPersistentStorage(
-        FileContentProvider(
-            fileName = "config.json",
-            relativePath = "appcache",
-        )
-    )
-
-    var windowWidth: Int? by storage
-    var windowHeight: Int? by storage
-    var positionX: Int? by storage
-    var positionY: Int? by storage
-    var isMaximized: Boolean? by storage
+    var windowWidth: Int? by configStorage
+    var windowHeight: Int? by configStorage
+    var positionX: Int? by configStorage
+    var positionY: Int? by configStorage
+    var isMaximized: Boolean? by configStorage
 
     val windowState = rememberWindowState(
         size = DpSize(
@@ -191,7 +199,7 @@ fun main() = application {
                         deviceType = Config.DeviceTypes.DESKTOP,
                         viewModelStore = vmStoreImpl,
                         repositoryFactory = repositoryFactory,
-                        storage = storage,
+                        storage = configStorage,
                     )),
                 ) {
                     App()

@@ -1,4 +1,4 @@
-package presentation.screens.postListScreen
+package presentation.screens.bookmarkListScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,8 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
-import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
+import freshapp.composeapp.generated.resources.ic_delete_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
@@ -36,12 +35,13 @@ import presentation.screens.sharedUi.Posts
 import presentation.theme.AppColors
 import presentation.theme.AppTheme
 
+
 @ExperimentalResourceApi
 @ExperimentalMaterial3Api
-class PostListScreen : BaseScreen<PostListViewModel>() {
+class BookmarkListScreen : BaseScreen<BookmarkListViewModel>() {
 
-    override val viewModel: PostListViewModel
-        get() = viewModelStore.getViewModel<PostListViewModel>(screenId)
+    override val viewModel: BookmarkListViewModel
+        get() = viewModelStore.getViewModel<BookmarkListViewModel>(screenId)
 
     override val isMenuVisible: Boolean = true
 
@@ -52,7 +52,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         AppTheme {
             Column {
                 TopAppBar(
-                    title = { Text(text = "Лента") },
+                    title = { Text(text = "Избранное") },
                     navigationIcon = {},
                     actions = {
                         if (readyState !is LoadingResource) {
@@ -77,25 +77,16 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                             ) { buttonType ->
                                 when (buttonType) {
                                     PostButtonType.FAVORITE -> {
-                                        val isChecked = post.isFavorite
-                                        val icon = when (isChecked) {
-                                            false -> Res.drawable.ic_cell_fav_disabled
-                                            true -> Res.drawable.ic_cell_fav_enabled
-                                        }
-                                        val tintColor = when (isChecked) {
-                                            true -> AppColors.favoriteRedColor
-                                            false -> AppColors.iconMutedColor
-                                        }
-
                                         PostButton(
-                                            iconRes = icon,
-                                            onClick = { viewModel.onFavoriteClick(post) },
-                                            tintColor = tintColor,
+                                            iconRes = Res.drawable.ic_delete_24,
+                                            onClick = { viewModel.onRemoveFavoriteClick(post) },
+                                            tintColor = AppColors.iconMutedColor,
                                         )
                                     }
                                 }
                             }
                         }
+
 
                         is ExceptionResource -> {
                             Column(
