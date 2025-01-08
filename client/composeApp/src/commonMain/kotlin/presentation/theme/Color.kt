@@ -2,6 +2,15 @@ package presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Project specific colors
+//
+object AppColors {
+    val favoriteRedColor = Color(0xFFFB2727)
+    val iconMutedColor = Color.Gray
+}
+
+// Theme colors
+//
 val primaryLight = Color(0xFF415F91)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD6E3FF)

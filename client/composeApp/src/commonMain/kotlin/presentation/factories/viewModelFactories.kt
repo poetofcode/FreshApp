@@ -1,11 +1,13 @@
 package presentation.factories
 
+import data.repository.FavoriteRepository
 import data.repository.FeedRepository
-import data.repository.JokeRepository
 import data.repository.ProfileRepository
 import data.repository.RepositoryFactory
 import presentation.base.ViewModelFactory
 import presentation.screens.authScreen.AuthViewModel
+import presentation.screens.bookmarkListScreen.BookmarkListViewModel
+import presentation.screens.bookmarkTabScreen.BookmarkTabViewModel
 import presentation.screens.homeTabScreen.HomeTabViewModel
 import presentation.screens.notificationsScreen.NotificationsViewModel
 import presentation.screens.postDetailsScreen.PostDetailsViewModel
@@ -25,14 +27,43 @@ class HomeTabViewModelFactory() : ViewModelFactory<HomeTabViewModel> {
 
 }
 
+class BookmarkTabViewModelFactory() : ViewModelFactory<BookmarkTabViewModel> {
+    override fun createViewModel(): BookmarkTabViewModel {
+        return BookmarkTabViewModel()
+    }
 
-class PostListViewModelFactory(val feedRepository: FeedRepository) : ViewModelFactory<PostListViewModel> {
+    override val vmTypeName: String
+        get() = BookmarkTabViewModel::class.java.typeName
+
+}
+
+class PostListViewModelFactory(
+    val feedRepository: FeedRepository,
+    val favoriteRepository: FavoriteRepository,
+) : ViewModelFactory<PostListViewModel> {
     override fun createViewModel(): PostListViewModel {
-        return PostListViewModel(feedRepository = feedRepository)
+        return PostListViewModel(
+            feedRepository = feedRepository,
+            favoriteRepository = favoriteRepository,
+        )
     }
 
     override val vmTypeName: String
         get() = PostListViewModel::class.java.typeName
+
+}
+
+class BookmarkListViewModelFactory(
+    val favoriteRepository: FavoriteRepository,
+) : ViewModelFactory<BookmarkListViewModel> {
+    override fun createViewModel(): BookmarkListViewModel {
+        return BookmarkListViewModel(
+            favoriteRepository = favoriteRepository,
+        )
+    }
+
+    override val vmTypeName: String
+        get() = BookmarkListViewModel::class.java.typeName
 
 }
 
@@ -106,14 +137,22 @@ fun viewModelFactories(
     repositoryFactory: RepositoryFactory
 ): List<ViewModelFactory<*>> {
     val profileRepository = repositoryFactory.createProfileRepository()
+    val favoriteRepository = repositoryFactory.createFavoriteRepository()
     return listOf<ViewModelFactory<*>>(
         HomeTabViewModelFactory(),
         ProfileTabViewModelFactory(),
+        BookmarkTabViewModelFactory(),
         ProfileViewModelFactory(profileRepository),
         AuthViewModelFactory(profileRepository),
         RegViewModelFactory(profileRepository),
         NotificationsViewModelFactory(profileRepository),
-        PostListViewModelFactory(repositoryFactory.createFeedRepository()),
+        PostListViewModelFactory(
+            feedRepository = repositoryFactory.createFeedRepository(favoriteRepository),
+            favoriteRepository = favoriteRepository,
+        ),
+        BookmarkListViewModelFactory(
+            favoriteRepository = favoriteRepository,
+        ),
         PostDetailsViewModelFactory(),
     )
 }

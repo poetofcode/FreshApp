@@ -1,19 +1,22 @@
-package presentation.screens.postListScreen
+package presentation.screens.bookmarkListScreen
+
 
 import data.repository.ChangeInfo
 import data.repository.FavoriteRepository
-import data.repository.FeedRepository
 import domain.model.PostModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
-import presentation.model.*
+import presentation.model.CompleteResource
+import presentation.model.ExceptionResource
+import presentation.model.IdleResource
+import presentation.model.LoadingResource
+import presentation.model.Resource
 
-class PostListViewModel(
-    private val feedRepository: FeedRepository,
+class BookmarkListViewModel(
     private val favoriteRepository: FavoriteRepository,
-) : BaseViewModel<PostListViewModel.State>() {
+) : BaseViewModel<BookmarkListViewModel.State>() {
 
     data class State(
         val posts: List<PostModel> = emptyList(),
@@ -28,20 +31,10 @@ class PostListViewModel(
     private fun observeFavoriteChanges() {
         favoriteRepository.changesFlow
             .onEach { change ->
+                println("mylog Observed from BookmarkScreen: $change")
                 when (change) {
-                    is ChangeInfo.AddedItem -> {
-                        reduce { copy(posts = posts.map {
-                            if (it.id == change.id) {
-                                it.copy(isFavorite = true)
-                            } else it
-                        }) }
-                    }
-                    is ChangeInfo.DeletedItem -> {
-                        reduce { copy(posts = posts.map {
-                            if (it.id == change.id) {
-                                it.copy(isFavorite = false)
-                            } else it
-                        }) }
+                    else -> {
+                        fetchFeed()
                     }
                 }
             }
@@ -53,7 +46,7 @@ class PostListViewModel(
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
                 state.value = state.value.copy(
-                    posts = feedRepository.fetchFeed(),
+                    posts = favoriteRepository.fetch().list,
                     readyState = CompleteResource(Unit)
                 )
             } catch (e: Throwable) {
@@ -65,14 +58,10 @@ class PostListViewModel(
 
     override fun onInitState(): State = State()
 
-    fun onFavoriteClick(post: PostModel) {
+    fun onRemoveFavoriteClick(post: PostModel) {
         viewModelScope.launch {
             try {
-                if (post.isFavorite) {
-                    favoriteRepository.remove(post.id)
-                } else {
-                    favoriteRepository.add(post)
-                }
+                favoriteRepository.remove(post.id)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
@@ -80,3 +69,4 @@ class PostListViewModel(
     }
 
 }
+
