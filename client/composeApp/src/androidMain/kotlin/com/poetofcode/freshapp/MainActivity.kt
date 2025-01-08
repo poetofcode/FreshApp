@@ -10,9 +10,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
+import com.poetofcode.freshapp.utils.shareLink
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import data.utils.AppDataStorageImpl
 import data.utils.ContentBasedPersistentStorage
 import data.utils.ProfileStorageImpl
 import kotlinx.coroutines.flow.launchIn
@@ -25,6 +27,7 @@ import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
 import presentation.model.shared.OnReceivedTokenSharedEvent
+import presentation.model.shared.OnShareLinkSharedEvent
 import presentation.navigation.SetBackHandlerEffect
 import presentation.navigation.SharedMemory
 import specific.AndroidContentProvider
@@ -32,27 +35,42 @@ import specific.AndroidContentProvider
 
 class MainActivity : ComponentActivity() {
     // val repositoryFactory = MockRepositoryFactory()
-    val profileStorage = ProfileStorageImpl(
+    private val profileStorage = ProfileStorageImpl(
         AndroidContentProvider(
             fileName = "sessioncache.json",
             context = this,
         )
     )
 
-    val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
+    private val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
         profileStorage,
         Config.DeviceTypes.ANDROID,
     )
 
-    val repositoryFactory = RepositoryFactoryImpl(
+    private val configStorage = ContentBasedPersistentStorage(
+        AndroidContentProvider(
+            fileName = "config.json",
+            context = this,
+        )
+    )
+
+    private val appDataStorage = AppDataStorageImpl(
+        AndroidContentProvider(
+            fileName = "appdata.json",
+            context = this,
+        )
+    )
+
+    private val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
         freshApi = networkingFactory.createFreshApi(),
-        profileStorage = profileStorage
+        profileStorage = profileStorage,
+        appDataStorage = appDataStorage,
     )
 
     private var backHandleCallback: (() -> Boolean)? = null
 
-    val vmStoreImpl = ViewModelStore(
+    private val vmStoreImpl = ViewModelStore(
         coroutineScope = lifecycleScope,
         vmFactories = viewModelFactories(
             repositoryFactory = repositoryFactory
@@ -82,20 +100,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CompositionLocalProvider(
-                LocalMainAppState provides MainAppState(config = Config(
-                    deviceType = Config.DeviceTypes.ANDROID,
-                    viewModelStore = vmStoreImpl,
-                    repositoryFactory = repositoryFactory,
-                    storage = ContentBasedPersistentStorage(
-                        AndroidContentProvider(
-                            fileName = "config.json",
-                            context = this,
-                        )),
-                )
-                )
-            ) {
-                App()
-            }
+                LocalMainAppState provides MainAppState(
+                    config = Config(
+                        deviceType = Config.DeviceTypes.ANDROID,
+                        viewModelStore = vmStoreImpl,
+                        repositoryFactory = repositoryFactory,
+                        storage = configStorage
+                    ))
+                ) {
+                    App()
+                }
         }
 
         lifecycleScope.launch {
@@ -118,6 +132,10 @@ class MainActivity : ComponentActivity() {
                 when (event) {
                     is OnReceivedTokenSharedEvent -> {
                         saveTokenOnServer()
+                    }
+
+                    is OnShareLinkSharedEvent -> {
+                        shareLink(event.url)
                     }
                 }
             }

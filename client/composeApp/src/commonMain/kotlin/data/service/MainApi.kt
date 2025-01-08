@@ -5,7 +5,6 @@ import data.entity.CreateSessionResponse
 import data.entity.DataResponse
 import data.entity.ExceptionResponse
 import data.entity.FailureResponse
-import data.entity.JokesResponse
 import data.entity.NotificationResponse
 import data.entity.ResultResponse
 import data.entity.SaveFirebasePushTokenRequestBody
@@ -32,16 +31,6 @@ class MainApi(
     private val deviceType: Config.DeviceTypes,
     private val appVersion: String,
 ) {
-
-    suspend fun fetchJokes() = parseRequestResult<JokesResponse> {
-        httpClient.get {
-            authBlock {
-                url {
-                    path("/api/v1/jokes")
-                }
-            }
-        }
-    }
 
     suspend fun createSession(requestBody: CreateSessionRequestBody): ResultResponse<CreateSessionResponse> =
         parseRequestResult<CreateSessionResponse> {
