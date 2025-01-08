@@ -1,11 +1,13 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 
 package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.WebViewNavigator
+import com.multiplatform.webview.web.WebViewState
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
 import freshapp.composeapp.generated.resources.Res
@@ -59,7 +63,6 @@ class PostDetailsScreen(
         get() = viewModelStore.getViewModel<PostDetailsViewModel>()
 
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator = rememberWebViewNavigator()
@@ -107,6 +110,69 @@ class PostDetailsScreen(
             onDispose { }
         }
 
+        AppTheme {
+            Column {
+                val mainState = LocalMainAppState.current
+
+                when (mainState.config.deviceType) {
+                    Config.DeviceTypes.ANDROID -> mobileScreenLayout(
+                        navigationBar = {
+                            navigationBar(
+                                state = state,
+                                navigator = navigator,
+                                onBackClick = { onBackClick() }
+                            )
+                        },
+                        progressBar = {
+                            progressBar(loadingState = state.loadingState)
+                        },
+                        webView = {
+                            webContent(state = state, navigator = navigator)
+                        }
+                    )
+
+                    Config.DeviceTypes.DESKTOP -> desktopScreenLayout(
+                        navigationBar = {
+                            navigationBar(
+                                state = state,
+                                navigator = navigator,
+                                onBackClick = { onBackClick() }
+                            )
+                        },
+                        progressBar = {
+                            progressBar(loadingState = state.loadingState)
+                        },
+                        webView = {
+                            webContent(state = state, navigator = navigator)
+                        }
+                    )
+                }
+            }
+        }
+
+    }
+
+    @Composable
+    fun webContent(state: WebViewState, navigator: WebViewNavigator) = WebView(
+        state = state,
+        modifier = Modifier
+            .fillMaxSize(),
+        navigator = navigator,
+    )
+
+    @Composable
+    fun progressBar(loadingState: LoadingState) = LinearProgressIndicator(
+        progress = (loadingState as? LoadingState.Loading)?.progress ?: 0f,
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(if (loadingState is LoadingState.Loading) 1f else 0f),
+    )
+
+    // Url text field
+    //
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    fun navigationBar(state: WebViewState, navigator: WebViewNavigator, onBackClick: () -> Unit) {
         var textFieldValue by remember(state.lastLoadedUrl) {
             mutableStateOf(state.lastLoadedUrl)
         }
@@ -120,38 +186,18 @@ class PostDetailsScreen(
             isSubmitVisible = textFieldCurrentValue != state.lastLoadedUrl
         }
 
-        AppTheme {
-            Column {
-                WebView(
-                    state = state,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    navigator = navigator,
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { onBackClick() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
                 )
+            }
 
-                val loadingState = state.loadingState
-                LinearProgressIndicator(
-                    progress = (loadingState as? LoadingState.Loading)?.progress ?: 0f,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(if (loadingState is LoadingState.Loading) 1f else 0f),
-                )
-
-                // Url field at bottom of page
-                //
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { onBackClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                        )
-                    }
-
-                    Box(modifier = Modifier.weight(1f)) {
+            Box(modifier = Modifier.weight(1f)) {
 //                        if (state.errorsForCurrentRequest.isNotEmpty()) {
 //                            Image(
 //                                imageVector = Icons.Default.Close,
@@ -163,60 +209,83 @@ class PostDetailsScreen(
 //                            )
 //                        }
 
-                        OutlinedTextField(
-                            value = textFieldValue ?: "",
-                            onValueChange = {
-                                textFieldValue = it
-                                checkSubmitVisibility(it)
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            interactionSource = interactionSource,
-                            maxLines = 1,
+                OutlinedTextField(
+                    value = textFieldValue ?: "",
+                    onValueChange = {
+                        textFieldValue = it
+                        checkSubmitVisibility(it)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    interactionSource = interactionSource,
+                    maxLines = 1,
+                )
+            }
+
+            if (isSubmitVisible) {
+                Button(
+                    onClick = {
+                        textFieldValue?.let {
+                            navigator.loadUrl(it)
+                        }
+                        isSubmitVisible = false
+                    },
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                ) {
+                    Text("Go")
+                }
+            }
+
+            val mainState = LocalMainAppState.current
+            when (mainState.config.deviceType) {
+                Config.DeviceTypes.ANDROID -> {
+                    IconButton(onClick = {
+                        viewModel.onShareLink(textFieldValue.orEmpty())
+                    }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_share_24),
+                            contentDescription = "Share",
                         )
                     }
+                }
 
-                    if (isSubmitVisible) {
-                        Button(
-                            onClick = {
-                                textFieldValue?.let {
-                                    navigator.loadUrl(it)
-                                }
-                                isSubmitVisible = false
-                            },
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                        ) {
-                            Text("Go")
-                        }
-                    }
-
-                    val mainState = LocalMainAppState.current
-                    when (mainState.config.deviceType) {
-                        Config.DeviceTypes.ANDROID -> {
-                            IconButton(onClick = {
-                                viewModel.onShareLink(textFieldValue.orEmpty())
-                            }) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_share_24),
-                                    contentDescription = "Share",
-                                )
-                            }
-                        }
-
-                        Config.DeviceTypes.DESKTOP -> {
-                            IconButton(onClick = {
-                                viewModel.onOpenExternalBrowser(textFieldValue.orEmpty())
-                            }) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_open_in_new_24),
-                                    contentDescription = "Open in browser",
-                                )
-                            }
-                        }
+                Config.DeviceTypes.DESKTOP -> {
+                    IconButton(onClick = {
+                        viewModel.onOpenExternalBrowser(textFieldValue.orEmpty())
+                    }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_open_in_new_24),
+                            contentDescription = "Open in browser",
+                        )
                     }
                 }
             }
         }
+    }
 
+    @Composable
+    fun ColumnScope.mobileScreenLayout(
+        navigationBar: @Composable () -> Unit,
+        progressBar: @Composable () -> Unit,
+        webView: @Composable () -> Unit,
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            webView()
+        }
+        progressBar()
+        navigationBar()
+    }
+
+    @Composable
+    fun ColumnScope.desktopScreenLayout(
+        navigationBar: @Composable () -> Unit,
+        progressBar: @Composable () -> Unit,
+        webView: @Composable () -> Unit,
+    ) {
+        navigationBar()
+        progressBar()
+        Box(modifier = Modifier.weight(1f)) {
+            webView()
+        }
     }
 
 }
