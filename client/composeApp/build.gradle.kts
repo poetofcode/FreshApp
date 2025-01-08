@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -72,6 +73,25 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        register("release") {
+            val secretsPropertiesFile = rootProject.file("keystore/secret.properties")
+
+            // println("Curr dir: ${rootProject.buildscript.sourceFile}")
+
+            val secretProperties = Properties()
+            if (secretsPropertiesFile.exists()) {
+                println("secretsPropertiseFile exists!")
+                secretsPropertiesFile.bufferedReader().use { secretProperties.load(it) }
+
+                keyAlias = secretProperties.getProperty("keyAlias")
+                keyPassword = secretProperties.getProperty("keyPassword")
+                storeFile = file(secretProperties.getProperty("storeFile"))
+                storePassword = secretProperties.getProperty("storePassword")
+            }
+        }
+    }
+
     // apply(plugin = "com.google.gms.google-services")
     packaging {
         resources {
@@ -81,6 +101,9 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+            // proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isDebuggable = false
         }
     }
     compileOptions {
