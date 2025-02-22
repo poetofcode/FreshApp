@@ -192,7 +192,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @Composable
     private fun SourceList(sources: List<String>) {
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(space = 16.dp)
+            horizontalArrangement = Arrangement.spacedBy(space = 10.dp)
         ) {
             for (source in sources) {
                 SourceItem(source)
