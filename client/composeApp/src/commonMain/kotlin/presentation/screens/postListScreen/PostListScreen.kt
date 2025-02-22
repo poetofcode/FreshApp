@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -190,17 +191,23 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     private fun SourceList(sources: List<String>) {
-//        FlowRow {
-//            for (source in sources) {
-//                SourceItem(source)
-//            }
-//        }
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(space = 16.dp)
+        ) {
+            for (source in sources) {
+                SourceItem(source)
+            }
+        }
     }
 
 
     @Composable
     private fun SourceItem(source: String) {
-
+        RoundedButton(
+            modifier = Modifier.padding(),
+            title = source,
+            solidColor = AppColors.sourceSolidColor()
+        ) {  }
     }
 
     @Composable
