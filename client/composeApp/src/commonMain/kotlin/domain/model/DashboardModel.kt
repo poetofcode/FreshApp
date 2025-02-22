@@ -1,8 +1,8 @@
 package domain.model
 
 data class DashboardModel(
-    val categories: List<CategoryModel>,
-    val sources: List<String>
+    val categories: List<CategoryModel> = emptyList(),
+    val sources: List<String> = emptyList()
 )
 
 data class CategoryModel(

@@ -1,8 +1,10 @@
 package presentation.screens.postListScreen
 
 import data.repository.ChangeInfo
+import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
+import domain.model.DashboardModel
 import domain.model.PostModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -13,10 +15,12 @@ import presentation.model.*
 class PostListViewModel(
     private val feedRepository: FeedRepository,
     private val favoriteRepository: FavoriteRepository,
+    private val dashboardRepository: DashboardRepository,
 ) : BaseViewModel<PostListViewModel.State>() {
 
     data class State(
         val posts: List<PostModel> = emptyList(),
+        val dashboard: DashboardModel = DashboardModel(),
         val readyState: Resource<Unit> = IdleResource,
     )
 
@@ -54,6 +58,7 @@ class PostListViewModel(
                 state.value = state.value.copy(readyState = LoadingResource)
                 state.value = state.value.copy(
                     posts = feedRepository.fetchFeed(),
+                    dashboard = dashboardRepository.fetchDashboard(),
                     readyState = CompleteResource(Unit)
                 )
             } catch (e: Throwable) {
