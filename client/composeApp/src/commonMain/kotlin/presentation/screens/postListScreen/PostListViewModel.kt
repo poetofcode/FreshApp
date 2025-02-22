@@ -5,6 +5,7 @@ import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
 import domain.model.DashboardModel
+import domain.model.FeedQuery
 import domain.model.PostModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -22,6 +23,7 @@ class PostListViewModel(
         val posts: List<PostModel> = emptyList(),
         val dashboard: DashboardModel = DashboardModel(),
         val readyState: Resource<Unit> = IdleResource,
+        val currentFeedQuery: FeedQuery = FeedQuery(),
     )
 
     init {
