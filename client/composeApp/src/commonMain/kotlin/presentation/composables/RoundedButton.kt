@@ -26,13 +26,13 @@ fun RoundedButton(
     content: (@Composable BoxScope.() -> Unit)? = null,
     onClick: () -> Unit,
 ) {
-    Box(modifier = RoundedButtonDefaults.defaultRoundedModifier(
+    Box(modifier = Modifier.clickable {
+        onClick()
+    }.then(RoundedButtonDefaults.defaultRoundedModifier(
         solidColor = solidColor,
         borderColor = borderColor,
         shape = shape,
-    ).then(modifier).clickable {
-        onClick()
-    }) {
+    )).then(modifier)) {
         if (content == null) {
             RoundedButtonDefaults.defaultContent(
                 title = title,
