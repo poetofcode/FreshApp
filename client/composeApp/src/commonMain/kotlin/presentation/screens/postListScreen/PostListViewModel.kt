@@ -59,7 +59,7 @@ class PostListViewModel(
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
                 state.value = state.value.copy(
-                    posts = feedRepository.fetchFeed(),
+                    posts = feedRepository.fetchFeed(state.value.currentFeedQuery),
                     dashboard = dashboardRepository.fetchDashboard(),
                     readyState = CompleteResource(Unit)
                 )

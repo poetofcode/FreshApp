@@ -10,5 +10,9 @@ data class PostModel(
     val isFavorite: Boolean,
 ) {
     val id : String get() = link.toSha1()
+
+    val source: String get() = title.split(":").takeIf {
+        it.isNotEmpty()
+    }?.getOrNull(0) ?: "Unknown"
 }
 
