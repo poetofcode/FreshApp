@@ -110,4 +110,16 @@ class PostListViewModel(
         postSideEffect(HideBottomSheetEffect)
     }
 
+    fun onSourceClick(source: String) {
+        reduce {
+            copy(
+                currentFeedQuery = FeedQuery(
+                    sources = listOf(source)
+                )
+            )
+        }
+        fetchFeed()
+        postSideEffect(HideBottomSheetEffect)
+    }
+
 }

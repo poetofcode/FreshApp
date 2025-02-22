@@ -192,6 +192,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @Composable
     private fun SourceList(sources: List<String>) {
         FlowRow(
+            verticalArrangement = Arrangement.spacedBy(space = 6.dp),
             horizontalArrangement = Arrangement.spacedBy(space = 10.dp)
         ) {
             for (source in sources) {
@@ -207,12 +208,13 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             modifier = Modifier.padding(),
             title = source,
             solidColor = AppColors.sourceSolidColor()
-        ) {  }
+        ) {
+            viewModel.onSourceClick(source)
+        }
     }
 
     @Composable
     private fun CategoryItem(category: CategoryModel) {
-        // Text(text = category.title)
         RoundedButton(
             modifier = Modifier.sizeIn(minWidth = 170.dp),
             solidColor = AppColors.categorySolidColor,
