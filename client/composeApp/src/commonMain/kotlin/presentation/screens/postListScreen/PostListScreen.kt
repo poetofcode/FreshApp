@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import domain.model.CategoryModel
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
@@ -159,14 +160,45 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     private fun ChooseCategoryDialog() = Surface {
-        Column(
-            Modifier.fillMaxWidth().padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text(text = "Все")
-            Text(text = "Технологии")
-            Text(text = "Политика")
+        with(viewModel.state.value) {
+            Column(
+                Modifier.fillMaxWidth().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Category list
+                DialogTitle(text = "Категории")
+                for (category in dashboard.categories) {
+                    CategoryItem(category)
+                }
+
+                // Sources list
+                DialogTitle(text = "Источники")
+                SourceList(sources = dashboard.sources)
+            }
         }
+    }
+
+    @Composable
+    private fun DialogTitle(text: String) {
+
+    }
+
+    @Composable
+    private fun SourceList(sources: List<String>) {
+        for (source in sources) {
+            SourceItem(source)
+        }
+    }
+
+
+    @Composable
+    private fun SourceItem(source: String) {
+        //
+    }
+
+    @Composable
+    private fun CategoryItem(category: CategoryModel) {
+        // TODO("Not yet implemented")
     }
 }
