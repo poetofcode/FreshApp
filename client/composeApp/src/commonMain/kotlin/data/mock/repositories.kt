@@ -15,7 +15,7 @@ class MockDashboardRepositoryImpl : DashboardRepository {
     }
 
     private fun createSources(): List<String> = listOf(
-        "habr", "dtf", "3dnews"
+        "habr", "dtf", "3dnews", "Lenta"
     )
 
     private fun createCategories(): List<CategoryModel> = listOf(
