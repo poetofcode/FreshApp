@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -212,7 +215,15 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @Composable
     private fun CategoryItem(category: CategoryModel) {
         // Text(text = category.title)
-        RoundedButton(title = category.title) { }
+        RoundedButton(
+            modifier = Modifier.sizeIn(minWidth = 170.dp),
+            content = {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = category.title,
+                )
+            }
+        ) { }
     }
 
     @Composable
@@ -223,6 +234,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         solidColor: Color? = null,
         borderColor: Color? = null,
         shape: Shape? = null,
+        content: (@Composable BoxScope.() -> Unit)? = null,
         onClick: () -> Unit,
     ) {
         Box(modifier = RoundedButtonDefaults.defaultRoundedModifier(
@@ -232,10 +244,14 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         ).then(modifier).clickable {
             onClick()
         }) {
-            Text(
-                text = title,
-                color = textColor ?: RoundedButtonDefaults.defaultTextColor()
-            )
+            if (content == null) {
+                RoundedButtonDefaults.defaultContent(
+                    title = title,
+                    textColor = textColor
+                )
+            } else {
+                content()
+            }
         }
     }
 
@@ -277,4 +293,12 @@ object RoundedButtonDefaults {
 
     @Composable
     fun defaultShape() = RoundedCornerShape(size = 8.dp)
+
+    @Composable
+    fun defaultContent(title: String, textColor: Color?) {
+        Text(
+            text = title,
+            color = textColor ?: defaultTextColor()
+        )
+    }
 }
