@@ -19,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -34,6 +35,8 @@ import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
+import presentation.navigation.ShowModalBottomSheetEffect
+import presentation.navigation.postSideEffect
 import presentation.screens.sharedUi.Post
 import presentation.screens.sharedUi.PostButton
 import presentation.screens.sharedUi.PostButtonType
@@ -61,7 +64,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                         ChooseCategoryButton(
                             title = "Все",
                             onClick = {
-                                viewModel.onChooseCategoryButtonClick()
+                                postSideEffect(ShowModalBottomSheetEffect {
+                                    ChooseCategoryDialog()
+                                })
                             }
                         )
                     },
@@ -133,8 +138,8 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
-    private @Composable
-    fun ChooseCategoryButton(title: String, onClick: () -> Unit) {
+    @Composable
+    private fun ChooseCategoryButton(title: String, onClick: () -> Unit) {
         Row(
             modifier = Modifier.clickable {
                 onClick()
@@ -152,4 +157,16 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
+    @Composable
+    private fun ChooseCategoryDialog() = Surface {
+        Column(
+            Modifier.fillMaxWidth().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(text = "Все")
+            Text(text = "Технологии")
+            Text(text = "Политика")
+        }
+    }
 }
