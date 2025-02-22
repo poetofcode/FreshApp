@@ -19,7 +19,7 @@ class MockDashboardRepositoryImpl : DashboardRepository {
     )
 
     private fun createCategories(): List<CategoryModel> = listOf(
-        CategoryModel(id = "1", title = "Все", sources = createSources()),
+        CategoryModel(id = "1", title = "Все", sources = emptyList()),
         CategoryModel(id = "2", title = "Технологии", sources = listOf("habr", "3dnews")),
         CategoryModel(id = "3", title = "Игры", sources = listOf("dtf"))
     )

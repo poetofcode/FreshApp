@@ -226,7 +226,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     color = AppColors.categoryTextColor(),
                 )
             }
-        ) { }
+        ) {
+            viewModel.onCategoryClick(category)
+        }
     }
 
 

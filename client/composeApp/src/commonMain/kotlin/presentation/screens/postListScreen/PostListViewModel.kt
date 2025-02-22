@@ -4,6 +4,7 @@ import data.repository.ChangeInfo
 import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
+import domain.model.CategoryModel
 import domain.model.DashboardModel
 import domain.model.FeedQuery
 import domain.model.PostModel
@@ -93,6 +94,17 @@ class PostListViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun onCategoryClick(category: CategoryModel) {
+        reduce {
+            copy(
+                currentFeedQuery = FeedQuery(
+                    category = category
+                )
+            )
+        }
+        fetchFeed()
     }
 
 }
