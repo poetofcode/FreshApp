@@ -68,7 +68,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 TopAppBar(
                     title = {
                         ChooseCategoryButton(
-                            title = "Все",
+                            title = screenTitle,
                             onClick = {
                                 postSideEffect(ShowModalBottomSheetEffect {
                                     ChooseCategoryDialog()
