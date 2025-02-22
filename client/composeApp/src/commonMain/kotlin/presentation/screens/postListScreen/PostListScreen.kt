@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,12 +58,12 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
             Column {
                 TopAppBar(
                     title = {
-                            ChooseCategoryButton(
-                                title = "Все",
-                                onClick = {
-                                    viewModel.onChooseCategoryButtonClick()
-                                }
-                            )
+                        ChooseCategoryButton(
+                            title = "Все",
+                            onClick = {
+                                viewModel.onChooseCategoryButtonClick()
+                            }
+                        )
                     },
                     navigationIcon = {},
                     actions = {
@@ -132,10 +135,20 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     private @Composable
     fun ChooseCategoryButton(title: String, onClick: () -> Unit) {
-        Row(Modifier.clickable {
-            onClick()
-        }) {
+        Row(
+            modifier = Modifier.clickable {
+                onClick()
+            }.padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(text = title)
+            Spacer(modifier = Modifier.size(20.dp))
+            IconButton(onClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.List,
+                    contentDescription = "Categories",
+                )
+            }
         }
     }
 
