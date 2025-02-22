@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
+import presentation.base.postSideEffect
 import presentation.model.*
+import presentation.navigation.HideBottomSheetEffect
 
 class PostListViewModel(
     private val feedRepository: FeedRepository,
@@ -105,6 +107,7 @@ class PostListViewModel(
             )
         }
         fetchFeed()
+        postSideEffect(HideBottomSheetEffect)
     }
 
 }
