@@ -79,4 +79,8 @@ class PostListViewModel(
         }
     }
 
+    fun onChooseCategoryButtonClick() {
+
+    }
+
 }

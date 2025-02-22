@@ -1,8 +1,10 @@
 package presentation.screens.postListScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,7 +54,14 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         AppTheme {
             Column {
                 TopAppBar(
-                    title = { Text(text = "Лента") },
+                    title = {
+                            ChooseCategoryButton(
+                                title = "Все",
+                                onClick = {
+                                    viewModel.onChooseCategoryButtonClick()
+                                }
+                            )
+                    },
                     navigationIcon = {},
                     actions = {
                         if (readyState !is LoadingResource) {
@@ -118,6 +127,15 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 }
 
             }
+        }
+    }
+
+    private @Composable
+    fun ChooseCategoryButton(title: String, onClick: () -> Unit) {
+        Row(Modifier.clickable {
+            onClick()
+        }) {
+            Text(text = title)
         }
     }
 
