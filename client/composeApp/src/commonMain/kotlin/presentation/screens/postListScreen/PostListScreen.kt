@@ -215,10 +215,15 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         // Text(text = category.title)
         RoundedButton(
             modifier = Modifier.sizeIn(minWidth = 170.dp),
+            solidColor = AppColors.categorySolidColor,
+            borderColor = AppColors.categoryTextColor().copy(
+                alpha = 0.5f
+            ),
             content = {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = category.title,
+                    color = AppColors.categoryTextColor(),
                 )
             }
         ) { }

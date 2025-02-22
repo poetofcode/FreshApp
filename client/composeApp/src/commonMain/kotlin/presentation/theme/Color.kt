@@ -10,6 +10,9 @@ object AppColors {
     val iconMutedColor = Color.Gray
     val sourceSolidColorDark = Color.Blue
     val sourceSolidColorLight = Color.Cyan
+    val categorySolidColor = Color.Yellow.copy(alpha = 0.5f)
+    val categoryTextColorLight = Color.Black
+    val categoryTextColorDark = Color.White
 
     @Composable
     fun sourceSolidColor() : Color {
@@ -17,6 +20,15 @@ object AppColors {
             sourceSolidColorDark
         } else {
             sourceSolidColorLight
+        }
+    }
+
+    @Composable
+    fun categoryTextColor() : Color {
+        return if (LocalDarkMode.current) {
+            categoryTextColorDark
+        } else {
+            categoryTextColorLight
         }
     }
 }
