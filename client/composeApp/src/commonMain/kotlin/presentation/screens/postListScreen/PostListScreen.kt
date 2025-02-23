@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.model.CategoryModel
+import domain.model.isCategorySelected
 import domain.model.isSourceSelected
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
@@ -229,7 +230,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         val state = viewModel.state.value
         RoundedButton(
             modifier = Modifier.sizeIn(minWidth = 170.dp),
-            solidColor = if (state.currentFeedQuery.category == category)
+            solidColor = if (state.currentFeedQuery.isCategorySelected(category))
                 AppColors.categorySolidColor
             else
                 AppColors.categorySolidColorUnselected,
