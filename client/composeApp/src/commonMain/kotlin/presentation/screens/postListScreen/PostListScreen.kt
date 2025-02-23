@@ -171,15 +171,15 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Sources list
+                DialogTitle(text = "Источники")
+                SourceList(sources = dashboard.sources)
+
                 // Category list
                 DialogTitle(text = "Категории")
                 for (category in dashboard.categories) {
                     CategoryItem(category)
                 }
-
-                // Sources list
-                DialogTitle(text = "Источники")
-                SourceList(sources = dashboard.sources)
             }
         }
     }
@@ -192,8 +192,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @Composable
     private fun SourceList(sources: List<String>) {
         FlowRow(
+            modifier = Modifier.sizeIn(maxWidth = 300.dp),
             verticalArrangement = Arrangement.spacedBy(space = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(space = 10.dp)
+            horizontalArrangement = Arrangement.spacedBy(space = 10.dp, Alignment.CenterHorizontally),
         ) {
             for (source in sources) {
                 SourceItem(source)
