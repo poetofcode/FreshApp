@@ -17,6 +17,7 @@ fun FeedQuery.isSourceSelected(source: String) : Boolean {
 fun FeedQuery.isCategorySelected(categoryArg: CategoryModel) : Boolean {
     return when {
         category != null -> category == categoryArg
-        else -> categoryArg.sources.count { sources.contains(it) } == sources.size
+        sources.isEmpty() -> categoryArg.sources.isEmpty()
+        else -> categoryArg.sources.isNotEmpty() && sources.containsAll(categoryArg.sources)
     }
 }
