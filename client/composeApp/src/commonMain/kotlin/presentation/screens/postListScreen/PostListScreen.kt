@@ -32,11 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.model.CategoryModel
+import domain.model.isSourceSelected
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.composables.RoundedButton
+import presentation.composables.muted
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
@@ -194,7 +196,10 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         FlowRow(
             modifier = Modifier.sizeIn(maxWidth = 300.dp),
             verticalArrangement = Arrangement.spacedBy(space = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(space = 10.dp, Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(
+                space = 10.dp,
+                Alignment.CenterHorizontally
+            ),
         ) {
             for (source in sources) {
                 SourceItem(source)
@@ -206,11 +211,14 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @Composable
     private fun SourceItem(source: String) {
         val state = viewModel.state.value
-        val isSelected = state.dashboard.sources.contains(source)
+        val isSelected = state.currentFeedQuery.isSourceSelected(source)
         RoundedButton(
             modifier = Modifier.padding(),
             title = source,
-            solidColor = AppColors.sourceSolidColor()
+            solidColor = if (isSelected)
+                AppColors.sourceSolidColor()
+            else
+                AppColors.sourceSolidColorUnselected()
         ) {
             viewModel.onSourceClick(source)
         }
@@ -218,10 +226,14 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     private fun CategoryItem(category: CategoryModel) {
+        val state = viewModel.state.value
         RoundedButton(
             modifier = Modifier.sizeIn(minWidth = 170.dp),
-            solidColor = AppColors.categorySolidColor,
-            borderColor = AppColors.categoryTextColor().copy(alpha = 0.5f),
+            solidColor = if (state.currentFeedQuery.category == category)
+                AppColors.categorySolidColor
+            else
+                AppColors.categorySolidColorUnselected,
+            borderColor = AppColors.categoryTextColor().muted(),
             content = {
                 Text(
                     modifier = Modifier.align(Alignment.Center),

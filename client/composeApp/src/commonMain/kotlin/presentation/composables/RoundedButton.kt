@@ -66,9 +66,7 @@ object RoundedButtonDefaults {
         )
 
     @Composable
-    fun defaultBorderColor() = MaterialTheme.colorScheme.onSurface.copy(
-        alpha = 0.5f
-    )
+    fun defaultBorderColor() = MaterialTheme.colorScheme.onSurface.muted()
 
     @Composable
     fun defaultSolidColor() = MaterialTheme.colorScheme.surfaceBright
