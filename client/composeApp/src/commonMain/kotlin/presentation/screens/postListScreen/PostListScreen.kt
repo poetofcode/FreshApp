@@ -205,6 +205,8 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     private fun SourceItem(source: String) {
+        val state = viewModel.state.value
+        val isSelected = state.dashboard.sources.contains(source)
         RoundedButton(
             modifier = Modifier.padding(),
             title = source,

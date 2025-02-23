@@ -3,6 +3,7 @@ package data.repository
 import data.service.FreshApi
 import domain.model.FeedQuery
 import domain.model.PostModel
+import domain.model.isSourceSelected
 
 interface FeedRepository {
 
@@ -29,14 +30,7 @@ class FeedRepositoryImpl(
                     isFavorite = false  // TODO implement
                 )
             }
-            .filter {
-                val sources = (query.category?.sources ?: query.sources).map { s -> s.lowercase() }
-                if (sources.isNotEmpty()) {
-                    sources.contains(it.source.lowercase())
-                } else {
-                    true
-                }
-            }
+            .filter { query.isSourceSelected(it.source) }
         val favoriteIds = favoriteRepository.filterFavoriteIds(posts.map { it.id })
         return posts.map {
             it.copy(isFavorite = favoriteIds.contains(it.id))
