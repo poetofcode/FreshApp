@@ -27,23 +27,14 @@ class PostListViewModel(
     private val dashboardRepository: DashboardRepository,
 ) : BaseViewModel<PostListViewModel.State>() {
 
-    var querySources: List<String>? by configStorage
+    private var querySources: List<String>? by configStorage
 
     data class State(
         val posts: List<PostModel> = emptyList(),
         val dashboard: DashboardModel = DashboardModel(),
         val readyState: Resource<Unit> = IdleResource,
         val currentFeedQuery: FeedQuery = FeedQuery(),
-    ) {
-        val screenTitle : String get() {
-            val query = currentFeedQuery
-            return when {
-                query.category != null -> query.category.title
-                query.sources.isNotEmpty() -> query.sources[0]
-                else -> "Все"
-            }
-        }
-    }
+    )
 
     init {
         observeFavoriteChanges()

@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.model.CategoryModel
+import domain.model.FeedQuery
 import domain.model.isCategorySelected
 import domain.model.isSourceSelected
 import freshapp.composeapp.generated.resources.Res
@@ -247,5 +248,14 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
+}
 
+
+val PostListViewModel.State.screenTitle : String get() {
+    val query = this.currentFeedQuery
+    return when {
+        query.category != null -> query.category.title
+        query.sources.isNotEmpty() -> query.sources.joinToString(" / ")
+        else -> "Все"
+    }
 }
