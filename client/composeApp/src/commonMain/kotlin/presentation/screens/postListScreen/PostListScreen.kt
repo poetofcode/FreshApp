@@ -16,8 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.model.CategoryModel
-import domain.model.FeedQuery
 import domain.model.isCategorySelected
 import domain.model.isSourceSelected
 import freshapp.composeapp.generated.resources.Res
@@ -158,12 +160,10 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         ) {
             Text(text = title)
             Spacer(modifier = Modifier.size(20.dp))
-            IconButton(onClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.List,
-                    contentDescription = "Categories",
-                )
-            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Default.List,
+                contentDescription = "Categories",
+            )
         }
     }
 
@@ -214,15 +214,53 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     private fun SourceItem(source: String) {
         val state = viewModel.state.value
         val isSelected = state.currentFeedQuery.isSourceSelected(source)
-        RoundedButton(
-            modifier = Modifier.padding(),
-            title = source,
-            solidColor = if (isSelected)
-                AppColors.sourceSolidColor()
-            else
-                AppColors.sourceSolidColorUnselected()
-        ) {
-            viewModel.onSourceClick(source)
+        Row {
+            // Select 'only it' button
+            RoundedButton(
+                modifier = Modifier.padding(),
+                title = source,
+                shape = RoundedCornerShape(
+                    topStart = 10.dp,
+                    bottomStart = 10.dp,
+                    topEnd = 0.dp,
+                    bottomEnd = 0.dp
+                ),
+                borderColor = Color.Transparent,
+                solidColor = if (isSelected)
+                    AppColors.sourceSolidColor()
+                else
+                    AppColors.sourceSolidColorUnselected()
+            ) {
+                viewModel.onSourceClick(source)
+            }
+            Spacer(Modifier.size(1.dp))
+            // (+) / (-)
+            RoundedButton(
+                modifier = Modifier.padding(),
+                shape = RoundedCornerShape(
+                    topStart = 0.dp,
+                    bottomStart = 0.dp,
+                    topEnd = 10.dp,
+                    bottomEnd = 10.dp
+                ),
+                // title = if (isSelected) "-" else "+",
+                borderColor = Color.Transparent,
+                solidColor = if (isSelected)
+                    AppColors.sourceSolidColor()
+                else
+                    AppColors.sourceSolidColorUnselected(),
+                content = {
+                    Icon(
+                        imageVector = if (isSelected)
+                            Icons.Default.Clear
+                        else
+                            Icons.Default.Add,
+                        contentDescription = "+/-",
+                    )
+                }
+            ) {
+                viewModel.onSourceClick(source)
+            }
         }
     }
 
@@ -251,11 +289,12 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 }
 
 
-val PostListViewModel.State.screenTitle : String get() {
-    val query = this.currentFeedQuery
-    return when {
-        query.category != null -> query.category.title
-        query.sources.isNotEmpty() -> query.sources.joinToString(" / ")
-        else -> "Все"
+val PostListViewModel.State.screenTitle: String
+    get() {
+        val query = this.currentFeedQuery
+        return when {
+            query.category != null -> query.category.title
+            query.sources.isNotEmpty() -> query.sources.joinToString(" / ")
+            else -> "Все"
+        }
     }
-}
