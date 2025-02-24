@@ -83,12 +83,9 @@ class PersistentStorage(
         val content = try {
             contentProvider.provideContent()
         } catch (e: Throwable) {
-            println("mylog Exception: ${e.stackTraceToString()}")
             e.printStackTrace()
             "{}"
         }
-
-        println("mylog Content: $content")
 
         val map = json.decodeFromString<Map<String, JsonElement>>(content)
         map.toMutableMap()
