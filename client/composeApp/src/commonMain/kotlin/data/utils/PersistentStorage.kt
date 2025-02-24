@@ -83,13 +83,18 @@ class PersistentStorage(
         val content = try {
             contentProvider.provideContent()
         } catch (e: Throwable) {
+            println("mylog Exception: ${e.stackTraceToString()}")
+            e.printStackTrace()
             "{}"
         }
+
+        println("mylog Content: $content")
+
         val map = json.decodeFromString<Map<String, JsonElement>>(content)
         map.toMutableMap()
     }
 
-    val map: Map<String, JsonElement> = _map
+    val map: Map<String, JsonElement> by lazy { _map }
 
     fun save(key: String, param: Any) {
         _map[key] = toJsonElement(param)
