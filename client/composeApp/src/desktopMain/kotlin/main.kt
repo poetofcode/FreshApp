@@ -91,7 +91,10 @@ fun main() = application {
 
     val vmStoreImpl = ViewModelStore(
         coroutineScope = rememberCoroutineScope(),
-        vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
+        vmFactories = viewModelFactories(
+            repositoryFactory = repositoryFactory,
+            configStorage = configStorage,
+        )
     )
 
     var windowWidth: Int? by configStorage

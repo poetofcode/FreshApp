@@ -73,7 +73,8 @@ class MainActivity : ComponentActivity() {
     private val vmStoreImpl = ViewModelStore(
         coroutineScope = lifecycleScope,
         vmFactories = viewModelFactories(
-            repositoryFactory = repositoryFactory
+            repositoryFactory = repositoryFactory,
+            configStorage = configStorage,
         )
     )
 

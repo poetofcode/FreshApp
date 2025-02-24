@@ -4,6 +4,9 @@ import data.repository.ChangeInfo
 import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
+import data.utils.PersistentStorage
+import data.utils.getValue
+import data.utils.setValue
 import domain.model.CategoryModel
 import domain.model.DashboardModel
 import domain.model.FeedQuery
@@ -17,6 +20,7 @@ import presentation.model.*
 import presentation.navigation.HideBottomSheetEffect
 
 class PostListViewModel(
+    private val configStorage: PersistentStorage,
     private val feedRepository: FeedRepository,
     private val favoriteRepository: FavoriteRepository,
     private val dashboardRepository: DashboardRepository,
