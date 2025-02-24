@@ -40,7 +40,6 @@ class PostListViewModel(
 
     init {
         observeFavoriteChanges()
-        fetchFeed()
     }
 
     private fun observeFavoriteChanges() {
@@ -106,7 +105,6 @@ class PostListViewModel(
                 )
             )
         }
-        fetchFeed()
         postSideEffect(HideBottomSheetEffect)
     }
 
@@ -118,8 +116,15 @@ class PostListViewModel(
                 )
             )
         }
-        fetchFeed()
         postSideEffect(HideBottomSheetEffect)
+    }
+
+    fun restoreFeedQueryFromConfig(dashboardSources: List<String>) {
+        reduce { copy(
+            currentFeedQuery = FeedQuery(
+                sources = dashboardSources
+            )
+        ) }
     }
 
 }

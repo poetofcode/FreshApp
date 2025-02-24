@@ -27,10 +27,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import data.utils.getValue
+import data.utils.setValue
 import domain.model.CategoryModel
 import domain.model.isCategorySelected
 import domain.model.isSourceSelected
@@ -38,10 +41,12 @@ import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import presentation.LocalMainAppState
 import presentation.composables.RoundedButton
 import presentation.composables.muted
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
+import presentation.model.IdleResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
 import presentation.navigation.ShowModalBottomSheetEffect
@@ -66,6 +71,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     override fun Content() = with(viewModel.state.value) {
+        observeStateChanges()
         AppTheme {
             Column {
                 TopAppBar(
@@ -144,6 +150,26 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 }
 
             }
+        }
+    }
+
+    @Composable
+    private fun observeStateChanges() {
+        val state = viewModel.state.value
+        val storage = LocalMainAppState.current.config.storage
+        val query = state.currentFeedQuery
+        var querySources : String? by storage
+        LaunchedEffect(query.sources) {
+            println("mylog Dashboard changed: ${query.sources}, feedQuery: $querySources")
+            val sourcesList = querySources?.split(",").orEmpty()
+            if (state.readyState is IdleResource && querySources != null) {
+                println("mylog Restore, feedQuery: $querySources")
+                viewModel.restoreFeedQueryFromConfig(sourcesList)
+            }
+            if (state.readyState !is IdleResource && sourcesList != query.sources) {
+                querySources = query.sources.joinToString(",")
+            }
+            viewModel.fetchFeed()
         }
     }
 
