@@ -23,7 +23,7 @@ import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
 import data.utils.AppDataStorageImpl
-import data.utils.ContentBasedPersistentStorage
+import data.utils.PersistentStorage
 import data.utils.FileContentProvider
 import data.utils.ProfileStorageImpl
 import data.utils.getValue
@@ -68,7 +68,7 @@ fun main() = application {
         Config.DeviceTypes.DESKTOP,
     )
 
-    val configStorage = ContentBasedPersistentStorage(
+    val configStorage = PersistentStorage(
         FileContentProvider(
             fileName = "config.json",
             relativePath = "appcache",
