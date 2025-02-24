@@ -15,7 +15,7 @@ import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
 import data.utils.AppDataStorageImpl
-import data.utils.ContentBasedPersistentStorage
+import data.utils.PersistentStorage
 import data.utils.ProfileStorageImpl
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
         Config.DeviceTypes.ANDROID,
     )
 
-    private val configStorage = ContentBasedPersistentStorage(
+    private val configStorage = PersistentStorage(
         AndroidContentProvider(
             fileName = "config.json",
             context = this,

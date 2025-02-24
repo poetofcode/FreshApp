@@ -1,23 +1,24 @@
 package data.utils
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
-import java.io.File
-import kotlin.reflect.KProperty
-
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.float
 import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.reflect.KProperty
 
 /*
     Detecting the present annotations within the given object passed into a constructor
@@ -111,7 +112,9 @@ class FileContentProvider(
         val cachePath = File("./", relativePath)
         cachePath.mkdirs()
         val stream = File("$cachePath/$fileName").bufferedReader()
-        return try { stream.use { it.readText() } } catch (e: Throwable) {
+        return try {
+            stream.use { it.readText() }
+        } catch (e: Throwable) {
             String()
         }
     }
@@ -128,73 +131,129 @@ class FileContentProvider(
 }
 
 
-interface PersistentStorage {
+//interface PersistentStorage {
+//
+//    fun save(key: String, param: Any)
+//
+//    fun fetch(key: String): Any?
+//
+//}
 
-    fun save(key: String, param: Any)
-
-    fun fetch(key: String): Any?
-
-}
-
-class ContentBasedPersistentStorage(
+class PersistentStorage(
     private val contentProvider: ContentProvider
-) : PersistentStorage {
-
-    private val map: MutableMap<String, JsonElement> by lazy {
+) {
+    private val _map: MutableMap<String, JsonElement> by lazy {
         val content = try {
             contentProvider.provideContent()
         } catch (e: Throwable) {
             "{}"
         }
-        // json.decodeFromString<PreferencesInfo>(content).root.orEmpty().toMutableMap()
         val map = json.decodeFromString<Map<String, JsonElement>>(content)
         map.toMutableMap()
     }
 
+    val map: Map<String, JsonElement> = _map
 
-    override fun save(key: String, param: Any) {
-        map[key] = when (param) {
+    fun save(key: String, param: Any) {
+        _map[key] = toJsonElement(param)
+        val str = json.encodeToString(_map)
+        contentProvider.saveContent(str)
+    }
+
+    fun deserializeAny(jsonElement: JsonElement): Any? {
+        println("mylog JsonElement: $jsonElement, isPrimitive: ${jsonElement is JsonPrimitive}")
+        return when (jsonElement) {
+            is JsonPrimitive -> when {
+                jsonElement.booleanOrNull != null -> jsonElement.boolean
+                jsonElement.intOrNull != null -> {
+                    println("mylog JsonElement int parsed: ${jsonElement.int}")
+                    jsonElement.int
+                }
+                jsonElement.floatOrNull != null -> jsonElement.float
+                jsonElement.isString -> jsonElement.content
+                else -> null
+            }
+
+            is JsonArray -> jsonElement.map { deserializeAny(it) }
+
+            else -> null
+        }
+    }
+
+    inline fun <reified T : Any> fetch(key: String): T? {
+        val res = map.get(key) ?: return null
+        println("Fetch, key[$key] = $res")
+        return (deserializeAny(res) as? T).apply {
+            println("Fetch (2), key[$key] = $this")
+        }
+    }
+
+    /*
+            return when (T::class) {
+            String::class -> {
+                (res as? JsonPrimitive)?.contentOrNull as? T
+            }
+
+            Int::class -> {
+                (res as? JsonPrimitive)?.intOrNull as? T
+            }
+
+            Float::class -> {
+                (res as? JsonPrimitive)?.floatOrNull as? T
+            }
+
+            Boolean::class -> {
+                (res as? JsonPrimitive)?.booleanOrNull as? T
+            }
+
+            List::class -> {
+                (res as? JsonArray)?.forEach { element ->
+                    {
+                        when (element) {
+                            is JsonPrimitive
+                        }
+                    }
+                }
+
+                else -> null
+            }
+
+     */
+    private fun toJsonElement(param: Any): JsonElement {
+        return when (param) {
             is String -> JsonPrimitive(param)
             is Int -> JsonPrimitive(param)
             is Float -> JsonPrimitive(param)
             is Boolean -> JsonPrimitive(param)
+
+            is List<*> -> {
+                val arrayContents = param.mapNotNull { listEntry ->
+                    toJsonElement(listEntry!!)
+                }
+                JsonArray(arrayContents)
+            }
+
             else -> JsonPrimitive(param.toString())
         }
-
-        val str = json.encodeToString(map)
-
-        println("mylog STR: $str")
-
-        contentProvider.saveContent(str)
-    }
-
-    override fun fetch(key: String): Any? {
-        val param = (map[key] as? JsonPrimitive) ?: return null
-        return when {
-            param.isString -> param.content
-            param.booleanOrNull != null -> param.boolean
-            param.intOrNull != null -> param.int
-            param.floatOrNull != null -> param.float
-            else -> null
-        }
     }
 }
 
 
-inline operator fun <reified T : Any> PersistentStorage.getValue(nothing: Any?, property: KProperty<*>): T? {
+inline operator fun <reified T : Any> PersistentStorage.getValue(
+    nothing: Any?,
+    property: KProperty<*>
+): T? {
     val propertyName = property.name
-    val res = fetch(propertyName)
-    return when (T::class) {
-        String::class -> res?.toString() as? T
-        Int::class -> res?.toString()?.toIntOrNull() as? T
-        Float::class -> res?.toString()?.toFloatOrNull() as? T
-        Boolean::class -> res?.toString()?.toBooleanStrictOrNull() as? T
-
-        else -> null
+    return (fetch(propertyName) as? T)?.apply {
+        println("mylog name: $propertyName, value: $this")
     }
 }
 
-inline operator fun <reified T : Any> PersistentStorage.setValue(nothing: Any?, property: KProperty<*>, value: T?) {
+inline operator fun <reified T : Any> PersistentStorage.setValue(
+    nothing: Any?,
+    property: KProperty<*>,
+    value: T?
+) {
     val propertyName = property.name
     value?.let {
         this.save(propertyName, value)
