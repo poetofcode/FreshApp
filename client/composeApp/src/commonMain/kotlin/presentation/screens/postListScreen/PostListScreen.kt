@@ -259,7 +259,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     )
                 }
             ) {
-                viewModel.onSourceClick(source)
+                viewModel.onSourceAddRemoveClick(source)
             }
         }
     }

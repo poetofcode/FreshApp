@@ -12,6 +12,8 @@ import domain.model.DashboardModel
 import domain.model.FeedQuery
 import domain.model.PostModel
 import domain.model.finalSources
+import domain.model.isSourceSelected
+import domain.model.toggleSource
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -119,6 +121,16 @@ class PostListViewModel(
             )
         }
         postSideEffect(HideBottomSheetEffect)
+        querySources = state.value.currentFeedQuery.finalSources()
+        fetchFeed()
+    }
+
+    fun onSourceAddRemoveClick(source: String) {
+        reduce {
+            copy(
+                currentFeedQuery = currentFeedQuery.toggleSource(dashboard.sources, source)
+            )
+        }
         querySources = state.value.currentFeedQuery.finalSources()
         fetchFeed()
     }
