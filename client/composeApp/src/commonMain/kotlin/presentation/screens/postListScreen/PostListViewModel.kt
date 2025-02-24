@@ -11,6 +11,7 @@ import domain.model.CategoryModel
 import domain.model.DashboardModel
 import domain.model.FeedQuery
 import domain.model.PostModel
+import domain.model.finalSources
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -25,6 +26,8 @@ class PostListViewModel(
     private val favoriteRepository: FavoriteRepository,
     private val dashboardRepository: DashboardRepository,
 ) : BaseViewModel<PostListViewModel.State>() {
+
+    var querySources: List<String>? by configStorage
 
     data class State(
         val posts: List<PostModel> = emptyList(),
@@ -44,6 +47,8 @@ class PostListViewModel(
 
     init {
         observeFavoriteChanges()
+        restoreFeedQueryFromConfig(querySources.orEmpty())
+        fetchFeed()
     }
 
     private fun observeFavoriteChanges() {
@@ -110,6 +115,8 @@ class PostListViewModel(
             )
         }
         postSideEffect(HideBottomSheetEffect)
+        querySources = state.value.currentFeedQuery.finalSources()
+        fetchFeed()
     }
 
     fun onSourceClick(source: String) {
@@ -121,9 +128,11 @@ class PostListViewModel(
             )
         }
         postSideEffect(HideBottomSheetEffect)
+        querySources = state.value.currentFeedQuery.finalSources()
+        fetchFeed()
     }
 
-    fun restoreFeedQueryFromConfig(dashboardSources: List<String>) {
+    private fun restoreFeedQueryFromConfig(dashboardSources: List<String>) {
         reduce { copy(
             currentFeedQuery = FeedQuery(
                 sources = dashboardSources

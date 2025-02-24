@@ -155,22 +155,22 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     @Composable
     private fun observeStateChanges() {
-        val state = viewModel.state.value
-        val storage = LocalMainAppState.current.config.storage
-        val query = state.currentFeedQuery
-        var querySources : String? by storage
-        LaunchedEffect(query.sources) {
-            println("mylog Dashboard changed: ${query.sources}, feedQuery: $querySources")
-            val sourcesList = querySources?.split(",").orEmpty()
-            if (state.readyState is IdleResource && querySources != null) {
-                println("mylog Restore, feedQuery: $querySources")
-                viewModel.restoreFeedQueryFromConfig(sourcesList)
-            }
-            if (state.readyState !is IdleResource && sourcesList != query.sources) {
-                querySources = query.sources.joinToString(",")
-            }
-            viewModel.fetchFeed()
-        }
+//        val state = viewModel.state.value
+//        val storage = LocalMainAppState.current.config.storage
+//        val query = state.currentFeedQuery
+//        var querySources : String? by storage
+//        LaunchedEffect(query.sources) {
+//            println("mylog Dashboard changed: ${query.sources}, feedQuery: $querySources")
+//            val sourcesList = querySources?.split(",").orEmpty()
+//            if (state.readyState is IdleResource && querySources != null) {
+//                println("mylog Restore, feedQuery: $querySources")
+//                viewModel.restoreFeedQueryFromConfig(sourcesList)
+//            }
+//            if (state.readyState !is IdleResource && sourcesList != query.sources) {
+//                querySources = query.sources.joinToString(",")
+//            }
+//            viewModel.fetchFeed()
+//        }
     }
 
     @Composable

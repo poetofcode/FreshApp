@@ -21,3 +21,10 @@ fun FeedQuery.isCategorySelected(categoryArg: CategoryModel) : Boolean {
         else -> categoryArg.sources.isNotEmpty() && sources.containsAll(categoryArg.sources)
     }
 }
+
+fun FeedQuery.finalSources() : List<String> {
+    return when {
+        category != null -> category.sources
+        else -> sources
+    }
+}
