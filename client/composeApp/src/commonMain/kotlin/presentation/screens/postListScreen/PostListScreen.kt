@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import domain.model.CategoryModel
 import domain.model.isCategorySelected
@@ -153,14 +154,18 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
     @Composable
     private fun ChooseCategoryButton(title: String, onClick: () -> Unit) {
         Row(
-            modifier = Modifier.clickable {
+            modifier = Modifier.fillMaxWidth().clickable {
                 onClick()
             }.padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = title)
-            Spacer(modifier = Modifier.size(20.dp))
+            Text(
+                modifier = Modifier.weight(1f),
+                text = title,
+                overflow = TextOverflow.Ellipsis, maxLines = 1
+            )
             Icon(
+                modifier = Modifier,
                 imageVector = Icons.AutoMirrored.Default.List,
                 contentDescription = "Categories",
             )
