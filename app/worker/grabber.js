@@ -5,10 +5,14 @@ class GrabberWorker {
 
 	constructor(context) {
 		this.context = context;
+		this.repositories = context.repositories;
 	}
 
     async doWork() {
 	    console.log("Работает grabber (worker)");
+
+    	const feed = await this.repositories.grabber.fetchTotalFeed();
+		console.log(`Posts : ${feed}`);
 
 	    /*
 			Тут будет вызываться GrabRepository
