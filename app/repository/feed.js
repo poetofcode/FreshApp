@@ -7,11 +7,25 @@ class FeedRepository {
 
 	constructor(context) {
 		this.context = context;
+		this.postsCollection = context.getDb().collection('posts');
 	}
 
-	async saveFeed(feed) {
+	async saveFeed(posts) {
+		console.log('FeedRepository: logging');
+		
+		let bulkTags = [];
+		
+		posts.forEach(post => {
+			bulkTags.push({
+				updateOne: {
+					filter: { link: post.link },
+					update: { $set: post },
+					upsert: true
+				}
+			});
+		});
 
-        return [];
+        this.postsCollection.bulkWrite(bulkTags);
 	}
 
 }

@@ -14,18 +14,7 @@ class GrabberWorker {
     	const feed = await this.repositories.grabber.fetchTotalFeed();
 		console.log(`Posts : ${feed}`);
 
-	    /*
-			Тут будет вызываться GrabRepository
-			Что то наподобие:
-
-			const feed = async grabberRepository.fetchTotalFeed();
-			
-			Далее сохраняем это:
-
-			async feedRepository.saveFeed(feed);
-
-			Если ошибка, то логгируем её пока что просто
-	    */
+		await this.repositories.feed.saveFeed(feed);
     }
 
 }
