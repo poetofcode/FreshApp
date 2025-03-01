@@ -24,10 +24,23 @@ class GrabberRepository {
 	}
 
 	async fetchTotalFeed() {
-		// TODO Fetch sources
+		const sources = await this.fetchSources();
 
+		// Loop by sources and invoke fetchFeedBySource(source)
+
+	    return JSON.parse(mockFeed).posts;
+	}
+
+	async fetchSources() {
+		return JSON.parse(mockDashboard);
+	}
+
+
+	async fetchFeedBySource(source) {
 		const url = this.makeParserUrl('v2/feed/dtf');
 		console.log(`Url to parser: ${url}`);
+
+		// TODO add try|catch
 
 		const response = await axios({
           method: 'get',
@@ -43,12 +56,8 @@ class GrabberRepository {
 			console.log(result.posts);
 		}
 
-	    return JSON.parse(mockFeed).posts;
-	}
-
-	async fetchSources() {
-		return JSON.parse(mockDashboard);
-	}
+		return [];
+	} 
 
 
 	makeParserUrl(path) {
