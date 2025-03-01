@@ -27,6 +27,7 @@ class GrabberRepository {
 		const sources = await this.fetchSources();
 
 		// Loop by sources and invoke fetchFeedBySource(source)
+		await this.fetchFeedBySource('dtf');
 
 	    return JSON.parse(mockFeed).posts;
 	}
@@ -38,22 +39,23 @@ class GrabberRepository {
 
 	async fetchFeedBySource(source) {
 		const url = this.makeParserUrl('v2/feed/dtf');
-		console.log(`Url to parser: ${url}`);
 
-		// TODO add try|catch
+		try {
+			const response = await axios({
+	          method: 'get',
+	          url: url,
+	        });
 
-		const response = await axios({
-          method: 'get',
-          url: url,
-        });
+			const responseData = response.data;
 
-		const responseData = response.data;
-		console.log(responseData);
+			if (responseData.result && responseData.result.result == 'ok') {
+				const result = responseData.result;
+				console.log(`GrabberRepository, parsing of '${source}' success: ${result.posts.length} posts parsed`);
+				return result.posts; 
+			}
 
-		if (responseData.result && responseData.result.result == 'ok') {
-			const result = responseData.result;
-			console.log("Sucessfull!");
-			console.log(result.posts);
+		} catch (error) {
+			console.log(`GrabberRepository ERROR, method: fetchFeedBySource(${source}), exception: ${error}`);
 		}
 
 		return [];
