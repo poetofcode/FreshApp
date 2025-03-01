@@ -12,7 +12,7 @@ class GrabberWorker {
 	    console.log("Работает grabber (worker)");
 
     	const feed = await this.repositories.grabber.fetchTotalFeed();
-		console.log(`Posts : ${feed}`);
+		// 	console.log(`Posts : ${feed}`);
 
 		await this.repositories.feed.saveFeed(feed);
     }
