@@ -1,0 +1,26 @@
+{ 
+  "dev": {
+    "port": 3000,
+    "db": {
+      "url": "mongodb://127.0.0.1:27017/",
+      "name": "freshapp"
+    },
+    "fcmEnabled": false,
+    "parser": {
+      "path": "http://0.0.0.0:8080/site/fresh/",
+      "key": "xxxxx"
+    }
+  },
+  "prod": {
+    "port": 3000,
+    "db": {
+      "url": "mongodb://mongo_db:27017/",
+      "name": "freshapp"
+    },
+    "fcmEnabled": false,
+    "parser": {
+      "path": "http://0.0.0.0:8080/site/fresh/",
+      "key": "xxxxx"
+    }
+  }
+}
