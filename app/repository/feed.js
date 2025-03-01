@@ -26,7 +26,7 @@ class FeedRepository {
 			});
 		});
 
-        this.postsCollection.bulkWrite(bulkTags);
+        await this.postsCollection.bulkWrite(bulkTags);
 	}
 
 }

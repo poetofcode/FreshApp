@@ -24,16 +24,24 @@ class GrabberRepository {
 	}
 
 	async fetchTotalFeed() {
-		const sources = await this.fetchSources();
+		const sources = (await this.fetchDashboard()).sources;
+		console.log(sources);
 
 		// Loop by sources and invoke fetchFeedBySource(source)
-		const posts = await this.fetchFeedBySource('lenta');
 
-	    // return JSON.parse(mockFeed).posts;
-	    return posts;
+		// let totalPosts = [];
+
+		const totalPosts = await Promise.all(sources.map(source => this.fetchFeedBySource(source)));
+
+		// const posts = await this.fetchFeedBySource('lenta');
+
+		console.log('Total posts:');
+		console.log(totalPosts);
+
+	    return []; //totalPosts;
 	}
 
-	async fetchSources() {
+	async fetchDashboard() {
 		return JSON.parse(mockDashboard);
 	}
 

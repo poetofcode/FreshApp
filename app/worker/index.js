@@ -20,7 +20,7 @@ async function launch(context) {
         const interval = w[1];
         utils.setIntervalImmediately(async () => {
             try {
-                worker.doWork()
+                await worker.doWork()
             } catch(err) {
                 console.error(err);
             }

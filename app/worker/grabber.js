@@ -13,7 +13,7 @@ class GrabberWorker {
 
     	const feed = await this.repositories.grabber.fetchTotalFeed();
 		// 	console.log(`Posts : ${feed}`);
-
+		
 		await this.repositories.feed.saveFeed(feed);
     }
 
