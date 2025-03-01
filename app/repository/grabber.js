@@ -27,9 +27,10 @@ class GrabberRepository {
 		const sources = await this.fetchSources();
 
 		// Loop by sources and invoke fetchFeedBySource(source)
-		await this.fetchFeedBySource('dtf');
+		const posts = await this.fetchFeedBySource('lenta');
 
-	    return JSON.parse(mockFeed).posts;
+	    // return JSON.parse(mockFeed).posts;
+	    return posts;
 	}
 
 	async fetchSources() {
@@ -38,7 +39,7 @@ class GrabberRepository {
 
 
 	async fetchFeedBySource(source) {
-		const url = this.makeParserUrl('v2/feed/dtf');
+		const url = this.makeParserUrl(`v2/feed/${source}`);
 
 		try {
 			const response = await axios({
