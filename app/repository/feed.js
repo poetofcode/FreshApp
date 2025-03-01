@@ -16,6 +16,7 @@ class FeedRepository {
 		let bulkTags = [];
 		
 		posts.forEach(post => {
+			post.createdAt = new Date();
 			bulkTags.push({
 				updateOne: {
 					filter: { link: post.link },
