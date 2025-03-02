@@ -29,6 +29,14 @@ class FeedRepository {
         await this.postsCollection.bulkWrite(bulkTags);
 	}
 
+
+	async getFeed(sources, page, timestampFrom) {
+
+
+		
+		return [];
+	} 
+
 }
 
 exports.create = (context) => new FeedRepository(context);
