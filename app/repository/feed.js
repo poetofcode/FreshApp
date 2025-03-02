@@ -32,12 +32,22 @@ class FeedRepository {
 
 	async getFeed(sources, page, timestampFrom) {
 		const pageOrDefault = page || 0;
+		const sourcesOrDefault = sources || [];
 		const skipCount = pageOrDefault * countPerPage;
+		const timestampOrDefault = timestampFrom || 0;
+
+		let query = {};
+		if (sourcesOrDefault.length > 0) {
+			query.source = sourcesOrDefault[0];
+		}
+
+		if (timestampOrDefault > 0) {
+			// TODO учесть timestamp
+			// query.createdAt = sourcesOrDefault[0];
+		}
 
 		const arr = await this.postsCollection
-			.find({
-				// TODO учесть timestamp
-			})
+			.find(query)
 			.sort({ createdId: -1, _id: -1 })
 			.limit(countPerPage + 1) 
 			.skip(skipCount)
