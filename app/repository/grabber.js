@@ -47,7 +47,11 @@ class GrabberRepository {
 			if (responseData.result && responseData.result.result == 'ok') {
 				const result = responseData.result;
 				console.log(`GrabberRepository, parsing of '${source}' success: ${result.posts.length} posts parsed`);
-				return result.posts; 
+				return result.posts.map(post => {
+					const newPost = post;
+					newPost.source = source;
+					return newPost;
+				}); 
 			}
 
 		} catch (error) {
