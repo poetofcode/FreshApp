@@ -11,8 +11,8 @@ class FeedMiddleware {
     fetchFeed() { 
         return async (req, res, next) => {
             try {
-                const page = '0';   // TODO pare page from post-parameters
-                const timestampFrom = null;         // TODO same
+                const page = req.body.page;
+                const timestampFrom = req.body.timestampFrom;
                 const sources = req.body.sources;
 
                 console.log('Req body:');

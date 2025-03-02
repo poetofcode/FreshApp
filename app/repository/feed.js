@@ -36,25 +36,27 @@ class FeedRepository {
 		const skipCount = pageOrDefault * countPerPage;
 		const timestampOrDefault = timestampFrom || 0;
 
-		let query = {};
-		if (sourcesOrDefault.length > 0) {
-			query.source = sourcesOrDefault[0];
-		}
+		const arr = await Promise.all(
+			sourcesOrDefault.map(async (source) => {		
+				let query = {};
+				query.source = source;
 
-		if (timestampOrDefault > 0) {
-			// TODO учесть timestamp
-			// query.createdAt = sourcesOrDefault[0];
-		}
+				if (timestampOrDefault > 0) {
+					// TODO учесть timestamp
+					// query.createdAt = sourcesOrDefault[0];
+				}
 
-		const arr = await this.postsCollection
-			.find(query)
-			.sort({ createdId: -1, _id: -1 })
-			.limit(countPerPage + 1) 
-			.skip(skipCount)
-			.toArray();
+				return await this.postsCollection
+					.find(query)
+					.sort({ createdId: -1, _id: -1 })
+					.limit(countPerPage + 1) 
+					.skip(skipCount)
+					.toArray();
+			})
+		);
 
 		return {
-			posts: arr,
+			posts: arr.flat(),
 			isNextAllowed: false,
 			page: pageOrDefault,
 			timestamp: 0,
