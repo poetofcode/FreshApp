@@ -2,6 +2,8 @@ const ObjectId = require("mongodb").ObjectId;
 const crypto = require('crypto');
 const { utils } = require('../utils');
 
+const countPerPage = 10;
+
 
 class FeedRepository {
 
@@ -11,8 +13,6 @@ class FeedRepository {
 	}
 
 	async saveFeed(posts) {
-		console.log('FeedRepository: logging');
-		
 		let bulkTags = [];
 		
 		posts.forEach(post => {
@@ -31,10 +31,24 @@ class FeedRepository {
 
 
 	async getFeed(sources, page, timestampFrom) {
+		const pageOrDefault = page || 0;
+		const skipCount = pageOrDefault * countPerPage;
 
+		const arr = await this.postsCollection
+			.find({
+				// TODO учесть timestamp
+			})
+			.sort({ createdId: -1, _id: -1 })
+			.limit(countPerPage + 1) 
+			.skip(skipCount)
+			.toArray();
 
-		
-		return [];
+		return {
+			posts: arr,
+			isNextAllowed: false,
+			page: pageOrDefault,
+			timestamp: 0,
+		};
 	} 
 
 }
