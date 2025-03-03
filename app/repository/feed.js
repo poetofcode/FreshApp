@@ -2,7 +2,7 @@ const ObjectId = require("mongodb").ObjectId;
 const crypto = require('crypto');
 const { utils } = require('../utils');
 
-const countPerPage = 10;
+const countPerPage = 5;
 
 
 class FeedRepository {
@@ -34,32 +34,37 @@ class FeedRepository {
 		const pageOrDefault = page || 0;
 		const sourcesOrDefault = sources || [];
 		const skipCount = pageOrDefault * countPerPage;
-		const timestampOrDefault = timestampFrom || 0;
+		let timestampOrDefault = 0;		// Timestamp in milliseconds
+		if (timestampFrom > 0) {
+		 	timestampOrDefault = timestampFrom * 1;
+		} else {
+			timestampOrDefault = Date.now();
+		}
+
+		console.log(`TS or default: ${timestampOrDefault}`)
 
 		const arr = await Promise.all(
 			sourcesOrDefault.map(async (source) => {		
 				let query = {};
 				query.source = source;
-
-				if (timestampOrDefault > 0) {
-					// TODO учесть timestamp
-					// query.createdAt = sourcesOrDefault[0];
-				}
+				query.createdAt = { $lte: new Date(timestampOrDefault) };
 
 				return await this.postsCollection
 					.find(query)
-					.sort({ createdId: -1, _id: -1 })
-					.limit(countPerPage + 1) 
+					.sort({ _id: -1, createdAt: -1 })
+					.limit(countPerPage /* countPerPage + 1 */) 
 					.skip(skipCount)
 					.toArray();
 			})
 		);
 
+
+
 		return {
 			posts: arr.flat(),
 			isNextAllowed: false,
 			page: pageOrDefault,
-			timestamp: 0,
+			timestamp: timestampOrDefault,
 		};
 	} 
 

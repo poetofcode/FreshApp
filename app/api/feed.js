@@ -12,7 +12,7 @@ class FeedMiddleware {
         return async (req, res, next) => {
             try {
                 const page = req.body.page;
-                const timestampFrom = req.body.timestampFrom;
+                const timestampFrom = req.body.timestamp;
                 const sources = req.body.sources;
 
                 console.log('Req body:');
