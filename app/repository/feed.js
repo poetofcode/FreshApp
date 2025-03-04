@@ -41,7 +41,7 @@ class FeedRepository {
 			timestampOrDefault = Date.now();
 		}
 
-		console.log(`TS or default: ${timestampOrDefault}`)
+		// console.log(`TS or default: ${timestampOrDefault}`)
 
 		const arr = await Promise.all(
 			sourcesOrDefault.map(async (source) => {		
@@ -52,17 +52,21 @@ class FeedRepository {
 				return await this.postsCollection
 					.find(query)
 					.sort({ _id: -1, createdAt: -1 })
-					.limit(countPerPage /* countPerPage + 1 */) 
+					.limit(countPerPage + 1) 
 					.skip(skipCount)
 					.toArray();
 			})
 		);
 
-
+		const filtered = arr.filter(item => item.length > countPerPage);
+		let isNextAllowed = false;
+		if (filtered.length > 0) {
+			isNextAllowed = true;
+		}
 
 		return {
 			posts: arr.flat(),
-			isNextAllowed: false,
+			isNextAllowed: isNextAllowed,
 			page: pageOrDefault,
 			timestamp: timestampOrDefault,
 		};
