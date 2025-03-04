@@ -10,10 +10,7 @@ class GrabberWorker {
 
     async doWork() {
 	    console.log("Работает grabber (worker)");
-
-    	const feed = await this.repositories.grabber.fetchTotalFeed();
-		// 	console.log(`Posts : ${feed}`);
-		
+    	const feed = await this.repositories.grabber.fetchTotalFeed();		
 		await this.repositories.feed.saveFeed(feed);
     }
 

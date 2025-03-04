@@ -9,6 +9,7 @@ const mockDashboard = `
 		"categories": [],
 		"sources": [
 			"habr",
+			"dtf",
 			"lenta",
 			"3dnews"
 		]
