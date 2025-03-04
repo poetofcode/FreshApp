@@ -41,8 +41,6 @@ class FeedRepository {
 			timestampOrDefault = Date.now();
 		}
 
-		// console.log(`TS or default: ${timestampOrDefault}`)
-
 		const arr = await Promise.all(
 			sourcesOrDefault.map(async (source) => {		
 				let query = {};
@@ -64,8 +62,18 @@ class FeedRepository {
 			isNextAllowed = true;
 		}
 
+		let finalArray = [];
+		for (let i = 0; i < countPerPage; i++) {
+			for (let posts of arr) {
+				const post = posts[i];
+				if(!(typeof post === 'undefined')) {
+				    finalArray.push(post);
+				}
+			}
+		}
+
 		return {
-			posts: arr.flat(),
+			posts: finalArray,
 			isNextAllowed: isNextAllowed,
 			page: pageOrDefault,
 			timestamp: timestampOrDefault,
