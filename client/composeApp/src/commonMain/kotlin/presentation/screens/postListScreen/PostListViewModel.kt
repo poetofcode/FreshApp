@@ -54,12 +54,14 @@ class PostListViewModel(
     }
 
     fun fetchFeed() {
+        val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
+
         viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
                 state.value = state.value.copy(
                     posts = feedRepository.fetchFeed(
-                        FetchFeedInput(sources = listOf("lenta", "dtf", "habr"))
+                        FetchFeedInput(sources = mockSources)
                     ),
                     readyState = CompleteResource(Unit)
                 )

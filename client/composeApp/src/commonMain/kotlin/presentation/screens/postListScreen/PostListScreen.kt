@@ -70,7 +70,16 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
-                        is CompleteResource -> Posts(posts, gridState) { post ->
+                        is CompleteResource -> Posts(
+                            posts = posts,
+                            gridState = gridState,
+                            canLoadMore = {
+                                true
+                            },
+                            loadNextPage = {
+                                println("mylog Load next page !")
+                            }
+                        ) { post ->
                             Post(
                                 post,
                                 buttons = listOf(PostButtonType.FAVORITE)

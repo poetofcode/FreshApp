@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,10 +48,15 @@ import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
 
+private const val PAGE_COUNT = 5
+
+
 @Composable
 fun Posts(
     posts: List<PostModel>,
     gridState: LazyGridState,
+    canLoadMore: () -> Boolean = { false },
+    loadNextPage: () -> Unit = {},
     postContent: @Composable (PostModel) -> Unit = { Post(it) },
 ) {
 
@@ -68,6 +74,13 @@ fun Posts(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(posts) { post ->
+                LaunchedEffect(post) {
+                    val postIndex = posts.indexOf(post)
+                    val indexHalfOfLastPage = posts.size - PAGE_COUNT / 2 - 1
+                    if (postIndex > indexHalfOfLastPage) {
+                        if (canLoadMore()) loadNextPage()
+                    }
+                }
                 postContent(post)
             }
         }
