@@ -18,7 +18,7 @@ import kotlin.reflect.KProperty
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializer
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 /*
@@ -36,9 +36,23 @@ data class PreferencesInfo(
     val root: Map<String, @Serializable(with = AnySerializer::class) Any>? = null
 )
 
+@Serializer(forClass = ZonedDateTime::class)
+object DateSerializer : KSerializer<ZonedDateTime> {
+    private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
+
+    override fun serialize(encoder: Encoder, value: ZonedDateTime) {
+        encoder.encodeString(value.format(formatter))
+    }
+
+    override fun deserialize(decoder: Decoder): ZonedDateTime {
+        return ZonedDateTime.parse(decoder.decodeString(), formatter)
+    }
+}
+
+/*
 @Serializer(forClass = LocalDateTime::class)
 object DateSerializer : KSerializer<LocalDateTime> {
-    private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
+    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
     override fun serialize(encoder: Encoder, value: LocalDateTime) {
         encoder.encodeString(value.format(formatter))
@@ -48,6 +62,7 @@ object DateSerializer : KSerializer<LocalDateTime> {
         return LocalDateTime.parse(decoder.decodeString(), formatter)
     }
 }
+ */
 
 object AnySerializer : KSerializer<Any> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Any")

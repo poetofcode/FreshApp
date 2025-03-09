@@ -3,7 +3,7 @@ package domain.model
 import data.utils.DateSerializer
 import data.utils.toSha1
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @Serializable
 data class FavoritePost(
@@ -11,7 +11,7 @@ data class FavoritePost(
     val image: String?,
     val link: String,
     @Serializable(with = DateSerializer::class)
-    val createdAt: LocalDateTime,
+    val createdAt: ZonedDateTime,
 ) {
     val id : String get() = link.toSha1()
 }
@@ -21,7 +21,7 @@ fun PostModel.toFavoritePost() : FavoritePost {
         title = title,
         image = image,
         link = link,
-        createdAt = LocalDateTime.now(),
+        createdAt = ZonedDateTime.now(),
     )
 }
 
