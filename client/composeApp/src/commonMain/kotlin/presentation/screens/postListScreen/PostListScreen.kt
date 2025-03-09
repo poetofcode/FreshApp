@@ -77,7 +77,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                                 true
                             },
                             loadNextPage = {
-                                println("mylog Load next page !")
+                                viewModel.fetchFeed()
                             }
                         ) { post ->
                             Post(

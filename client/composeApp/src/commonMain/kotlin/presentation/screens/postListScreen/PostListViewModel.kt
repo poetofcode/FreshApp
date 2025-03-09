@@ -23,6 +23,7 @@ class PostListViewModel(
     data class State(
         val posts: List<PostModel> = emptyList(),
         val readyState: Resource<Unit> = IdleResource,
+        val currentPage: Int = 0,
     )
 
     init {
@@ -56,13 +57,21 @@ class PostListViewModel(
     fun fetchFeed() {
         val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
 
+        if (state.value.readyState is LoadingResource) {
+            return
+        }
+
         viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
                 state.value = state.value.copy(
-                    posts = feedRepository.fetchFeed(
-                        FetchFeedInput(sources = mockSources)
+                    posts = state.value.posts + feedRepository.fetchFeed(
+                        FetchFeedInput(
+                            sources = mockSources,
+                            page = state.value.currentPage,
+                        )
                     ),
+                    currentPage = state.value.currentPage + 1,
                     readyState = CompleteResource(Unit)
                 )
             } catch (e: Throwable) {

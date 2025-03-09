@@ -77,8 +77,11 @@ fun Posts(
                 LaunchedEffect(post) {
                     val postIndex = posts.indexOf(post)
                     val indexHalfOfLastPage = posts.size - PAGE_COUNT / 2 - 1
+
                     if (postIndex > indexHalfOfLastPage) {
-                        if (canLoadMore()) loadNextPage()
+                        if (canLoadMore()) {
+                            loadNextPage()
+                        }
                     }
                 }
                 postContent(post)
