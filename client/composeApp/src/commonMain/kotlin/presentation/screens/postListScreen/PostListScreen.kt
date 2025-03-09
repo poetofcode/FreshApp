@@ -139,7 +139,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         when (effect) {
             is ScrollToTopSideEffect -> {
                 lifecycleScope.launch {
-                    gridState.animateScrollToItem(index = 0)
+                    gridState.scrollToItem(0)
                 }
             }
         }
