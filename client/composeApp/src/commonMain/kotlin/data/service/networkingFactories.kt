@@ -10,10 +10,6 @@ interface NetworkingFactory {
 
     fun createApi() : MainApi
 
-    fun createFreshHttpClient() : HttpClient
-
-    fun createFreshApi() : FreshApi
-
 }
 
 class NetworkingFactoryImpl(
@@ -37,25 +33,9 @@ class NetworkingFactoryImpl(
         )
     }
 
-    override fun createFreshHttpClient(): HttpClient {
-        return FreshHttpClientFactory(
-            baseUrl = FRESH_URL,
-            apiKey = API_KEY
-        ).createClient()
-    }
-
-    override fun createFreshApi(): FreshApi {
-        return FreshApi(
-            httpClient = createFreshHttpClient(),
-            baseUrl = FRESH_URL
-        )
-    }
-
     private companion object {
         // TODO вынести в buildConfig
         const val BASE_URL = "http://127.0.0.1:3000"
-        const val FRESH_URL = "http://91.215.153.157:8080"
-        const val API_KEY = "secret-api-key"
     }
 
 }

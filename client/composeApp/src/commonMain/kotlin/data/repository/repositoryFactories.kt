@@ -1,9 +1,7 @@
 package data.repository
 
-import data.service.FreshApi
 import data.service.MainApi
 import data.utils.AppDataStorage
-import data.utils.PersistentStorage
 import data.utils.ProfileStorage
 
 interface RepositoryFactory {
