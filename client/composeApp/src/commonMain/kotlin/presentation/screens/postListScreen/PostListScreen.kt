@@ -1,5 +1,6 @@
 package presentation.screens.postListScreen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -133,18 +137,28 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                         }
                     }
 
-                    FloatingActionButton(
-                        modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
-                        onClick = {
-                            scrollTop(isAnimate = true)
+                    val firstItemVisible by remember {
+                        derivedStateOf {
+                            gridState.firstVisibleItemIndex == 0
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = null,
-                        )
                     }
 
+                    this@Column.AnimatedVisibility(
+                        visible = !firstItemVisible,
+                        modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)
+                    ) {
+                        FloatingActionButton(
+                            modifier = Modifier,
+                            onClick = {
+                                scrollTop(isAnimate = true)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowUp,
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 }
 
             }
