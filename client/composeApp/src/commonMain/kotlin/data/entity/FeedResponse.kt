@@ -1,6 +1,8 @@
 package data.entity
 
+import data.utils.DateSerializer
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
 @Serializable
 data class FeedResponse(
@@ -18,6 +20,7 @@ data class FeedResponse(
         val link: String? = null,
         val commentsCount: String? = null,
         val source: String? = null,
-        val createdAt: String? = null,
+        @Serializable(with = DateSerializer::class)
+        val createdAt: LocalDateTime,
     )
 }

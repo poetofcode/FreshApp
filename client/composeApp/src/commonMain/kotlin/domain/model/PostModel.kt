@@ -1,6 +1,7 @@
 package domain.model
 
 import data.utils.toSha1
+import java.time.LocalDateTime
 
 data class PostModel(
     val title: String,
@@ -8,7 +9,7 @@ data class PostModel(
     val link: String,
     val commentsCount: String,
     val isFavorite: Boolean,
+    val createdAt: LocalDateTime,
 ) {
-    val id : String get() = link.toSha1()
+    val id: String get() = link.toSha1()
 }
-

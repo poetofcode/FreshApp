@@ -32,5 +32,6 @@ fun FavoritePost.toPostModel() : PostModel {
         link = link,
         commentsCount = "",
         isFavorite = true,
+        createdAt = createdAt,
     )
 }

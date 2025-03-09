@@ -24,6 +24,8 @@ class PostListViewModel(
         val posts: List<PostModel> = emptyList(),
         val readyState: Resource<Unit> = IdleResource,
         val currentPage: Int = 0,
+        val lastTimestamp: Long = 0,
+        val isNextAllowed: Boolean = false,
     )
 
     init {
@@ -64,15 +66,19 @@ class PostListViewModel(
         viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
+                val feed = feedRepository.fetchFeed(
+                    FetchFeedInput(
+                        sources = mockSources,
+                        page = state.value.currentPage,
+                        lastTimestamp = state.value.lastTimestamp,
+                    )
+                )
                 state.value = state.value.copy(
-                    posts = state.value.posts + feedRepository.fetchFeed(
-                        FetchFeedInput(
-                            sources = mockSources,
-                            page = state.value.currentPage,
-                        )
-                    ),
-                    currentPage = state.value.currentPage + 1,
-                    readyState = CompleteResource(Unit)
+                    posts = state.value.posts + feed.posts,
+                    currentPage = feed.page + 1,
+                    readyState = CompleteResource(Unit),
+                    lastTimestamp = feed.timestamp,
+                    isNextAllowed = feed.isNextAllowed,
                 )
             } catch (e: Throwable) {
                 state.value = state.value.copy(readyState = ExceptionResource(e))

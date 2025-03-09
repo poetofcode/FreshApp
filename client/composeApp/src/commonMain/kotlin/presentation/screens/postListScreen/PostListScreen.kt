@@ -74,7 +74,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                             posts = posts,
                             gridState = gridState,
                             canLoadMore = {
-                                true
+                                isNextAllowed
                             },
                             loadNextPage = {
                                 viewModel.fetchFeed()
