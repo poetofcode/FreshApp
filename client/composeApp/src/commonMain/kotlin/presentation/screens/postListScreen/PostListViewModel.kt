@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
+import presentation.base.postSideEffect
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.IdleResource
@@ -63,6 +64,7 @@ class PostListViewModel(
 
     fun resetAndFetch() {
         val currentSources = state.value.sources
+        postSideEffect(ScrollToTopSideEffect)
         state.value = onInitState().copy(
             sources = currentSources
         )

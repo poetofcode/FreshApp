@@ -24,17 +24,22 @@ import androidx.compose.ui.unit.dp
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
+import presentation.navigation.SideEffect
 import presentation.screens.sharedUi.Post
 import presentation.screens.sharedUi.PostButton
 import presentation.screens.sharedUi.PostButtonType
 import presentation.screens.sharedUi.Posts
 import presentation.theme.AppColors
 import presentation.theme.AppTheme
+
+
+object ScrollToTopSideEffect : SideEffect
 
 @ExperimentalResourceApi
 @ExperimentalMaterial3Api
@@ -126,6 +131,16 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     }
                 }
 
+            }
+        }
+    }
+
+    override fun obtainSideEffect(effect: SideEffect) {
+        when (effect) {
+            is ScrollToTopSideEffect -> {
+                lifecycleScope.launch {
+                    gridState.animateScrollToItem(index = 0)
+                }
             }
         }
     }
