@@ -136,7 +136,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     FloatingActionButton(
                         modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
                         onClick = {
-                            scrollTop()
+                            scrollTop(isAnimate = true)
                         }
                     ) {
                         Icon(
@@ -157,9 +157,13 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
         }
     }
 
-    private fun scrollTop() {
+    private fun scrollTop(isAnimate: Boolean = false) {
         lifecycleScope.launch {
-            gridState.scrollToItem(0)
+            if (isAnimate) {
+                gridState.animateScrollToItem(0)
+            } else {
+                gridState.scrollToItem(0)
+            }
         }
     }
 
