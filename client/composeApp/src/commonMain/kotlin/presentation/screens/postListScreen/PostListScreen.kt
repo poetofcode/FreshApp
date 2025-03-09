@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -129,6 +132,19 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                             }
                         }
                     }
+
+                    FloatingActionButton(
+                        modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
+                        onClick = {
+                            scrollTop()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                        )
+                    }
+
                 }
 
             }
@@ -137,11 +153,13 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
     override fun obtainSideEffect(effect: SideEffect) {
         when (effect) {
-            is ScrollToTopSideEffect -> {
-                lifecycleScope.launch {
-                    gridState.scrollToItem(0)
-                }
-            }
+            is ScrollToTopSideEffect -> scrollTop()
+        }
+    }
+
+    private fun scrollTop() {
+        lifecycleScope.launch {
+            gridState.scrollToItem(0)
         }
     }
 
