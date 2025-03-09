@@ -1,6 +1,7 @@
 package data.repository
 
-import data.service.FreshApi
+import data.entity.FetchFeedRequestBody
+import data.service.MainApi
 import domain.model.PostModel
 
 interface FeedRepository {
@@ -10,12 +11,14 @@ interface FeedRepository {
 }
 
 class FeedRepositoryImpl(
-    private val api: FreshApi,
+    private val api: MainApi,
     private val favoriteRepository: FavoriteRepository,
 ) : FeedRepository {
 
     override suspend fun fetchFeed(): List<PostModel> {
-        val posts = api.fetchFeed()
+        val posts = api.fetchFeed(
+            FetchFeedRequestBody(sources = listOf("lenta"))
+        )
             .resultOrError()
             .posts
             .orEmpty()

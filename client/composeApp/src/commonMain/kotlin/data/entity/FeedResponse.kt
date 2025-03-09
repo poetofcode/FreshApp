@@ -4,15 +4,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FeedResponse(
-    var result: String? = null,
-    var posts: List<Post>? = null
+    val result: String? = null,
+    val posts: List<Post>? = null,
+    val page: Int? = null,
+    val timestamp: Long? = null,
+    val isNextAllowed: Boolean? = null,
 ) {
 
     @Serializable
     data class Post(
-        var title: String? = null,
-        var image: String? = null,
-        var link: String? = null,
-        var commentsCount: String? = null
+        val title: String? = null,
+        val image: String? = null,
+        val link: String? = null,
+        val commentsCount: String? = null,
+        val source: String? = null,
+        val createdAt: String? = null,
     )
 }

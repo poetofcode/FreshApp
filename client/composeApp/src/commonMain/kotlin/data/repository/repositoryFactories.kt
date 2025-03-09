@@ -18,7 +18,6 @@ interface RepositoryFactory {
 
 class RepositoryFactoryImpl(
     val api: MainApi,
-    val freshApi: FreshApi,
     val profileStorage: ProfileStorage,
     val appDataStorage: AppDataStorage,
 ) : RepositoryFactory {
@@ -31,7 +30,7 @@ class RepositoryFactoryImpl(
     }
 
     override fun createFeedRepository(favoriteRepository: FavoriteRepository): FeedRepository {
-        return FeedRepositoryImpl(freshApi, favoriteRepository)
+        return FeedRepositoryImpl(api, favoriteRepository)
     }
 
     override fun createFavoriteRepository(): FavoriteRepository {

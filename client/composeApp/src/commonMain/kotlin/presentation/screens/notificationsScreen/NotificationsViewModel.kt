@@ -27,7 +27,7 @@ class NotificationsViewModel(
     }
 
     fun onReload() {
-        fetchNotifications()
+        // fetchNotifications()
     }
 
     private fun fetchNotifications() {

@@ -84,7 +84,6 @@ fun main() = application {
 
     val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
-        freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
         appDataStorage = appDataStorage,
     )

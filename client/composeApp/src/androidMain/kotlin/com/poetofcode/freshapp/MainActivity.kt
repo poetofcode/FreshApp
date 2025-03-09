@@ -63,7 +63,6 @@ class MainActivity : ComponentActivity() {
 
     private val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
-        freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
         appDataStorage = appDataStorage,
     )
