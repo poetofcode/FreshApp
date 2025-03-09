@@ -20,8 +20,13 @@ class PostListViewModel(
     private val favoriteRepository: FavoriteRepository,
 ) : BaseViewModel<PostListViewModel.State>() {
 
+    companion object {
+        val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
+    }
+
     data class State(
         val posts: List<PostModel> = emptyList(),
+        val sources: List<String> = mockSources,
         val readyState: Resource<Unit> = IdleResource,
         val currentPage: Int = 0,
         val lastTimestamp: Long = 0,
@@ -56,9 +61,15 @@ class PostListViewModel(
             .launchIn(viewModelScope)
     }
 
-    fun fetchFeed() {
-        val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
+    fun resetAndFetch() {
+        val currentSources = state.value.sources
+        state.value = onInitState().copy(
+            sources = currentSources
+        )
+        fetchFeed()
+    }
 
+    fun fetchFeed() {
         if (state.value.readyState is LoadingResource) {
             return
         }

@@ -57,7 +57,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     actions = {
                         if (readyState !is LoadingResource) {
                             IconButton(onClick = {
-                                viewModel.fetchFeed()
+                                viewModel.resetAndFetch()
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Refresh,
