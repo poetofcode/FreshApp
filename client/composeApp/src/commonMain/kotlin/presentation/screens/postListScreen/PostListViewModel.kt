@@ -5,6 +5,7 @@ import data.repository.FavoriteRepository
 import data.repository.FeedRepository
 import domain.model.FetchFeedInput
 import domain.model.PostModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class PostListViewModel(
 ) : BaseViewModel<PostListViewModel.State>() {
 
     companion object {
-        val mockSources = listOf("dtf")   // TODO replace on actual data
+        val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
     }
 
     data class State(
@@ -71,12 +72,14 @@ class PostListViewModel(
         fetchFeed()
     }
 
+    private var fetchFeedJob: Job? = null
+
     fun fetchFeed() {
-        if (state.value.readyState is LoadingResource) {
+        if (fetchFeedJob?.isActive == true) {
             return
         }
 
-        viewModelScope.launch {
+        fetchFeedJob = viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
                 val feed = feedRepository.fetchFeed(
