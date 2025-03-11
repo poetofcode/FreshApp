@@ -76,9 +76,6 @@ fun Posts(
             itemsIndexed(posts) { postIndex, post ->
                 LaunchedEffect(post) {
                     val indexHalfOfLastPage = posts.size - PAGE_COUNT / 2 - 1
-
-                    println("Post appear, post: ${post.title}, index: $postIndex, halfOfPageIndex: $indexHalfOfLastPage, canLoadMore: ${canLoadMore()}")
-
                     if (postIndex > indexHalfOfLastPage) {
                         if (canLoadMore()) {
                             loadNextPage()
