@@ -1,12 +1,41 @@
 package presentation.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import presentation.composables.muted
 
 // Project specific colors
 //
 object AppColors {
     val favoriteRedColor = Color(0xFFFB2727)
     val iconMutedColor = Color.Gray
+    val sourceSolidColorDark = Color.Blue
+    val sourceSolidColorLight = Color.Cyan
+    val categorySolidColor = Color.Yellow.muted()
+    val categorySolidColorUnselected = Color.Yellow.copy(alpha = 0.2f)
+    val categoryTextColorLight = Color.Black
+    val categoryTextColorDark = Color.White
+
+    @Composable
+    fun sourceSolidColor() : Color {
+        return if (LocalDarkMode.current) {
+            sourceSolidColorDark
+        } else {
+            sourceSolidColorLight
+        }
+    }
+
+    @Composable
+    fun sourceSolidColorUnselected() : Color = sourceSolidColor().copy(alpha = 0.2f)
+
+    @Composable
+    fun categoryTextColor() : Color {
+        return if (LocalDarkMode.current) {
+            categoryTextColorDark
+        } else {
+            categoryTextColorLight
+        }
+    }
 }
 
 // Theme colors

@@ -1,6 +1,8 @@
 package data.repository
 
 import data.utils.AppDataStorage
+import domain.model.FetchFavoriteInput
+import domain.model.PagedResource
 import domain.model.PostModel
 import domain.model.toFavoritePost
 import domain.model.toPostModel
@@ -26,20 +28,6 @@ sealed interface ChangeInfo {
     data class AddedItem(val id: String) : ChangeInfo
     data class DeletedItem(val id: String) : ChangeInfo
 }
-
-// TODO move to domain/model/
-data class FetchFavoriteInput(
-    val query: String = "",
-    val limit: Int = 30,
-    val start: Int = 0,
-    val sort: String = "",
-)
-
-// TODO move to domain/model/
-data class PagedResource<T>(
-    val isListCompleted: Boolean,
-    val list: List<T>,
-)
 
 class FavoriteLocalRepositoryImpl(
     private val storage: AppDataStorage,

@@ -1,10 +1,19 @@
 package presentation.screens.postListScreen
 
 import data.repository.ChangeInfo
+import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
+import data.utils.PersistentStorage
+import data.utils.getValue
+import data.utils.setValue
+import domain.model.CategoryModel
+import domain.model.DashboardModel
+import domain.model.FeedQuery
 import domain.model.FetchFeedInput
 import domain.model.PostModel
+import domain.model.finalSources
+import domain.model.toggleSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -16,10 +25,13 @@ import presentation.model.ExceptionResource
 import presentation.model.IdleResource
 import presentation.model.LoadingResource
 import presentation.model.Resource
+import presentation.navigation.HideBottomSheetEffect
 
 class PostListViewModel(
+    private val configStorage: PersistentStorage,
     private val feedRepository: FeedRepository,
     private val favoriteRepository: FavoriteRepository,
+    private val dashboardRepository: DashboardRepository,
 ) : BaseViewModel<PostListViewModel.State>() {
 
     companion object {
@@ -33,10 +45,15 @@ class PostListViewModel(
         val currentPage: Int = 0,
         val lastTimestamp: Long = 0,
         val isNextAllowed: Boolean = false,
+        val currentFeedQuery: FeedQuery = FeedQuery(),
+        val dashboard: DashboardModel = DashboardModel(),
     )
+
+    private var querySources: List<String>? by configStorage
 
     init {
         observeFavoriteChanges()
+        restoreFeedQueryFromConfig(querySources.orEmpty())
         fetchFeed()
     }
 
@@ -82,9 +99,10 @@ class PostListViewModel(
         fetchFeedJob = viewModelScope.launch {
             try {
                 state.value = state.value.copy(readyState = LoadingResource)
+                val dashboard = dashboardRepository.fetchDashboard()
                 val feed = feedRepository.fetchFeed(
                     FetchFeedInput(
-                        sources = mockSources,
+                        sources = state.value.currentFeedQuery.sources,
                         page = state.value.currentPage,
                         lastTimestamp = state.value.lastTimestamp,
                     )
@@ -95,6 +113,7 @@ class PostListViewModel(
                     readyState = CompleteResource(Unit),
                     lastTimestamp = feed.timestamp,
                     isNextAllowed = feed.isNextAllowed,
+                    dashboard = dashboard,
                 )
             } catch (e: Throwable) {
                 state.value = state.value.copy(readyState = ExceptionResource(e))
@@ -117,6 +136,50 @@ class PostListViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun onCategoryClick(category: CategoryModel) {
+        reduce {
+            copy(
+                currentFeedQuery = FeedQuery(
+                    category = category
+                )
+            )
+        }
+        postSideEffect(HideBottomSheetEffect)
+        querySources = state.value.currentFeedQuery.finalSources()
+        fetchFeed()
+    }
+
+    fun onSourceClick(source: String) {
+        reduce {
+            copy(
+                currentFeedQuery = FeedQuery(
+                    sources = listOf(source)
+                )
+            )
+        }
+        postSideEffect(HideBottomSheetEffect)
+        querySources = state.value.currentFeedQuery.finalSources()
+        fetchFeed()
+    }
+
+    fun onSourceAddRemoveClick(source: String) {
+        reduce {
+            copy(
+                currentFeedQuery = currentFeedQuery.toggleSource(dashboard.sources, source)
+            )
+        }
+        querySources = state.value.currentFeedQuery.finalSources()
+        fetchFeed()
+    }
+
+    private fun restoreFeedQueryFromConfig(dashboardSources: List<String>) {
+        reduce { copy(
+            currentFeedQuery = FeedQuery(
+                sources = dashboardSources
+            )
+        ) }
     }
 
 }
