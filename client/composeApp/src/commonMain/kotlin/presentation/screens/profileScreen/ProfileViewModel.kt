@@ -27,7 +27,7 @@ class ProfileViewModel(
     init {
         fetchProfile()
 
-        fetchNotifis()
+        // fetchNotifis()
     }
 
     fun fetchNotifis() {
