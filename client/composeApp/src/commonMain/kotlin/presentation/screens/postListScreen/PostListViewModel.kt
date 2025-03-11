@@ -22,7 +22,7 @@ class PostListViewModel(
 ) : BaseViewModel<PostListViewModel.State>() {
 
     companion object {
-        val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
+        val mockSources = listOf("dtf")   // TODO replace on actual data
     }
 
     data class State(

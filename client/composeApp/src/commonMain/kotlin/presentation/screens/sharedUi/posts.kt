@@ -22,7 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -73,10 +73,11 @@ fun Posts(
             userScrollEnabled = true,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(posts) { post ->
+            itemsIndexed(posts) { postIndex, post ->
                 LaunchedEffect(post) {
-                    val postIndex = posts.indexOf(post)
                     val indexHalfOfLastPage = posts.size - PAGE_COUNT / 2 - 1
+
+                    println("Post appear, post: ${post.title}, index: $postIndex, halfOfPageIndex: $indexHalfOfLastPage, canLoadMore: ${canLoadMore()}")
 
                     if (postIndex > indexHalfOfLastPage) {
                         if (canLoadMore()) {
