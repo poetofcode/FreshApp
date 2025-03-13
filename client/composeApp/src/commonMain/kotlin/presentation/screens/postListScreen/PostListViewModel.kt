@@ -165,8 +165,9 @@ class PostListViewModel(
     }
 
     fun onSourceAddRemoveClick(source: String) {
+        postSideEffect(ScrollToTopSideEffect)
         reduce {
-            copy(
+            onInitState().copy(
                 currentFeedQuery = currentFeedQuery.toggleSource(dashboard.sources, source)
             )
         }
