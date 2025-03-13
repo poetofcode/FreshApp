@@ -100,7 +100,7 @@ class PostListViewModel(
                 val dashboard = dashboardRepository.fetchDashboard()
                 val feed = feedRepository.fetchFeed(
                     FetchFeedInput(
-                        sources = state.value.currentFeedQuery.sources,
+                        sources = state.value.currentFeedQuery.finalSources(),
                         page = state.value.currentPage,
                         lastTimestamp = state.value.lastTimestamp,
                     )
@@ -137,8 +137,9 @@ class PostListViewModel(
     }
 
     fun onCategoryClick(category: CategoryModel) {
+        postSideEffect(ScrollToTopSideEffect)
         reduce {
-            copy(
+            onInitState().copy(
                 currentFeedQuery = FeedQuery(
                     category = category
                 )
@@ -150,11 +151,12 @@ class PostListViewModel(
     }
 
     fun onSourceClick(source: String) {
+        postSideEffect(ScrollToTopSideEffect)
         reduce {
-            copy(
+            onInitState().copy(
                 currentFeedQuery = FeedQuery(
                     sources = listOf(source)
-                )
+                ),
             )
         }
         postSideEffect(HideBottomSheetEffect)
