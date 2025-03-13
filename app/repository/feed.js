@@ -32,7 +32,12 @@ class FeedRepository {
 
 	async getFeed(sources, page, timestampFrom) {
 		const pageOrDefault = page || 0;
-		const sourcesOrDefault = sources || [];
+		let sourcesOrDefault = sources || [];
+		if (sourcesOrDefault.length == 0) {
+			sourcesOrDefault = (await this.context.repositories.grabber.fetchDashboard()).sources;
+			console.log("Default sources:");
+			console.log(sourcesOrDefault);
+		}
 		const skipCount = pageOrDefault * countPerPage;
 		let timestampOrDefault = 0;		// Timestamp in milliseconds
 		if (timestampFrom > 0) {
