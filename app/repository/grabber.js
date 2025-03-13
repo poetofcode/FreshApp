@@ -29,7 +29,28 @@ class GrabberRepository {
 	}
 
 	async fetchDashboard() {
-		return JSON.parse(mockDashboard);
+		const url = this.makeParserUrl(`v1/dashboard`);
+
+		try {
+			const response = await axios({
+				method: 'get',
+				url: url,
+			});
+
+			const responseData = response.data;
+			
+			if (responseData.result) {
+				const result = responseData.result;
+				return result; 
+			}
+		} catch (error) {
+			console.log(`GrabberRepository ERROR, method: fetchDashboard(), exception: ${error}`);
+		}
+
+		return 	{
+			categories: [],
+			sources: []
+		}
 	}
 
 
@@ -46,7 +67,7 @@ class GrabberRepository {
 
 			if (responseData.result && responseData.result.result == 'ok') {
 				const result = responseData.result;
-				console.log(`GrabberRepository, parsing of '${source}' success: ${result.posts.length} posts parsed`);
+				// console.log(`GrabberRepository, parsing of '${source}' success: ${result.posts.length} posts parsed`);
 				return result.posts.map(post => {
 					const newPost = post;
 					newPost.source = source;
