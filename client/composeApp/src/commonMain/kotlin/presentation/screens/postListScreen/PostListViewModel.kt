@@ -34,10 +34,6 @@ class PostListViewModel(
     private val dashboardRepository: DashboardRepository,
 ) : BaseViewModel<PostListViewModel.State>() {
 
-    companion object {
-        val mockSources = listOf("lenta", "dtf", "habr")   // TODO replace on actual data
-    }
-
     data class State(
         val posts: List<PostModel> = emptyList(),
         val sources: List<String> = emptyList(),
