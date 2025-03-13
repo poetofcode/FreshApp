@@ -40,7 +40,7 @@ class PostListViewModel(
 
     data class State(
         val posts: List<PostModel> = emptyList(),
-        val sources: List<String> = mockSources,
+        val sources: List<String> = emptyList(),
         val readyState: Resource<Unit> = IdleResource,
         val currentPage: Int = 0,
         val lastTimestamp: Long = 0,
@@ -82,9 +82,11 @@ class PostListViewModel(
 
     fun resetAndFetch() {
         val currentSources = state.value.sources
+        val currentFeedQuery = state.value.currentFeedQuery
         postSideEffect(ScrollToTopSideEffect)
         state.value = onInitState().copy(
-            sources = currentSources
+            sources = currentSources,
+            currentFeedQuery = currentFeedQuery,
         )
         fetchFeed()
     }
