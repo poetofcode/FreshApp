@@ -148,21 +148,11 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                         }
 
                         is ExceptionResource -> {
-                            Column(
-                                Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(text = "Ошибка загрузки", color = Color.Red)
-                                Spacer(Modifier.size(10.dp))
-                                Text(text = "${readyState.exception}")
-                            }
+                            ErrorOverlay()
                         }
 
                         else -> {
-                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator()
-                            }
+                            LoadingOverlay()
                         }
                     }
 
@@ -362,3 +352,31 @@ val PostListViewModel.State.screenTitle: String
             else -> "Все"
         }
     }
+
+
+@Composable
+fun ErrorOverlay(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    exception: Throwable? = null,
+) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Ошибка загрузки", color = Color.Red)
+        if (exception != null) {
+            Spacer(Modifier.size(10.dp))
+            Text(text = "${exception}")
+        }
+    }
+}
+
+@Composable
+fun LoadingOverlay(
+    modifier: Modifier = Modifier.fillMaxSize(),
+) {
+    Box(modifier, contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
