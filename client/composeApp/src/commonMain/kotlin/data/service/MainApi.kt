@@ -2,6 +2,7 @@ package data.service
 
 import data.entity.CreateSessionRequestBody
 import data.entity.CreateSessionResponse
+import data.entity.DashboardResponse
 import data.entity.DataResponse
 import data.entity.ExceptionResponse
 import data.entity.FailureResponse
@@ -111,6 +112,15 @@ class MainApi(
                 nonAuthBlock {
                     url { path("/api/v1/feed") }
                     setBody(requestBody)
+                }
+            }
+        }
+
+    suspend fun fetchDashboard(): ResultResponse<DashboardResponse> =
+        parseRequestResult<DashboardResponse> {
+            httpClient.post {
+                nonAuthBlock {
+                    url { path("/api/v1/dashboard") }
                 }
             }
         }

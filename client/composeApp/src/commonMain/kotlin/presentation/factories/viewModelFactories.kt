@@ -1,6 +1,5 @@
 package presentation.factories
 
-import data.mock.MockDashboardRepositoryImpl
 import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
@@ -146,6 +145,7 @@ fun viewModelFactories(
 ): List<ViewModelFactory<*>> {
     val profileRepository = repositoryFactory.createProfileRepository()
     val favoriteRepository = repositoryFactory.createFavoriteRepository()
+    val dashboardRepository = repositoryFactory.createDashboardRepository()
     return listOf<ViewModelFactory<*>>(
         HomeTabViewModelFactory(),
         ProfileTabViewModelFactory(),
@@ -158,7 +158,7 @@ fun viewModelFactories(
             configStorage = configStorage,
             feedRepository = repositoryFactory.createFeedRepository(favoriteRepository),
             favoriteRepository = favoriteRepository,
-            dashboardRepository = MockDashboardRepositoryImpl()
+            dashboardRepository =  dashboardRepository
         ),
         BookmarkListViewModelFactory(
             favoriteRepository = favoriteRepository,

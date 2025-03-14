@@ -12,6 +12,8 @@ interface RepositoryFactory {
 
     fun createFavoriteRepository() : FavoriteRepository
 
+    fun createDashboardRepository() : DashboardRepository
+
 }
 
 class RepositoryFactoryImpl(
@@ -33,6 +35,10 @@ class RepositoryFactoryImpl(
 
     override fun createFavoriteRepository(): FavoriteRepository {
         return FavoriteLocalRepositoryImpl(storage = appDataStorage)
+    }
+
+    override fun createDashboardRepository(): DashboardRepository {
+        return DashboardRepositoryImpl(api)
     }
 
 }
