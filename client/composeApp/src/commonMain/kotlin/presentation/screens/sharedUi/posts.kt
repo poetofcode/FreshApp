@@ -57,6 +57,7 @@ fun Posts(
     gridState: LazyGridState,
     canLoadMore: () -> Boolean = { false },
     loadNextPage: () -> Unit = {},
+    bottomContent: @Composable () -> Unit = {},
     postContent: @Composable (PostModel) -> Unit = { Post(it) },
 ) {
 
@@ -84,6 +85,7 @@ fun Posts(
                 }
                 postContent(post)
             }
+            item { bottomContent() }
         }
 
         ScrollBar(

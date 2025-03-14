@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -111,39 +112,54 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
-                        is CompleteResource -> Posts(
-                            posts = posts,
-                            gridState = gridState,
-                            canLoadMore = {
-                                isNextAllowed
-                            },
-                            loadNextPage = {
-                                viewModel.fetchFeed()
-                            }
-                        ) { post ->
-                            Post(
-                                post,
-                                buttons = listOf(PostButtonType.FAVORITE)
-                            ) { buttonType ->
-                                when (buttonType) {
-                                    PostButtonType.FAVORITE -> {
-                                        val isChecked = post.isFavorite
-                                        val icon = when (isChecked) {
-                                            false -> Res.drawable.ic_cell_fav_disabled
-                                            true -> Res.drawable.ic_cell_fav_enabled
-                                        }
-                                        val tintColor = when (isChecked) {
-                                            true -> AppColors.favoriteRedColor
-                                            false -> AppColors.iconMutedColor
-                                        }
-
-                                        PostButton(
-                                            iconRes = icon,
-                                            onClick = { viewModel.onFavoriteClick(post) },
-                                            tintColor = tintColor,
+                        is CompleteResource, LoadingResource -> {
+                            Posts(
+                                posts = posts,
+                                gridState = gridState,
+                                canLoadMore = {
+                                    isNextAllowed
+                                },
+                                loadNextPage = {
+                                    viewModel.fetchFeed()
+                                },
+                                bottomContent = {
+                                    if (readyState is LoadingResource && !isLoadingFromScratch()) {
+                                        LoadingOverlay(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(100.dp)
                                         )
                                     }
                                 }
+                            ) { post ->
+                                Post(
+                                    post,
+                                    buttons = listOf(PostButtonType.FAVORITE)
+                                ) { buttonType ->
+                                    when (buttonType) {
+                                        PostButtonType.FAVORITE -> {
+                                            val isChecked = post.isFavorite
+                                            val icon = when (isChecked) {
+                                                false -> Res.drawable.ic_cell_fav_disabled
+                                                true -> Res.drawable.ic_cell_fav_enabled
+                                            }
+                                            val tintColor = when (isChecked) {
+                                                true -> AppColors.favoriteRedColor
+                                                false -> AppColors.iconMutedColor
+                                            }
+
+                                            PostButton(
+                                                iconRes = icon,
+                                                onClick = { viewModel.onFavoriteClick(post) },
+                                                tintColor = tintColor,
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (readyState is LoadingResource && isLoadingFromScratch()) {
+                                LoadingOverlay()
                             }
                         }
 
@@ -153,11 +169,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                             }
                         }
 
-                        else -> {
-                            if (isLoadingFromScratch()) {
-                                LoadingOverlay()
-                            }
-                        }
+                        else -> Unit
                     }
 
                     val firstItemVisible by remember {
