@@ -111,65 +111,65 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 )
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    when (readyState) {
-                        is CompleteResource, LoadingResource -> {
-                            Posts(
-                                posts = posts,
-                                gridState = gridState,
-                                canLoadMore = {
-                                    isNextAllowed
-                                },
-                                loadNextPage = {
-                                    viewModel.fetchFeed()
-                                },
-                                bottomContent = {
-                                    if (readyState is LoadingResource && !isLoadingFromScratch()) {
-                                        LoadingOverlay(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(100.dp)
-                                        )
-                                    }
-                                }
-                            ) { post ->
-                                Post(
-                                    post,
-                                    buttons = listOf(PostButtonType.FAVORITE)
-                                ) { buttonType ->
-                                    when (buttonType) {
-                                        PostButtonType.FAVORITE -> {
-                                            val isChecked = post.isFavorite
-                                            val icon = when (isChecked) {
-                                                false -> Res.drawable.ic_cell_fav_disabled
-                                                true -> Res.drawable.ic_cell_fav_enabled
-                                            }
-                                            val tintColor = when (isChecked) {
-                                                true -> AppColors.favoriteRedColor
-                                                false -> AppColors.iconMutedColor
-                                            }
-
-                                            PostButton(
-                                                iconRes = icon,
-                                                onClick = { viewModel.onFavoriteClick(post) },
-                                                tintColor = tintColor,
-                                            )
-                                        }
-                                    }
-                                }
+                    Posts(
+                        posts = posts,
+                        gridState = gridState,
+                        canLoadMore = {
+                            isNextAllowed
+                        },
+                        loadNextPage = {
+                            viewModel.fetchFeed()
+                        },
+                        bottomContent = {
+                            if (readyState is LoadingResource && !isLoadingFromScratch()) {
+                                LoadingOverlay(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                )
                             }
 
-                            if (readyState is LoadingResource && isLoadingFromScratch()) {
-                                LoadingOverlay()
+                            if (readyState is ExceptionResource && !isLoadingFromScratch()) {
+                                ErrorOverlay(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                )
                             }
                         }
+                    ) { post ->
+                        Post(
+                            post,
+                            buttons = listOf(PostButtonType.FAVORITE)
+                        ) { buttonType ->
+                            when (buttonType) {
+                                PostButtonType.FAVORITE -> {
+                                    val isChecked = post.isFavorite
+                                    val icon = when (isChecked) {
+                                        false -> Res.drawable.ic_cell_fav_disabled
+                                        true -> Res.drawable.ic_cell_fav_enabled
+                                    }
+                                    val tintColor = when (isChecked) {
+                                        true -> AppColors.favoriteRedColor
+                                        false -> AppColors.iconMutedColor
+                                    }
 
-                        is ExceptionResource -> {
-                            if (isLoadingFromScratch()) {
-                                ErrorOverlay()
+                                    PostButton(
+                                        iconRes = icon,
+                                        onClick = { viewModel.onFavoriteClick(post) },
+                                        tintColor = tintColor,
+                                    )
+                                }
                             }
                         }
+                    }
 
-                        else -> Unit
+                    if (readyState is LoadingResource && isLoadingFromScratch()) {
+                        LoadingOverlay()
+                    }
+
+                    if (readyState is ExceptionResource && isLoadingFromScratch()) {
+                        ErrorOverlay()
                     }
 
                     val firstItemVisible by remember {
@@ -397,6 +397,6 @@ fun LoadingOverlay(
     }
 }
 
-fun PostListViewModel.State.isLoadingFromScratch() : Boolean {
+fun PostListViewModel.State.isLoadingFromScratch(): Boolean {
     return lastTimestamp == 0L
 }
