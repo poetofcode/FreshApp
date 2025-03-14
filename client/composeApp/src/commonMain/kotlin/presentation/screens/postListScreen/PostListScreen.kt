@@ -148,11 +148,15 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                         }
 
                         is ExceptionResource -> {
-                            ErrorOverlay()
+                            if (isLoadingFromScratch()) {
+                                ErrorOverlay()
+                            }
                         }
 
                         else -> {
-                            LoadingOverlay()
+                            if (isLoadingFromScratch()) {
+                                LoadingOverlay()
+                            }
                         }
                     }
 
@@ -379,4 +383,8 @@ fun LoadingOverlay(
     Box(modifier, contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
+}
+
+fun PostListViewModel.State.isLoadingFromScratch() : Boolean {
+    return lastTimestamp == 0L
 }
