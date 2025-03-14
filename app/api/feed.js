@@ -27,6 +27,18 @@ class FeedMiddleware {
         }
     }
 
+    fetchDashboard() { 
+        return async (req, res, next) => {
+            try {
+                const result = await this.repositories.grabber.fetchDashboard();
+
+                res.send(utils.wrapResult(result));
+            } catch (err) {
+                next(err);
+            }
+        }
+    }
+
 }
 
 exports.create = (context) => new FeedMiddleware(context);
