@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Notification
@@ -161,13 +162,11 @@ fun main() = application {
 //        }
 //    )
 
-    // val icon = ImageIcon(File("src/desktopMain/resources/app_icon.png").absolutePath).image
     Window(
         state = windowState,
         onCloseRequest = ::exitApplication,
         title = "FreshApp",
-        // icon = painterResource("ic_logo.png")
-        // icon = painterResource("src/desktopMain/resources/ic_logo.png"),
+        icon = painterResource("ic_logo.png")
     ) {
         var restartRequired by remember { mutableStateOf(false) }
         var downloading by remember { mutableStateOf(0F) }
