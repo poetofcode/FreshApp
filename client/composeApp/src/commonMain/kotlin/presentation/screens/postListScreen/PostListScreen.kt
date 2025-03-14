@@ -50,6 +50,8 @@ import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.vectorResource
 import presentation.composables.RoundedButton
 import presentation.composables.muted
 import presentation.model.CompleteResource
@@ -133,7 +135,10 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                                 ErrorOverlay(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(200.dp)
+                                        .height(200.dp),
+                                    onReload = {
+                                        viewModel.fetchFeed()
+                                    }
                                 )
                             }
                         }
@@ -169,7 +174,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     }
 
                     if (readyState is ExceptionResource && isLoadingFromScratch()) {
-                        ErrorOverlay()
+                        ErrorOverlay(onReload = { viewModel.fetchFeed() })
                     }
 
                     val firstItemVisible by remember {
@@ -374,16 +379,26 @@ val PostListViewModel.State.screenTitle: String
 fun ErrorOverlay(
     modifier: Modifier = Modifier.fillMaxSize(),
     exception: Throwable? = null,
+    onReload: () -> Unit = {},
 ) {
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Ошибка загрузки", color = Color.Red)
-        if (exception != null) {
-            Spacer(Modifier.size(10.dp))
-            Text(text = "${exception}")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Ошибка загрузки", color = Color.Red)
+            if (exception != null) {
+                Spacer(Modifier.size(10.dp))
+                Text(text = "${exception}")
+            }
+        }
+        Spacer(Modifier.size(16.dp))
+        IconButton(onClick = { onReload() }) {
+            Icon(imageVector = Icons.Default.Refresh, contentDescription = "Try again")
         }
     }
 }
