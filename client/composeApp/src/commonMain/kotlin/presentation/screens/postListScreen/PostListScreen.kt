@@ -2,7 +2,6 @@
 
 package presentation.screens.postListScreen
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,23 +19,18 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,16 +44,13 @@ import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 import presentation.composables.RoundedButton
 import presentation.composables.muted
-import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.LoadingResource
 import presentation.navigation.BaseScreen
-import presentation.navigation.SideEffect
 import presentation.navigation.ShowModalBottomSheetEffect
+import presentation.navigation.SideEffect
 import presentation.navigation.postSideEffect
 import presentation.screens.sharedUi.Post
 import presentation.screens.sharedUi.PostButton
@@ -177,26 +168,6 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     if (readyState is ExceptionResource && isLoadingFromScratch()) {
                         ErrorOverlay(onReload = { viewModel.fetchFeed() })
                     }
-
-                    /*
-                    this@Column.AnimatedVisibility(
-                        visible = !firstItemVisible,
-                        modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)
-                    ) {
-                        FloatingActionButton(
-                            modifier = Modifier,
-                            onClick = {
-                                scrollTop(isAnimate = true)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowUp,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-                     */
-
                 }
 
             }
