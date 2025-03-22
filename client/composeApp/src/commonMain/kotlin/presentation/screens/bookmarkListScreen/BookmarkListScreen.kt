@@ -70,7 +70,11 @@ class BookmarkListScreen : BaseScreen<BookmarkListViewModel>() {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
-                        is CompleteResource -> Posts(posts, gridState) { post ->
+                        is CompleteResource -> Posts(
+                            posts = posts,
+                            gridState = gridState,
+                            lifecycleScope = lifecycleScope,
+                        ) { post ->
                             Post(
                                 post,
                                 buttons = listOf(PostButtonType.FAVORITE)

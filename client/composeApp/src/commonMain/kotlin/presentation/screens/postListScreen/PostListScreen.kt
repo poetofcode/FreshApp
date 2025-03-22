@@ -116,6 +116,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                     Posts(
                         posts = posts,
                         gridState = gridState,
+                        lifecycleScope = lifecycleScope,
                         canLoadMore = {
                             isNextAllowed
                         },
@@ -177,12 +178,7 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                         ErrorOverlay(onReload = { viewModel.fetchFeed() })
                     }
 
-                    val firstItemVisible by remember {
-                        derivedStateOf {
-                            gridState.firstVisibleItemIndex == 0
-                        }
-                    }
-
+                    /*
                     this@Column.AnimatedVisibility(
                         visible = !firstItemVisible,
                         modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)
@@ -199,6 +195,8 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                             )
                         }
                     }
+                     */
+
                 }
 
             }

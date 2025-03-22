@@ -2,6 +2,7 @@
 
 package presentation.screens.sharedUi
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,11 +25,18 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +45,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -55,46 +65,92 @@ private const val PAGE_COUNT = 5
 fun Posts(
     posts: List<PostModel>,
     gridState: LazyGridState,
+    lifecycleScope: CoroutineScope,
     canLoadMore: () -> Boolean = { false },
     loadNextPage: () -> Unit = {},
     bottomContent: @Composable () -> Unit = {},
     postContent: @Composable (PostModel) -> Unit = { Post(it) },
 ) {
+    val firstItemVisible by remember {
+        derivedStateOf {
+            gridState.firstVisibleItemIndex == 0
+        }
+    }
 
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxHeight().padding().weight(1f),
-            state = gridState,
-            columns = GridCells.Adaptive(minSize = 300.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            userScrollEnabled = true,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
-            itemsIndexed(posts) { postIndex, post ->
-                LaunchedEffect(post) {
-                    val indexHalfOfLastPage = posts.size - PAGE_COUNT / 2 - 1
-                    if (postIndex > indexHalfOfLastPage) {
-                        if (canLoadMore()) {
-                            loadNextPage()
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxHeight().padding().weight(1f),
+                state = gridState,
+                columns = GridCells.Adaptive(minSize = 300.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                userScrollEnabled = true,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                itemsIndexed(posts) { postIndex, post ->
+                    LaunchedEffect(post) {
+                        val indexHalfOfLastPage = posts.size - PAGE_COUNT / 2 - 1
+                        if (postIndex > indexHalfOfLastPage) {
+                            if (canLoadMore()) {
+                                loadNextPage()
+                            }
                         }
                     }
+                    postContent(post)
                 }
-                postContent(post)
+                item { bottomContent() }
             }
-            item { bottomContent() }
+
+            ScrollBar(
+                modifier = Modifier.width(20.dp).fillMaxHeight(),
+                orientation = ScrollBarOrientation.VERTICAL,
+                state = ScrollableComponentState.LazyGridComponentState(gridState)
+            )
         }
 
-        ScrollBar(
-            modifier = Modifier.width(20.dp).fillMaxHeight(),
-            orientation = ScrollBarOrientation.VERTICAL,
-            state = ScrollableComponentState.LazyGridComponentState(gridState)
-        )
+        AnimatedVisibility(
+            visible = !firstItemVisible,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)
+        ) {
+            FloatingActionButton(
+                modifier = Modifier,
+                onClick = {
+                    scrollTop(
+                        lifecycleScope = lifecycleScope,
+                        gridState = gridState,
+                        isAnimate = true
+                    )
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowUp,
+                    contentDescription = null,
+                )
+            }
+        }
     }
 }
+
+private fun scrollTop(
+    lifecycleScope: CoroutineScope,
+    gridState: LazyGridState,
+    isAnimate: Boolean = false
+) {
+    lifecycleScope.launch {
+        if (isAnimate) {
+            gridState.animateScrollToItem(0)
+        } else {
+            gridState.scrollToItem(0)
+        }
+    }
+}
+
 
 // TODO move to /domain/entities
 enum class PostButtonType {
