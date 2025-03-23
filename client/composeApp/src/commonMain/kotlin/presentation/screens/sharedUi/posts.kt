@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.PostModel
@@ -193,7 +194,16 @@ fun Post(
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
-        Text(text = post.title.orEmpty(), fontSize = 16.sp)
+        Text(
+            text = post.source,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            modifier = Modifier.padding(start = 10.dp),
+            text = post.title,
+            fontSize = 17.sp
+        )
 
         // Bottom buttons (Fav and etc)
         //
