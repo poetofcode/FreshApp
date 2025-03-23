@@ -43,6 +43,7 @@ import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_favorite_24
 import freshapp.composeapp.generated.resources.ic_home_24
 import freshapp.composeapp.generated.resources.ic_person_24
+import freshapp.composeapp.generated.resources.ic_settings_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -133,7 +134,7 @@ fun App() {
                             val icon = when (tab) {
                                 HOME -> Res.drawable.ic_home_24
                                 Tabs.BOOKMARK -> Res.drawable.ic_favorite_24
-                                PROFILE -> Res.drawable.ic_person_24
+                                PROFILE -> Res.drawable.ic_settings_24 /* Res.drawable.ic_person_24 */
                             }
 
                             Image(
