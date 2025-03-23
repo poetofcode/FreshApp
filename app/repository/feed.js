@@ -86,7 +86,6 @@ class FeedRepository {
 	} 
 
 	async cleanOldRecords() {
-		//console.log("FeedRepository: clean old records");
 		const deleteAfterCount = 5000
 		const records = await this.postsCollection
 			.find()
