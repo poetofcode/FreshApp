@@ -84,6 +84,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
     fun UnsignedProfile() {
         Box(Modifier.fillMaxSize()) {
             Column(Modifier.wrapContentSize().align(Alignment.Center)) {
+                /*
                 Text(
                     text = "Войдите в аккаунт, чтобы получить доступ ко всем функциям приложения",
                     color = Color.Gray,
@@ -107,6 +108,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 ) {
                     Text(text = "Регистрация")
                 }
+                 */
 
                 CommonPrefs(
                     modifier = Modifier
@@ -122,7 +124,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
         val localMainAppState = LocalMainAppState.current
 
         Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-            HorizontalDivider()
+            /* HorizontalDivider() */
 
             Row(
                 modifier = Modifier.padding(top = 16.dp),
