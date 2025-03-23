@@ -111,9 +111,9 @@ fun App() {
             val navState = remember {
                 NavStateImpl(viewModelStore = config.viewModelStore).apply {
                     push(listOf(
-                        HomeTabScreen(),
-                        BookmarkTabScreen(),
                         ProfileTabScreen(),
+                        BookmarkTabScreen(),
+                        HomeTabScreen(),
                     ))
                 }
             }
