@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -55,7 +56,15 @@ kotlin {
 }
 
 buildConfig {
+    val localPropertiesFile = rootProject.file("local.properties")
+    val localProperties = Properties()
+    if (localPropertiesFile.exists()) {
+        localProperties.load(FileInputStream(localPropertiesFile))
+    }
+
+    useJavaOutput()
     buildConfigField("APP_NAME", project.name)
+    buildConfigField("SERVER_URL", localProperties.getProperty("serverUrl"))
 }
 
 //repositories {

@@ -1,14 +1,15 @@
 package data.service
 
+import FreshApp.composeApp.BuildConfig
 import data.utils.ProfileStorage
 import io.ktor.client.HttpClient
 import presentation.base.Config
 
 interface NetworkingFactory {
 
-    fun createHttpClient() : HttpClient
+    fun createHttpClient(): HttpClient
 
-    fun createApi() : MainApi
+    fun createApi(): MainApi
 
 }
 
@@ -17,10 +18,11 @@ class NetworkingFactoryImpl(
     private val deviceType: Config.DeviceTypes,
     private val appVersion: String = "0.1",
 ) : NetworkingFactory {
-    
+
     override fun createHttpClient(): HttpClient {
         return HttpClientFactory(
-            baseUrl = BASE_URL,
+            baseUrl = BuildConfig.SERVER_URL.takeIf { it.isNotBlank() }
+                ?: DEFAULT_BASE_URL,
         ).createClient()
     }
 
@@ -34,9 +36,7 @@ class NetworkingFactoryImpl(
     }
 
     private companion object {
-        // TODO вынести в buildConfig
-        // const val BASE_URL = "http://127.0.0.1:3000"
-        const val BASE_URL = "http://192.168.0.105:3000"
+        const val DEFAULT_BASE_URL = "http://127.0.0.1:3000"
     }
 
 }
