@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinSerialization)
     // id("com.google.gms.google-services") version "4.4.2" apply false
+    id("com.github.gmazzo.buildconfig") version "5.5.4"
 }
 
 kotlin {
@@ -51,6 +52,10 @@ kotlin {
             implementation("ch.qos.logback:logback-classic:1.5.2")
         }
     }
+}
+
+buildConfig {
+    buildConfigField("APP_NAME", project.name)
 }
 
 //repositories {
