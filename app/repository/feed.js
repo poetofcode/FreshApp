@@ -86,7 +86,23 @@ class FeedRepository {
 	} 
 
 	async cleanOldRecords() {
-		console.log("FeedRepository: clean old records");
+		//console.log("FeedRepository: clean old records");
+		const deleteAfterCount = 5000
+		const records = await this.postsCollection
+			.find()
+			.sort({ createdAt : 1 })
+			.limit(deleteAfterCount)
+			.toArray();
+
+		if (records.length < deleteAfterCount) {
+			console.log(`Удалять нечего, записей меньше, чем ${deleteAfterCount}: ${records.length}`);
+			return;
+		}
+
+		const lastRecord = records[deleteAfterCount - 1];
+		const result = await this.postsCollection.deleteMany({ _id : { $gt: lastRecord._id } });
+
+		console.log(`Удалено записей: ${result.deletedCount}`);
 	}
 
 }
