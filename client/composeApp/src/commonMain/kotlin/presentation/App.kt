@@ -110,9 +110,11 @@ fun App() {
             val selectedTab = remember { mutableStateOf<Tabs>(HOME) }
             val navState = remember {
                 NavStateImpl(viewModelStore = config.viewModelStore).apply {
-                    push(HomeTabScreen())
-                    push(BookmarkTabScreen())
-                    push(ProfileTabScreen())
+                    push(listOf(
+                        HomeTabScreen(),
+                        BookmarkTabScreen(),
+                        ProfileTabScreen(),
+                    ))
                 }
             }
 

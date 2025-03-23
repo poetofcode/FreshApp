@@ -182,9 +182,6 @@ fun BaseScreen<*>.collectSideEffects(customHandler: (SideEffect) -> Unit) {
     }.launchIn(scope)
 }
 
-// TODO предусмотреть абстрактный (или пустой открытый) метод для
-//  обработки кастомный side-эффектов
-
 fun BaseScreen<*>.postSideEffect(effect: SideEffect) {
     viewModel.postSideEffect(effect)
 }

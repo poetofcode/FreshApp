@@ -16,6 +16,8 @@ interface NavState {
 
     fun push(screen: AnyScreen)
 
+    fun push(screens: List<AnyScreen>)
+
     fun pop()
 
     fun moveToFront(screenId: String)
@@ -32,6 +34,15 @@ class NavStateImpl(val viewModelStore: ViewModelStore) : NavState {
     override fun push(screen: AnyScreen) {
         screen.setVMStore(viewModelStore)
         _screens.value += screen
+    }
+
+    override fun push(screens: List<AnyScreen>) {
+        screens.map {
+            it.setVMStore(viewModelStore)
+            it
+        }.apply {
+            _screens.value += this
+        }
     }
 
     override fun pop() {
