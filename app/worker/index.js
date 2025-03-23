@@ -9,10 +9,9 @@ async function launch(context) {
     });
 
     const withIntervals = [
-        // [ workers.jokes, seconds(120) ],
-        // [ workers.mailer, seconds(5) ]
         // [ new SerialWorker([workers.notifications, workers.pushes]), seconds(10) ]
-        [ workers.grabber, minutes(7) ]
+        [ workers.grabber, minutes(7) ],
+        [ workers.cleaner, hours(3) ],
     ];
 
     withIntervals.forEach((w) => {
@@ -34,6 +33,10 @@ function seconds(sec) {
 
 function minutes(min) {
     return min * seconds(60);
+}
+
+function hours(h) {
+    return h * minutes(60);
 }
 
 class SerialWorker {

@@ -85,6 +85,10 @@ class FeedRepository {
 		};
 	} 
 
+	async cleanOldRecords() {
+		console.log("FeedRepository: clean old records");
+	}
+
 }
 
 exports.create = (context) => new FeedRepository(context);

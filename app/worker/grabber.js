@@ -1,6 +1,3 @@
-const ObjectId = require("mongodb").ObjectId;
-const { utils } = require('../utils');
-
 class GrabberWorker {
 
 	constructor(context) {
