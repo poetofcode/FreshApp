@@ -16,11 +16,15 @@ class FeedRepository {
 		let bulkTags = [];
 		
 		posts.forEach(post => {
-			post.createdAt = new Date();
+			let postOnCreate = utils.deepCopy(post);
+			postOnCreate.createdAt = new Date();
 			bulkTags.push({
 				updateOne: {
 					filter: { link: post.link },
-					update: { $set: post },
+					update: { 
+						$set: post,
+						$setOnInsert: postOnCreate
+					},
 					upsert: true
 				}
 			});
@@ -89,7 +93,7 @@ class FeedRepository {
 		const deleteAfterCount = 5000
 		const records = await this.postsCollection
 			.find()
-			.sort({ createdAt : 1 })
+			.sort({ _id: -1, createdAt : -1 })
 			.limit(deleteAfterCount)
 			.toArray();
 
@@ -99,7 +103,7 @@ class FeedRepository {
 		}
 
 		const lastRecord = records[deleteAfterCount - 1];
-		const result = await this.postsCollection.deleteMany({ _id : { $gt: lastRecord._id } });
+		const result = await this.postsCollection.deleteMany({ _id : { $lt: lastRecord._id } });
 
 		console.log(`Удалено записей: ${result.deletedCount}`);
 	}
