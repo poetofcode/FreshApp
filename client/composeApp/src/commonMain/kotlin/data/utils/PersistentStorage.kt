@@ -15,6 +15,8 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
 import java.io.File
+import java.time.Instant
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.reflect.KProperty
@@ -38,7 +40,10 @@ object DateSerializer : KSerializer<ZonedDateTime> {
     }
 
     override fun deserialize(decoder: Decoder): ZonedDateTime {
-        return ZonedDateTime.parse(decoder.decodeString(), formatter)
+        val str = decoder.decodeString()
+        val instant = Instant.parse(str)
+        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+        return zonedDateTime
     }
 }
 

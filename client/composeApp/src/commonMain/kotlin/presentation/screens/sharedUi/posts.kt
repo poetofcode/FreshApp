@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -58,6 +59,7 @@ import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
 import specific.ScrollableComponentState
+import java.time.format.DateTimeFormatter
 
 private const val PAGE_COUNT = 5
 
@@ -195,12 +197,7 @@ fun Post(
         }
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = post.source,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            modifier = Modifier.padding(start = 10.dp),
+            modifier = Modifier.padding(horizontal = 10.dp),
             text = post.title,
             fontSize = 17.sp
         )
@@ -208,7 +205,21 @@ fun Post(
         // Bottom buttons (Fav and etc)
         //
         if (buttons.isNotEmpty()) {
-            Row(modifier = Modifier.padding(vertical = 8.dp)) {
+            Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
+                // Метка "Source"
+                Text(
+                    text = post.source,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+
+                // Метка "даты-время"
+                Text(
+                    modifier = Modifier.padding(start = 10.dp).alpha(0.5f),
+                    text = post.createdAt.format(DateTimeFormatter.ofPattern("dd MMM HH:mm")).toString(),
+                    fontSize = 14.sp,
+                )
+
                 Spacer(modifier = Modifier.weight(1f))
 
                 buttons.forEach { buttonType ->
