@@ -15,15 +15,13 @@ class FeedRepository {
 	async saveFeed(posts) {
 		let bulkTags = [];
 		
-		posts.forEach(post => {
-			let postOnCreate = utils.deepCopy(post);
-			postOnCreate.createdAt = new Date();
+		posts.forEach((post, idx) => {
 			bulkTags.push({
 				updateOne: {
 					filter: { link: post.link },
 					update: { 
 						$set: post,
-						$setOnInsert: postOnCreate
+						$setOnInsert: { createdAt: new Date() }
 					},
 					upsert: true
 				}
