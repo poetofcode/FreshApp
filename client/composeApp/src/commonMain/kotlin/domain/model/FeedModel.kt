@@ -14,6 +14,7 @@ fun FeedResponse.toModel() : FeedModel {
         posts = posts.orEmpty().map { post ->
         PostModel(
             title = post.title.orEmpty(),
+            source = post.source.orEmpty(),
             image = post.image,
             link = post.link.orEmpty(),
             commentsCount = post.commentsCount ?: "0",

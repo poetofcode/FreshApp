@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -208,9 +209,10 @@ fun Post(
             Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
                 // Метка "Source"
                 Text(
-                    text = post.source,
+                    text = post.source.uppercase(),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
                 )
 
                 // Метка "даты-время"
