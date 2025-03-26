@@ -97,8 +97,8 @@ fun Posts(
                 columns = GridCells.Adaptive(minSize = 300.dp),
                 contentPadding = PaddingValues(16.dp),
                 userScrollEnabled = true,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(posts) { postIndex, post ->
                     LaunchedEffect(post) {
@@ -194,7 +194,7 @@ fun Post(
             Box {
                 // Blurred background image
                 AsyncImage(
-                    modifier = Modifier.height(250.dp).blur(20.dp),
+                    modifier = Modifier.align(Alignment.Center).height(250.dp).blur(20.dp),
                     url = imageUrl,
                     contentScale = ContentScale.Crop,
                     loadingView = {},
@@ -202,7 +202,7 @@ fun Post(
                 )
                 // Original image
                 AsyncImage(
-                    modifier = Modifier.height(250.dp),
+                    modifier = Modifier.align(Alignment.Center).height(250.dp),
                     url = imageUrl,
                     contentScale = ContentScale.Fit,
                     loadingView = {},
