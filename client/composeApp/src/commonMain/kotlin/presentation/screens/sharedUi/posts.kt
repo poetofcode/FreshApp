@@ -94,9 +94,10 @@ fun Posts(
                 modifier = Modifier.fillMaxHeight().padding().weight(1f),
                 state = gridState,
                 columns = GridCells.Adaptive(minSize = 300.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp),
+                contentPadding = PaddingValues(16.dp),
                 userScrollEnabled = true,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 itemsIndexed(posts) { postIndex, post ->
                     LaunchedEffect(post) {
@@ -180,14 +181,12 @@ fun Post(
                     )
                 )
             }
-            .padding(vertical = 5.dp)
             .fillMaxWidth()
             .sizeIn(minHeight = 300.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shape = RoundedCornerShape(10.dp)
             )
-            // .padding(8.dp)
     ) {
         post.image?.let { imageUrl ->
             AsyncImage(
@@ -200,7 +199,7 @@ fun Post(
         }
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            modifier = Modifier.padding(horizontal = 10.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = post.title,
             fontSize = 17.sp
         )
@@ -208,7 +207,7 @@ fun Post(
         // Bottom buttons (Fav and etc)
         //
         if (buttons.isNotEmpty()) {
-            Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
+            Row(modifier = Modifier.padding(vertical = 14.dp, horizontal = 16.dp)) {
                 // Метка "Source"
                 Text(
                     text = post.source.uppercase(),
