@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -186,12 +187,13 @@ fun Post(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(8.dp)
+            // .padding(8.dp)
     ) {
         post.image?.let { imageUrl ->
             AsyncImage(
                 modifier = Modifier.height(250.dp),
                 url = imageUrl,
+                contentScale = ContentScale.Crop,
                 loadingView = {},
                 errorView = {}
             )
