@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +25,11 @@ internal class DesktopImageUtil {
     private val cache = mutableMapOf<String, Resource<ImageBitmap>>()
 
     @Composable
-    fun AsyncImage(url: String, modifier: Modifier) {
+    fun AsyncImage(
+        url: String,
+        contentScale: ContentScale,
+        modifier: Modifier,
+    ) {
         val scope = rememberCoroutineScope()
         val imageBitmapState = remember { mutableStateOf<Resource<ImageBitmap>>(IdleResource) }
 
@@ -34,7 +39,8 @@ internal class DesktopImageUtil {
                     Image(
                         bitmap = bitmap.result,
                         "",
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = contentScale
                     )
                 }
 
