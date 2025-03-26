@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -172,6 +173,7 @@ fun Post(
     // val context = LocalContext.current
     Column(
         modifier = Modifier
+            .clip(shape = RoundedCornerShape(10.dp))
             .clickable {
                 SharedMemory.effectFlow.tryEmit(
                     NavigateEffect(
