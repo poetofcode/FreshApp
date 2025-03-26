@@ -191,13 +191,24 @@ fun Post(
             )
     ) {
         post.image?.let { imageUrl ->
-            AsyncImage(
-                modifier = Modifier.height(250.dp),
-                url = imageUrl,
-                contentScale = ContentScale.Crop,
-                loadingView = {},
-                errorView = {}
-            )
+            Box {
+                // Blurred background image
+                AsyncImage(
+                    modifier = Modifier.height(250.dp).blur(20.dp),
+                    url = imageUrl,
+                    contentScale = ContentScale.Crop,
+                    loadingView = {},
+                    errorView = {}
+                )
+                // Original image
+                AsyncImage(
+                    modifier = Modifier.height(250.dp),
+                    url = imageUrl,
+                    contentScale = ContentScale.Fit,
+                    loadingView = {},
+                    errorView = {}
+                )
+            }
         }
         Spacer(modifier = Modifier.size(8.dp))
         Text(
