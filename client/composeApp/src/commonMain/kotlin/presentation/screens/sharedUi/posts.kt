@@ -184,7 +184,7 @@ fun Post(
                 )
             }
             .fillMaxWidth()
-            .sizeIn(minHeight = 300.dp)
+            .sizeIn(minHeight = 250.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shape = RoundedCornerShape(10.dp)
@@ -194,7 +194,7 @@ fun Post(
             Box {
                 // Blurred background image
                 AsyncImage(
-                    modifier = Modifier.align(Alignment.Center).height(250.dp).blur(20.dp),
+                    modifier = Modifier.align(Alignment.Center).height(200.dp).blur(20.dp),
                     url = imageUrl,
                     contentScale = ContentScale.Crop,
                     loadingView = {},
@@ -202,7 +202,7 @@ fun Post(
                 )
                 // Original image
                 AsyncImage(
-                    modifier = Modifier.align(Alignment.Center).height(250.dp),
+                    modifier = Modifier.align(Alignment.Center).height(200.dp),
                     url = imageUrl,
                     contentScale = ContentScale.Fit,
                     loadingView = {},
