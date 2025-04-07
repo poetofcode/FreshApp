@@ -58,6 +58,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.navigation.NavigateEffect
 import presentation.navigation.SharedMemory
 import presentation.screens.postDetailsScreen.PostDetailsScreen
+import presentation.theme.AppColors
 import specific.AsyncImage
 import specific.ScrollBar
 import specific.ScrollBarOrientation
@@ -186,7 +187,7 @@ fun Post(
             .fillMaxWidth()
             .sizeIn(minHeight = 250.dp)
             .background(
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                color = AppColors.contentBackgroundColor,
                 shape = RoundedCornerShape(10.dp)
             )
     ) {

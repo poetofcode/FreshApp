@@ -57,6 +57,7 @@ import presentation.navigation.NavigatorTag
 import presentation.screens.bookmarkTabScreen.BookmarkTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
 import presentation.screens.profileTabScreen.ProfileTabScreen
+import presentation.theme.AppColors
 import presentation.theme.AppTheme
 import presentation.theme.LocalDarkMode
 
@@ -183,7 +184,7 @@ fun AppLayout(
     menu: Menu,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
-) = Surface(color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+) = Surface(color = AppColors.contentBackgroundColor) {
     val isMenuVisible = LocalMainAppState.current.isMenuVisible.value
 
     if (deviceType.isMobile) {

@@ -17,6 +17,8 @@ object AppColors {
     val categoryTextColorLight = Color.Black
     val categoryTextColorDark = Color.White
 
+    val contentBackgroundColor @Composable get() = MaterialTheme.colorScheme.surfaceContainer
+
     val scrollBarHoverBackgroundColor
         @Composable get() = if (LocalDarkMode.current)
             Color.DarkGray
