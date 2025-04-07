@@ -14,7 +14,7 @@ import specific.ScrollBarOrientation.VERTICAL
 private val scrollBarStyle
     @Composable get() = defaultScrollbarStyle().copy(
         hoverColor = AppColors.scrollBarHoverBackgroundColor,
-        unhoverColor = AppColors.contentBackgroundColor
+        unhoverColor = AppColors.scrollBarBackgroundColor
     )
 
 
