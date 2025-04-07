@@ -1,5 +1,6 @@
 package presentation.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import presentation.composables.muted
@@ -15,6 +16,12 @@ object AppColors {
     val categorySolidColorUnselected = Color.Yellow.copy(alpha = 0.2f)
     val categoryTextColorLight = Color.Black
     val categoryTextColorDark = Color.White
+
+    @Composable
+    fun contentBackgroundColor() = MaterialTheme.colorScheme.surfaceContainerHigh
+
+    @Composable
+    fun scrollBarHoverBackgroundColor() = Color.Gray
 
     @Composable
     fun sourceSolidColor() : Color {
