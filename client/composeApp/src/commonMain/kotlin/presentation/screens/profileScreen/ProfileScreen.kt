@@ -1,14 +1,18 @@
 package presentation.screens.profileScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -20,16 +24,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import presentation.LocalMainAppState
 import presentation.Tabs
 import presentation.navigation.BaseScreen
 import presentation.navigation.HideBottomSheetEffect
 import presentation.navigation.ShowModalBottomSheetEffect
 import presentation.navigation.postSideEffect
+import presentation.theme.AppColors
 import presentation.theme.AppTheme
 
 
@@ -83,7 +90,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
     @Composable
     fun UnsignedProfile() {
         Box(Modifier.fillMaxSize()) {
-            Column(Modifier.wrapContentSize().align(Alignment.Center)) {
+            Column(Modifier.wrapContentSize().padding(16.dp)) {
                 /*
                 Text(
                     text = "Войдите в аккаунт, чтобы получить доступ ко всем функциям приложения",
@@ -110,12 +117,33 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 }
                  */
 
-                CommonPrefs(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 20.dp)
-                )
+                GroupedBox(
+                    title = "Отображение"
+                ) {
+                    CommonPrefs()
+                }
             }
+        }
+    }
+
+    @Composable
+    fun GroupedBox(
+        modifier: Modifier = Modifier,
+        title: String,
+        content: @Composable () -> Unit
+    ) {
+        Column(
+            modifier = modifier.clip(shape = RoundedCornerShape(10.dp))
+                .background(color = AppColors.contentBackgroundColor)
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = title,
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            content()
         }
     }
 
@@ -123,9 +151,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
     fun CommonPrefs(modifier: Modifier = Modifier) {
         val localMainAppState = LocalMainAppState.current
 
-        Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-            /* HorizontalDivider() */
-
+        Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
             Row(
                 modifier = Modifier.padding(top = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
