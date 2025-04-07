@@ -70,27 +70,36 @@ class BookmarkListScreen : BaseScreen<BookmarkListViewModel>() {
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (readyState) {
-                        is CompleteResource -> Posts(
-                            posts = posts,
-                            gridState = gridState,
-                            lifecycleScope = lifecycleScope,
-                        ) { post ->
-                            Post(
-                                post,
-                                buttons = listOf(PostButtonType.FAVORITE)
-                            ) { buttonType ->
-                                when (buttonType) {
-                                    PostButtonType.FAVORITE -> {
-                                        PostButton(
-                                            iconRes = Res.drawable.ic_delete_24,
-                                            onClick = { viewModel.onRemoveFavoriteClick(post) },
-                                            tintColor = AppColors.iconMutedColor,
-                                        )
+                        is CompleteResource -> {
+                            if (posts.isNotEmpty()) {
+                                Posts(
+                                    posts = posts,
+                                    gridState = gridState,
+                                    lifecycleScope = lifecycleScope,
+                                ) { post ->
+                                    Post(
+                                        post,
+                                        buttons = listOf(PostButtonType.FAVORITE)
+                                    ) { buttonType ->
+                                        when (buttonType) {
+                                            PostButtonType.FAVORITE -> {
+                                                PostButton(
+                                                    iconRes = Res.drawable.ic_delete_24,
+                                                    onClick = { viewModel.onRemoveFavoriteClick(post) },
+                                                    tintColor = AppColors.iconMutedColor,
+                                                )
+                                            }
+                                        }
                                     }
                                 }
+                            } else {
+                                Text(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    text = "Вы пока ничего не добавили",
+                                    color = AppColors.iconMutedColor
+                                )
                             }
                         }
-
 
                         is ExceptionResource -> {
                             Column(
