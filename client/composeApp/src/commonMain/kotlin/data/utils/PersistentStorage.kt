@@ -33,7 +33,7 @@ private val json = JsonProvider.json
 
 @Serializer(forClass = ZonedDateTime::class)
 object DateSerializer : KSerializer<ZonedDateTime> {
-    private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
+    private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     override fun serialize(encoder: Encoder, value: ZonedDateTime) {
         encoder.encodeString(value.format(formatter))
