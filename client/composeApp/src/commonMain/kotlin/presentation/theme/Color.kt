@@ -16,33 +16,25 @@ object AppColors {
     val categorySolidColorUnselected = Color.Yellow.copy(alpha = 0.2f)
     val categoryTextColorLight = Color.Black
     val categoryTextColorDark = Color.White
+    val scrollBarHoverBackgroundColor = Color.Gray
 
-    @Composable
-    fun contentBackgroundColor() = MaterialTheme.colorScheme.surfaceContainerHigh
+    val contentBackgroundColor @Composable get() = MaterialTheme.colorScheme.surfaceContainerHigh
 
-    @Composable
-    fun scrollBarHoverBackgroundColor() = Color.Gray
-
-    @Composable
-    fun sourceSolidColor() : Color {
-        return if (LocalDarkMode.current) {
+    val sourceSolidColor
+        @Composable get() = if (LocalDarkMode.current) {
             sourceSolidColorDark
         } else {
             sourceSolidColorLight
         }
-    }
 
-    @Composable
-    fun sourceSolidColorUnselected() : Color = sourceSolidColor().copy(alpha = 0.2f)
+    val sourceSolidColorUnselected @Composable get() = sourceSolidColor.copy(alpha = 0.2f)
 
-    @Composable
-    fun categoryTextColor() : Color {
-        return if (LocalDarkMode.current) {
+    val categoryTextColor
+        @Composable get() = if (LocalDarkMode.current) {
             categoryTextColorDark
         } else {
             categoryTextColorLight
         }
-    }
 }
 
 // Theme colors

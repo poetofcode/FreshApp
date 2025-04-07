@@ -271,9 +271,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 ),
                 borderColor = Color.Transparent,
                 solidColor = if (isSelected)
-                    AppColors.sourceSolidColor()
+                    AppColors.sourceSolidColor
                 else
-                    AppColors.sourceSolidColorUnselected()
+                    AppColors.sourceSolidColorUnselected
             ) {
                 viewModel.onSourceClick(source)
             }
@@ -290,9 +290,9 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 // title = if (isSelected) "-" else "+",
                 borderColor = Color.Transparent,
                 solidColor = if (isSelected)
-                    AppColors.sourceSolidColor()
+                    AppColors.sourceSolidColor
                 else
-                    AppColors.sourceSolidColorUnselected(),
+                    AppColors.sourceSolidColorUnselected,
                 content = {
                     Icon(
                         imageVector = if (isSelected)
@@ -317,12 +317,12 @@ class PostListScreen : BaseScreen<PostListViewModel>() {
                 AppColors.categorySolidColor
             else
                 AppColors.categorySolidColorUnselected,
-            borderColor = AppColors.categoryTextColor().muted(),
+            borderColor = AppColors.categoryTextColor.muted(),
             content = {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = category.title,
-                    color = AppColors.categoryTextColor(),
+                    color = AppColors.categoryTextColor,
                 )
             }
         ) {
