@@ -182,8 +182,8 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
 
     @Composable
     fun AboutApp(modifier: Modifier = Modifier) {
-        val versionName = "1.0"
-        val versionNumber = "100"
+        val versionName = "1.0"     // TODO take from build.config
+        val versionNumber = "100"   // TODO same
         val githubLink = "https://github.com/poetofcode/freshapp"
         Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
             // App version
@@ -286,7 +286,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
         }) {
             Text(
                 text = text,
-                color = Color.Black,
+                color = AppColors.categoryTextColor,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.align(Alignment.Center),
             )
