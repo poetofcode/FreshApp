@@ -59,7 +59,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
         AppTheme {
             Column {
                 TopAppBar(
-                    title = { Text(text = "Профиль") },
+                    title = { Text(text = "Настройки") },
                     navigationIcon = {},
                     actions = {
 //                        if (readyState !is LoadingResource) {
