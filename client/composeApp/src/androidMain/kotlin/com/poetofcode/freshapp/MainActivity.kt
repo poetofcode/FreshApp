@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
+import com.poetofcode.freshapp.utils.openLink
 import com.poetofcode.freshapp.utils.shareLink
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
@@ -140,7 +141,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     is OnOpenExternalBrowserSharedEvent -> {
-                        openLink(event,url)
+                        openLink(event.url)
                     }
                 }
             }
