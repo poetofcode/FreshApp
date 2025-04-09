@@ -202,13 +202,9 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 modifier = Modifier.padding(top = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = "Github",
-                    modifier = Modifier,
-                )
                 ClickableItem(
-                    modifier = Modifier.padding(start = 10.dp),
-                    text = githubLink
+                    modifier = Modifier,
+                    text = "Github \uD83E\uDC65" // githubLink
                 ) {
 //                    postSideEffect(ShowModalBottomSheetEffect {
 //                        ConfirmContent()
