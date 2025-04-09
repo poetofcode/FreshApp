@@ -282,7 +282,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
         }) {
             Text(
                 text = text,
-                color = AppColors.categoryTextColor,
+                color = AppColors.linkColor,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.align(Alignment.Center),
             )

@@ -42,6 +42,14 @@ object AppColors {
         } else {
             categoryTextColorLight
         }
+
+    val linkColor
+        @Composable get() = if (LocalDarkMode.current) {
+            sourceSolidColorLight
+        } else {
+            sourceSolidColorDark
+        }
+
 }
 
 // Theme colors
