@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import presentation.LocalMainAppState
 import presentation.Tabs
+import presentation.base.postSharedEvent
+import presentation.model.shared.OnOpenExternalBrowserSharedEvent
 import presentation.navigation.BaseScreen
 import presentation.navigation.HideBottomSheetEffect
 import presentation.navigation.ShowModalBottomSheetEffect
@@ -206,9 +208,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                     modifier = Modifier,
                     text = "Github \uD83E\uDC65" // githubLink
                 ) {
-//                    postSideEffect(ShowModalBottomSheetEffect {
-//                        ConfirmContent()
-//                    })
+                    viewModel.postSharedEvent(OnOpenExternalBrowserSharedEvent(githubLink))
                 }
             }
         }

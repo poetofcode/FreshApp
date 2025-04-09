@@ -26,6 +26,7 @@ import presentation.MainAppState
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
+import presentation.model.shared.OnOpenExternalBrowserSharedEvent
 import presentation.model.shared.OnReceivedTokenSharedEvent
 import presentation.model.shared.OnShareLinkSharedEvent
 import presentation.navigation.SetBackHandlerEffect
@@ -136,6 +137,10 @@ class MainActivity : ComponentActivity() {
 
                     is OnShareLinkSharedEvent -> {
                         shareLink(event.url)
+                    }
+
+                    is OnOpenExternalBrowserSharedEvent -> {
+                        openLink(event,url)
                     }
                 }
             }
