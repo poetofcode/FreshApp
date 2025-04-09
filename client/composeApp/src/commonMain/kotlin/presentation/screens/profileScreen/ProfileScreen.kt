@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -122,6 +122,13 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 ) {
                     CommonPrefs()
                 }
+
+                GroupedBox(
+                    modifier = Modifier.padding(top = 16.dp),
+                    title = "О приложении"
+                ) {
+                    AboutApp()
+                }
             }
         }
     }
@@ -140,10 +147,13 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
         ) {
             Text(
                 text = title,
-                fontSize = 16.sp
+                fontSize = 14.sp,
+                color = AppColors.iconMutedColor,
             )
             Spacer(modifier = Modifier.size(8.dp))
-            content()
+            Box(modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp)) {
+                content()
+            }
         }
     }
 
@@ -153,7 +163,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
 
         Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
             Row(
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Switch(
@@ -166,6 +176,44 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                     text = "Тёмная тема",
                     modifier = Modifier.padding(start = 16.dp),
                 )
+            }
+        }
+    }
+
+    @Composable
+    fun AboutApp(modifier: Modifier = Modifier) {
+        val versionName = "1.0"
+        val versionNumber = "100"
+        val githubLink = "https://github.com/poetofcode/freshapp"
+        Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
+            // App version
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Версия $versionName ($versionNumber)",
+                    modifier = Modifier,
+                )
+            }
+
+            // Github link
+            Row(
+                modifier = Modifier.padding(top = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Github",
+                    modifier = Modifier,
+                )
+                ClickableItem(
+                    modifier = Modifier.padding(start = 10.dp),
+                    text = githubLink
+                ) {
+//                    postSideEffect(ShowModalBottomSheetEffect {
+//                        ConfirmContent()
+//                    })
+                }
             }
         }
     }
@@ -235,7 +283,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
     fun ClickableItem(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
         Box(modifier.clickable {
             onClick()
-        }.fillMaxWidth().padding(10.dp)) {
+        }) {
             Text(
                 text = text,
                 color = Color.Black,
