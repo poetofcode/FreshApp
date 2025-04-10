@@ -65,6 +65,8 @@ buildConfig {
     useJavaOutput()
     buildConfigField("APP_NAME", project.name)
     buildConfigField("SERVER_URL", localProperties.getProperty("serverUrl"))
+    buildConfigField("VERSION_NAME", libs.versions.app.versionName.get())
+    buildConfigField("VERSION_CODE", libs.versions.app.versionCode.get())
 }
 
 //repositories {
@@ -83,8 +85,8 @@ android {
         applicationId = "com.poetofcode.freshapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode =  libs.versions.app.versionCode.get().toInt()
+        versionName = libs.versions.app.versionName.get()
     }
 
     signingConfigs {
@@ -139,7 +141,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.poetofcode.freshapp"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.app.versionName.get()
 
             macOS {
                 iconFile.set(project.file("src/desktopMain/resources/ic_logo.icns"))

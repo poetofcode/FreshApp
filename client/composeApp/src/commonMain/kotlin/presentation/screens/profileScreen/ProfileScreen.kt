@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -185,7 +184,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
     @Composable
     fun AboutApp(modifier: Modifier = Modifier) {
         val versionName = "1.0"     // TODO take from build.config
-        val versionNumber = "100"   // TODO same
+        val versionCode = "100"   // TODO same
         val githubLink = "https://github.com/poetofcode/freshapp"
         Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
             // App version
@@ -194,7 +193,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Версия $versionName ($versionNumber)",
+                    text = "Версия $versionName ($versionCode)",
                     modifier = Modifier,
                 )
             }
