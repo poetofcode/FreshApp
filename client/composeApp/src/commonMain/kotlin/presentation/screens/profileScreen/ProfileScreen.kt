@@ -206,7 +206,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
             ) {
                 ClickableItem(
                     modifier = Modifier,
-                    text = "Github"
+                    text = "Страница на Github"
                 ) {
                     viewModel.postSharedEvent(OnOpenExternalBrowserSharedEvent(githubLink))
                 }
