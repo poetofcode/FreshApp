@@ -1,5 +1,6 @@
 package presentation.screens.profileScreen
 
+import FreshApp.composeApp.BuildConfig
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -183,8 +184,8 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
 
     @Composable
     fun AboutApp(modifier: Modifier = Modifier) {
-        val versionName = "1.0"     // TODO take from build.config
-        val versionCode = "100"   // TODO same
+        val versionName = BuildConfig.VERSION_NAME
+        val versionCode = BuildConfig.VERSION_CODE
         val githubLink = "https://github.com/poetofcode/freshapp"
         Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
             // App version
