@@ -22,6 +22,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -185,7 +187,11 @@ fun AppLayout(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) = Surface(color = AppColors.contentBackgroundColor) {
-    val isMenuVisible = LocalMainAppState.current.isMenuVisible.value
+    val localMainAppState = LocalMainAppState.current
+
+    val isMenuVisible by remember {
+        derivedStateOf { localMainAppState.isMenuVisible.value }
+    }
 
     if (deviceType.isMobile) {
         Column(
