@@ -3,10 +3,12 @@
 package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.WebViewNavigator
@@ -35,6 +38,7 @@ import com.multiplatform.webview.web.WebViewState
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
 import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_favorite_24
 import freshapp.composeapp.generated.resources.ic_open_in_new_24
 import freshapp.composeapp.generated.resources.ic_share_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -235,33 +239,49 @@ class PostDetailsScreen(
                 }
             }
 
-            val mainState = LocalMainAppState.current
-            when (mainState.config.deviceType) {
-                Config.DeviceTypes.ANDROID -> {
-                    IconButton(onClick = {
-                        viewModel.onShareLink(textFieldValue.orEmpty())
-                    }) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_share_24),
-                            contentDescription = "Share",
-                        )
-                    }
+            Row(horizontalArrangement = Arrangement.spacedBy(0.dp)) {
+                IconButton(onClick = {
+                    // viewModel.onShareLink(textFieldValue.orEmpty())
+                }) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_favorite_24),
+                        contentDescription = "Add to favorites",
+                    )
                 }
 
-                Config.DeviceTypes.DESKTOP -> {
-                    IconButton(onClick = {
-                        viewModel.onOpenExternalBrowser(textFieldValue.orEmpty())
-                    }) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_open_in_new_24),
-                            contentDescription = "Open in browser",
-                        )
-                    }
-                }
+                platformSpecificActions(textFieldValue)
             }
         }
     }
 
+    @Composable
+    fun RowScope.platformSpecificActions(textFieldValue: String?) {
+        val mainState = LocalMainAppState.current
+        when (mainState.config.deviceType) {
+            Config.DeviceTypes.ANDROID -> {
+                IconButton(onClick = {
+                    viewModel.onShareLink(textFieldValue.orEmpty())
+                }) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_share_24),
+                        contentDescription = "Share",
+                    )
+                }
+            }
+
+            Config.DeviceTypes.DESKTOP -> {
+                IconButton(onClick = {
+                    viewModel.onOpenExternalBrowser(textFieldValue.orEmpty())
+                }) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_open_in_new_24),
+                        contentDescription = "Open in browser",
+                    )
+                }
+            }
+        }
+    }
+    
     @Composable
     fun ColumnScope.mobileScreenLayout(
         navigationBar: @Composable () -> Unit,
