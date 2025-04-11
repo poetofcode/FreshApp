@@ -73,9 +73,11 @@ class BookmarkListViewModelFactory(
 
 }
 
-class PostDetailsViewModelFactory() : ViewModelFactory<PostDetailsViewModel> {
+class PostDetailsViewModelFactory(
+    val favoriteRepository: FavoriteRepository
+) : ViewModelFactory<PostDetailsViewModel> {
     override fun createViewModel(): PostDetailsViewModel {
-        return PostDetailsViewModel()
+        return PostDetailsViewModel(favoriteRepository = favoriteRepository)
     }
 
     override val vmTypeName: String
@@ -163,6 +165,8 @@ fun viewModelFactories(
         BookmarkListViewModelFactory(
             favoriteRepository = favoriteRepository,
         ),
-        PostDetailsViewModelFactory(),
+        PostDetailsViewModelFactory(
+            favoriteRepository = favoriteRepository,
+        ),
     )
 }

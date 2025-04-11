@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,8 @@ import com.multiplatform.webview.web.WebViewState
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
 import freshapp.composeapp.generated.resources.Res
-import freshapp.composeapp.generated.resources.ic_favorite_24
+import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
+import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import freshapp.composeapp.generated.resources.ic_open_in_new_24
 import freshapp.composeapp.generated.resources.ic_share_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -63,12 +65,14 @@ class PostDetailsScreen(
     val postUrl: String
 ) : BaseScreen<PostDetailsViewModel>() {
 
-    override val viewModel: PostDetailsViewModel
-        get() = viewModelStore.getViewModel<PostDetailsViewModel>()
-
+    override val viewModel by lazy { viewModelStore.getViewModel<PostDetailsViewModel>() }
 
     @Composable
     override fun Content() {
+        LaunchedEffect(Unit) {
+            viewModel.onScreenReady(postUrl)
+        }
+
         val navigator = rememberWebViewNavigator()
 
         fun onBackClick(): Boolean {
@@ -239,12 +243,19 @@ class PostDetailsScreen(
                 }
             }
 
+            // Context buttons
+            //
+            val isFavorite = viewModel.state.value.isFavorite
             Row(horizontalArrangement = Arrangement.spacedBy(0.dp)) {
                 IconButton(onClick = {
                     // viewModel.onShareLink(textFieldValue.orEmpty())
                 }) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_favorite_24),
+                        painter = if (isFavorite) {
+                            painterResource(Res.drawable.ic_cell_fav_enabled)
+                        } else {
+                            painterResource(Res.drawable.ic_cell_fav_disabled)
+                        },
                         contentDescription = "Add to favorites",
                     )
                 }
@@ -281,7 +292,7 @@ class PostDetailsScreen(
             }
         }
     }
-    
+
     @Composable
     fun ColumnScope.mobileScreenLayout(
         navigationBar: @Composable () -> Unit,
