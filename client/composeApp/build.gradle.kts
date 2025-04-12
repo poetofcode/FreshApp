@@ -140,7 +140,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.poetofcode.freshapp"
+            packageName = "FreshApp"
             packageVersion = libs.versions.app.versionName.get()
 
             macOS {
