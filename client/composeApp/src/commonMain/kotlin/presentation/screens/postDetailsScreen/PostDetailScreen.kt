@@ -38,6 +38,7 @@ import com.multiplatform.webview.web.WebViewNavigator
 import com.multiplatform.webview.web.WebViewState
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
+import domain.model.PostModel
 import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
 import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
@@ -62,15 +63,17 @@ import specific.BackHandler
 
 
 class PostDetailsScreen(
-    val postUrl: String
+    val post: PostModel
 ) : BaseScreen<PostDetailsViewModel>() {
+
+    private val postUrl get() = post.link
 
     override val viewModel by lazy { viewModelStore.getViewModel<PostDetailsViewModel>() }
 
     @Composable
     override fun Content() {
         LaunchedEffect(Unit) {
-            viewModel.onScreenReady(postUrl)
+            viewModel.onScreenReady(post)
         }
 
         val navigator = rememberWebViewNavigator()
@@ -248,7 +251,7 @@ class PostDetailsScreen(
             val isFavorite = viewModel.state.value.isFavorite
             Row(horizontalArrangement = Arrangement.spacedBy(0.dp)) {
                 IconButton(onClick = {
-                    // viewModel.onShareLink(textFieldValue.orEmpty())
+                    viewModel.onFavoriteClick(post)
                 }) {
                     Icon(
                         painter = if (isFavorite) {
@@ -256,7 +259,7 @@ class PostDetailsScreen(
                         } else {
                             painterResource(Res.drawable.ic_cell_fav_disabled)
                         },
-                        contentDescription = "Add to favorites",
+                        contentDescription = "Favorites add/remove",
                     )
                 }
 

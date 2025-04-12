@@ -1,7 +1,7 @@
 package presentation.screens.postDetailsScreen
 
 import data.repository.FavoriteRepository
-import data.utils.toSha1
+import domain.model.PostModel
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
 import presentation.base.postSharedEvent
@@ -24,15 +24,14 @@ class PostDetailsViewModel(
         val isFavorite: Boolean = false,
     )
 
-    fun onScreenReady(postUrl: String) {
-        val postId = postUrl.toSha1()
+    fun onScreenReady(post: PostModel) {
         viewModelScope.launch {
             try {
                 reduce { copy(favoriteReadyState = LoadingResource) }
-                val favoriteIds = favoriteRepository.filterFavoriteIds(listOf(postId))
+                val favoriteIds = favoriteRepository.filterFavoriteIds(listOf(post.id))
                 reduce { copy(
                     favoriteReadyState = CompleteResource(Unit),
-                    isFavorite = favoriteIds.contains(postId)
+                    isFavorite = favoriteIds.contains(post.id)
                 ) }
             } catch (e: Throwable) {
                 reduce { copy(favoriteReadyState = ExceptionResource(e)) }
@@ -53,6 +52,23 @@ class PostDetailsViewModel(
 
     fun onOpenExternalBrowser(url: String) {
         postSharedEvent(OnOpenExternalBrowserSharedEvent(url))
+    }
+
+    fun onFavoriteClick(post: PostModel) = with(state.value) {
+        if (favoriteReadyState !is CompleteResource) {
+            return@with
+        }
+        viewModelScope.launch {
+            try {
+                if (isFavorite) {
+                    favoriteRepository.remove(post.id)
+                } else {
+                    favoriteRepository.add(post)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
     }
 
 }

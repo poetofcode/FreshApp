@@ -178,9 +178,7 @@ fun Post(
             .clickable {
                 SharedMemory.effectFlow.tryEmit(
                     NavigateEffect(
-                        PostDetailsScreen(
-                            postUrl = post.link
-                        )
+                        PostDetailsScreen(post = post)
                     )
                 )
             }
