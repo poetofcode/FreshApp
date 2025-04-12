@@ -1,10 +1,14 @@
 package presentation.screens.postDetailsScreen
 
+import data.repository.ChangeInfo
 import data.repository.FavoriteRepository
 import domain.model.PostModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
 import presentation.base.postSharedEvent
+import presentation.base.postSideEffect
 import presentation.model.CompleteResource
 import presentation.model.ExceptionResource
 import presentation.model.IdleResource
@@ -13,6 +17,7 @@ import presentation.model.Resource
 import presentation.model.shared.OnOpenExternalBrowserSharedEvent
 import presentation.model.shared.OnShareLinkSharedEvent
 import presentation.navigation.NavigateBackEffect
+import presentation.navigation.OnFavoriteFlagChanged
 import presentation.navigation.SharedMemory
 
 class PostDetailsViewModel(
@@ -23,6 +28,10 @@ class PostDetailsViewModel(
         val favoriteReadyState: Resource<Unit> = IdleResource,
         val isFavorite: Boolean = false,
     )
+
+    init {
+        observeFavoriteChanges()
+    }
 
     fun onScreenReady(post: PostModel) {
         viewModelScope.launch {
@@ -37,7 +46,29 @@ class PostDetailsViewModel(
                 reduce { copy(favoriteReadyState = ExceptionResource(e)) }
             }
         }
+    }
 
+    private fun observeFavoriteChanges() {
+        favoriteRepository.changesFlow
+            .onEach { change ->
+                var postId: String
+                var newIsFavorite: Boolean
+                when (change) {
+                    is ChangeInfo.AddedItem -> {
+                        postId = change.id
+                        newIsFavorite = true
+                    }
+                    is ChangeInfo.DeletedItem -> {
+                        postId = change.id
+                        newIsFavorite = false
+                    }
+                }
+                postSideEffect(OnFavoriteFlagChanged(
+                    id = postId,
+                    isFavorite = newIsFavorite
+                ))
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onBackClick() = viewModelScope.launch {
@@ -69,6 +100,10 @@ class PostDetailsViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun changeFavoriteState(newIsFavorite: Boolean) {
+        reduce { copy(isFavorite = newIsFavorite) }
     }
 
 }

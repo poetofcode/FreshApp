@@ -49,6 +49,8 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.LocalMainAppState
 import presentation.base.Config
 import presentation.navigation.BaseScreen
+import presentation.navigation.OnFavoriteFlagChanged
+import presentation.navigation.SideEffect
 import presentation.theme.AppTheme
 import specific.BackHandler
 
@@ -291,6 +293,16 @@ class PostDetailsScreen(
                         painter = painterResource(Res.drawable.ic_open_in_new_24),
                         contentDescription = "Open in browser",
                     )
+                }
+            }
+        }
+    }
+
+    override fun obtainSideEffect(effect: SideEffect) {
+        when (effect) {
+            is OnFavoriteFlagChanged -> {
+                if (post.id == effect.id) {
+                    viewModel.changeFavoriteState(effect.isFavorite)
                 }
             }
         }

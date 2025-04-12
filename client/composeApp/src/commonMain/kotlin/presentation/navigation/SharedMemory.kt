@@ -38,6 +38,11 @@ data class ShowModalBottomSheetEffect(
 
 object HideBottomSheetEffect : SideEffect
 
+data class OnFavoriteFlagChanged(
+    val id: String,
+    val isFavorite: Boolean
+) : SideEffect
+
 /* SHARED EVENTS */
 
 interface SharedEvent
