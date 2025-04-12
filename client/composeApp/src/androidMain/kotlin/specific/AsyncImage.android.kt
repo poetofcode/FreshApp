@@ -2,7 +2,8 @@ package specific
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.poetofcode.freshapp.AndroidImageUtil
+import androidx.compose.ui.layout.ContentScale
+import com.poetofcode.freshapp.utils.AndroidImageUtil
 
 private val imageUtil = AndroidImageUtil()
 
@@ -10,8 +11,9 @@ private val imageUtil = AndroidImageUtil()
 actual fun AsyncImage(
     modifier: Modifier,
     url: String,
+    contentScale: ContentScale,
     loadingView: @Composable () -> Unit,
     errorView: @Composable () -> Unit,
 ) {
-    imageUtil.AsyncImage(url, modifier)
+    imageUtil.AsyncImage(url, contentScale, modifier)
 }

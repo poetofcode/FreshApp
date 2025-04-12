@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinSerialization)
     // id("com.google.gms.google-services") version "4.4.2" apply false
+    id("com.github.gmazzo.buildconfig") version "5.5.4"
 }
 
 kotlin {
@@ -53,6 +55,20 @@ kotlin {
     }
 }
 
+buildConfig {
+    val localPropertiesFile = rootProject.file("local.properties")
+    val localProperties = Properties()
+    if (localPropertiesFile.exists()) {
+        localProperties.load(FileInputStream(localPropertiesFile))
+    }
+
+    useJavaOutput()
+    buildConfigField("APP_NAME", project.name)
+    buildConfigField("SERVER_URL", localProperties.getProperty("serverUrl"))
+    buildConfigField("VERSION_NAME", libs.versions.app.versionName.get())
+    buildConfigField("VERSION_CODE", libs.versions.app.versionCode.get())
+}
+
 //repositories {
 //    mavenCentral()
 //}
@@ -69,8 +85,8 @@ android {
         applicationId = "com.poetofcode.freshapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode =  libs.versions.app.versionCode.get().toInt()
+        versionName = libs.versions.app.versionName.get()
     }
 
     signingConfigs {
@@ -125,7 +141,17 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.poetofcode.freshapp"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.app.versionName.get()
+
+            macOS {
+                iconFile.set(project.file("src/desktopMain/resources/ic_logo.icns"))
+            }
+            windows {
+                iconFile.set(project.file("src/desktopMain/resources/ic_logo.ico"))
+            }
+            linux {
+                iconFile.set(project.file("src/desktopMain/resources/ic_logo.png"))
+            }
         }
 
         jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")

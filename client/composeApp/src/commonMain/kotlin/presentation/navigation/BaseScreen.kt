@@ -54,6 +54,8 @@ abstract class BaseScreen<T : BaseViewModel<*>> : Screen<T> {
     private val snackState = mutableStateOf<SnackState>(SnackState())
     private var snackHidingJob: Job? = null
 
+    protected lateinit var lifecycleScope: CoroutineScope
+
     @Composable
     protected fun setMainMenuVisibility() {
         val appState = LocalMainAppState.current
@@ -66,8 +68,8 @@ abstract class BaseScreen<T : BaseViewModel<*>> : Screen<T> {
 
     @Composable
     fun PrepareContent() {
-        val scope = rememberCoroutineScope()
-        scope.launch {
+        lifecycleScope = rememberCoroutineScope()
+        lifecycleScope.launch {
             SharedMemory.effectFlow.emit(SetBackHandlerEffect { false })
         }
         setMainMenuVisibility()
@@ -77,7 +79,7 @@ abstract class BaseScreen<T : BaseViewModel<*>> : Screen<T> {
             (viewModel as? BaseViewModel<*>)?.run {
                 onViewReady()
                 collectEffects()
-                collectSideEffects()
+                collectSideEffects(this@BaseScreen::obtainSideEffect)
             }
 
             isReady = true
@@ -132,10 +134,14 @@ abstract class BaseScreen<T : BaseViewModel<*>> : Screen<T> {
         }
     }
 
+    protected open fun obtainSideEffect(effect: SideEffect) {
+        // Override on children
+    }
+
 }
 
 @Composable
-fun BaseScreen<*>.collectSideEffects() {
+fun BaseScreen<*>.collectSideEffects(customHandler: (SideEffect) -> Unit) {
     val localMainAppState = LocalMainAppState.current
     val scope = viewModel.viewModelScope
 
@@ -169,11 +175,12 @@ fun BaseScreen<*>.collectSideEffects() {
                 }
             }
         }
+
+        // Invoke BaseScreen::obtainSideEffect()
+        customHandler(effect)
+
     }.launchIn(scope)
 }
-
-// TODO предусмотреть абстрактный (или пустой открытый) метод для
-//  обработки кастомный side-эффектов
 
 fun BaseScreen<*>.postSideEffect(effect: SideEffect) {
     viewModel.postSideEffect(effect)

@@ -7,6 +7,7 @@ object JsonProvider {
     val json by lazy {
         Json {
             ignoreUnknownKeys = true
+            isLenient = true
         }
     }
 

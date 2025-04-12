@@ -1,5 +1,6 @@
 package presentation
 
+import FreshApp.composeApp.BuildConfig
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,6 +22,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,6 +46,7 @@ import freshapp.composeapp.generated.resources.Res
 import freshapp.composeapp.generated.resources.ic_favorite_24
 import freshapp.composeapp.generated.resources.ic_home_24
 import freshapp.composeapp.generated.resources.ic_person_24
+import freshapp.composeapp.generated.resources.ic_settings_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -55,6 +59,7 @@ import presentation.navigation.NavigatorTag
 import presentation.screens.bookmarkTabScreen.BookmarkTabScreen
 import presentation.screens.homeTabScreen.HomeTabScreen
 import presentation.screens.profileTabScreen.ProfileTabScreen
+import presentation.theme.AppColors
 import presentation.theme.AppTheme
 import presentation.theme.LocalDarkMode
 
@@ -109,9 +114,11 @@ fun App() {
             val selectedTab = remember { mutableStateOf<Tabs>(HOME) }
             val navState = remember {
                 NavStateImpl(viewModelStore = config.viewModelStore).apply {
-                    push(HomeTabScreen())
-                    push(BookmarkTabScreen())
-                    push(ProfileTabScreen())
+                    push(listOf(
+                        ProfileTabScreen(),
+                        BookmarkTabScreen(),
+                        HomeTabScreen(),
+                    ))
                 }
             }
 
@@ -133,7 +140,7 @@ fun App() {
                             val icon = when (tab) {
                                 HOME -> Res.drawable.ic_home_24
                                 Tabs.BOOKMARK -> Res.drawable.ic_favorite_24
-                                PROFILE -> Res.drawable.ic_person_24
+                                PROFILE -> Res.drawable.ic_settings_24 /* Res.drawable.ic_person_24 */
                             }
 
                             Image(
@@ -179,8 +186,12 @@ fun AppLayout(
     menu: Menu,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
-) = Surface(color = MaterialTheme.colorScheme.surfaceContainerHigh) {
-    val isMenuVisible = LocalMainAppState.current.isMenuVisible.value
+) = Surface(color = AppColors.contentBackgroundColor) {
+    val localMainAppState = LocalMainAppState.current
+
+    val isMenuVisible by remember {
+        derivedStateOf { localMainAppState.isMenuVisible.value }
+    }
 
     if (deviceType.isMobile) {
         Column(

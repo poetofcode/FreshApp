@@ -1,9 +1,7 @@
 package data.repository
 
-import data.service.FreshApi
 import data.service.MainApi
 import data.utils.AppDataStorage
-import data.utils.PersistentStorage
 import data.utils.ProfileStorage
 
 interface RepositoryFactory {
@@ -14,11 +12,12 @@ interface RepositoryFactory {
 
     fun createFavoriteRepository() : FavoriteRepository
 
+    fun createDashboardRepository() : DashboardRepository
+
 }
 
 class RepositoryFactoryImpl(
     val api: MainApi,
-    val freshApi: FreshApi,
     val profileStorage: ProfileStorage,
     val appDataStorage: AppDataStorage,
 ) : RepositoryFactory {
@@ -31,11 +30,15 @@ class RepositoryFactoryImpl(
     }
 
     override fun createFeedRepository(favoriteRepository: FavoriteRepository): FeedRepository {
-        return FeedRepositoryImpl(freshApi, favoriteRepository)
+        return FeedRepositoryImpl(api, favoriteRepository)
     }
 
     override fun createFavoriteRepository(): FavoriteRepository {
         return FavoriteLocalRepositoryImpl(storage = appDataStorage)
+    }
+
+    override fun createDashboardRepository(): DashboardRepository {
+        return DashboardRepositoryImpl(api)
     }
 
 }

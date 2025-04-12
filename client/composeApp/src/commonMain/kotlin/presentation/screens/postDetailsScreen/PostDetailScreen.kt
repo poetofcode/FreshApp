@@ -3,10 +3,12 @@
 package presentation.screens.postDetailsScreen
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -21,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,13 +31,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import com.multiplatform.webview.web.LoadingState
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.WebViewNavigator
 import com.multiplatform.webview.web.WebViewState
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewState
+import domain.model.PostModel
 import freshapp.composeapp.generated.resources.Res
+import freshapp.composeapp.generated.resources.ic_cell_fav_disabled
+import freshapp.composeapp.generated.resources.ic_cell_fav_enabled
 import freshapp.composeapp.generated.resources.ic_open_in_new_24
 import freshapp.composeapp.generated.resources.ic_share_24
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -42,6 +49,8 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.LocalMainAppState
 import presentation.base.Config
 import presentation.navigation.BaseScreen
+import presentation.navigation.OnFavoriteFlagChanged
+import presentation.navigation.SideEffect
 import presentation.theme.AppTheme
 import specific.BackHandler
 
@@ -56,15 +65,19 @@ import specific.BackHandler
 
 
 class PostDetailsScreen(
-    val postUrl: String
+    val post: PostModel
 ) : BaseScreen<PostDetailsViewModel>() {
 
-    override val viewModel: PostDetailsViewModel
-        get() = viewModelStore.getViewModel<PostDetailsViewModel>()
+    private val postUrl get() = post.link
 
+    override val viewModel by lazy { viewModelStore.getViewModel<PostDetailsViewModel>() }
 
     @Composable
     override fun Content() {
+        LaunchedEffect(Unit) {
+            viewModel.onScreenReady(post)
+        }
+
         val navigator = rememberWebViewNavigator()
 
         fun onBackClick(): Boolean {
@@ -235,28 +248,61 @@ class PostDetailsScreen(
                 }
             }
 
-            val mainState = LocalMainAppState.current
-            when (mainState.config.deviceType) {
-                Config.DeviceTypes.ANDROID -> {
-                    IconButton(onClick = {
-                        viewModel.onShareLink(textFieldValue.orEmpty())
-                    }) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_share_24),
-                            contentDescription = "Share",
-                        )
-                    }
+            // Context buttons
+            //
+            val isFavorite = viewModel.state.value.isFavorite
+            Row(horizontalArrangement = Arrangement.spacedBy(0.dp)) {
+                IconButton(onClick = {
+                    viewModel.onFavoriteClick(post)
+                }) {
+                    Icon(
+                        painter = if (isFavorite) {
+                            painterResource(Res.drawable.ic_cell_fav_enabled)
+                        } else {
+                            painterResource(Res.drawable.ic_cell_fav_disabled)
+                        },
+                        contentDescription = "Favorites add/remove",
+                    )
                 }
 
-                Config.DeviceTypes.DESKTOP -> {
-                    IconButton(onClick = {
-                        viewModel.onOpenExternalBrowser(textFieldValue.orEmpty())
-                    }) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_open_in_new_24),
-                            contentDescription = "Open in browser",
-                        )
-                    }
+                platformSpecificActions(textFieldValue)
+            }
+        }
+    }
+
+    @Composable
+    fun RowScope.platformSpecificActions(textFieldValue: String?) {
+        val mainState = LocalMainAppState.current
+        when (mainState.config.deviceType) {
+            Config.DeviceTypes.ANDROID -> {
+                IconButton(onClick = {
+                    viewModel.onShareLink(textFieldValue.orEmpty())
+                }) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_share_24),
+                        contentDescription = "Share",
+                    )
+                }
+            }
+
+            Config.DeviceTypes.DESKTOP -> {
+                IconButton(onClick = {
+                    viewModel.onOpenExternalBrowser(textFieldValue.orEmpty())
+                }) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_open_in_new_24),
+                        contentDescription = "Open in browser",
+                    )
+                }
+            }
+        }
+    }
+
+    override fun obtainSideEffect(effect: SideEffect) {
+        when (effect) {
+            is OnFavoriteFlagChanged -> {
+                if (post.id == effect.id) {
+                    viewModel.changeFavoriteState(effect.isFavorite)
                 }
             }
         }

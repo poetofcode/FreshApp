@@ -3,6 +3,7 @@ package presentation.base
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,11 +29,13 @@ interface ViewModel<S> {
 abstract class BaseViewModel<S> : ViewModel<S> {
 
     val effectFlow: MutableSharedFlow<Effect> = MutableSharedFlow(
-        extraBufferCapacity = 1
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.SUSPEND
     )
 
     val sideEffectFlow = MutableSharedFlow<SideEffect>(
         extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.SUSPEND
     )
 
     val viewModelScope: CoroutineScope by lazy {
@@ -115,12 +118,14 @@ fun BaseViewModel<*>.postEffect(effect: Effect) {
 }
 fun BaseViewModel<*>.postSideEffect(effect: SideEffect) {
     viewModelScope.launch {
-        sideEffectFlow.tryEmit(effect)
+        sideEffectFlow.emit(effect)
     }
 }
 
 fun BaseViewModel<*>.postSharedEvent(event: SharedEvent) {
-    SharedMemory.eventFlow.tryEmit(event)
+    viewModelScope.launch {
+        SharedMemory.eventFlow.emit(event)
+    }
 }
 
 fun findNavigatorInfoByTag(navigators: List<NavigatorInfo>, tag: NavigatorTag): NavigatorInfo {

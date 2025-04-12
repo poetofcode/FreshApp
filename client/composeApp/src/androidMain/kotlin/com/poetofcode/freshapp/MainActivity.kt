@@ -10,12 +10,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
+import com.poetofcode.freshapp.utils.openLink
 import com.poetofcode.freshapp.utils.shareLink
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
 import data.utils.AppDataStorageImpl
-import data.utils.ContentBasedPersistentStorage
+import data.utils.PersistentStorage
 import data.utils.ProfileStorageImpl
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,6 +27,7 @@ import presentation.MainAppState
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
+import presentation.model.shared.OnOpenExternalBrowserSharedEvent
 import presentation.model.shared.OnReceivedTokenSharedEvent
 import presentation.model.shared.OnShareLinkSharedEvent
 import presentation.navigation.SetBackHandlerEffect
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
         Config.DeviceTypes.ANDROID,
     )
 
-    private val configStorage = ContentBasedPersistentStorage(
+    private val configStorage = PersistentStorage(
         AndroidContentProvider(
             fileName = "config.json",
             context = this,
@@ -63,7 +65,6 @@ class MainActivity : ComponentActivity() {
 
     private val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
-        freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
         appDataStorage = appDataStorage,
     )
@@ -73,7 +74,8 @@ class MainActivity : ComponentActivity() {
     private val vmStoreImpl = ViewModelStore(
         coroutineScope = lifecycleScope,
         vmFactories = viewModelFactories(
-            repositoryFactory = repositoryFactory
+            repositoryFactory = repositoryFactory,
+            configStorage = configStorage,
         )
     )
 
@@ -136,6 +138,10 @@ class MainActivity : ComponentActivity() {
 
                     is OnShareLinkSharedEvent -> {
                         shareLink(event.url)
+                    }
+
+                    is OnOpenExternalBrowserSharedEvent -> {
+                        openLink(event.url)
                     }
                 }
             }

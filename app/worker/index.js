@@ -9,9 +9,9 @@ async function launch(context) {
     });
 
     const withIntervals = [
-        // [ workers.jokes, seconds(120) ],
-        // [ workers.mailer, seconds(5) ]
         // [ new SerialWorker([workers.notifications, workers.pushes]), seconds(10) ]
+        [ workers.grabber, minutes(7) ],
+        [ workers.cleaner, hours(3) ],
     ];
 
     withIntervals.forEach((w) => {
@@ -19,7 +19,7 @@ async function launch(context) {
         const interval = w[1];
         utils.setIntervalImmediately(async () => {
             try {
-                worker.doWork()
+                await worker.doWork()
             } catch(err) {
                 console.error(err);
             }
@@ -29,6 +29,14 @@ async function launch(context) {
 
 function seconds(sec) {
     return sec * 1000;
+}
+
+function minutes(min) {
+    return min * seconds(60);
+}
+
+function hours(h) {
+    return h * minutes(60);
 }
 
 class SerialWorker {

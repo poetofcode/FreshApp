@@ -2,9 +2,12 @@ package data.service
 
 import data.entity.CreateSessionRequestBody
 import data.entity.CreateSessionResponse
+import data.entity.DashboardResponse
 import data.entity.DataResponse
 import data.entity.ExceptionResponse
 import data.entity.FailureResponse
+import data.entity.FeedResponse
+import data.entity.FetchFeedRequestBody
 import data.entity.NotificationResponse
 import data.entity.ResultResponse
 import data.entity.SaveFirebasePushTokenRequestBody
@@ -86,9 +89,11 @@ class MainApi(
         httpClient.post {
             authBlock {
                 url { path("/api/v1/sessions/push_token") }
-                setBody(SaveFirebasePushTokenRequestBody(
-                    pushToken = pushToken
-                ))
+                setBody(
+                    SaveFirebasePushTokenRequestBody(
+                        pushToken = pushToken
+                    )
+                )
             }
         }
     }
@@ -100,6 +105,25 @@ class MainApi(
             }
         }
     }
+
+    suspend fun fetchFeed(requestBody: FetchFeedRequestBody = FetchFeedRequestBody()): ResultResponse<FeedResponse> =
+        parseRequestResult<FeedResponse> {
+            httpClient.post {
+                nonAuthBlock {
+                    url { path("/api/v1/feed") }
+                    setBody(requestBody)
+                }
+            }
+        }
+
+    suspend fun fetchDashboard(): ResultResponse<DashboardResponse> =
+        parseRequestResult<DashboardResponse> {
+            httpClient.post {
+                nonAuthBlock {
+                    url { path("/api/v1/dashboard") }
+                }
+            }
+        }
 
     private suspend inline fun <reified T : Any> parseRequestResult(doRequest: () -> HttpResponse): ResultResponse<T> {
         var response: HttpResponse? = null

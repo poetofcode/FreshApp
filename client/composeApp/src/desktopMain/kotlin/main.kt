@@ -8,10 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Notification
-import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.TrayState
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
@@ -23,8 +23,8 @@ import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
 import data.utils.AppDataStorageImpl
-import data.utils.ContentBasedPersistentStorage
 import data.utils.FileContentProvider
+import data.utils.PersistentStorage
 import data.utils.ProfileStorageImpl
 import data.utils.getValue
 import data.utils.setValue
@@ -38,7 +38,6 @@ import kotlinx.coroutines.withContext
 import presentation.App
 import presentation.LocalMainAppState
 import presentation.MainAppState
-import presentation.TrayIcon
 import presentation.base.Config
 import presentation.base.ViewModelStore
 import presentation.factories.viewModelFactories
@@ -68,7 +67,7 @@ fun main() = application {
         Config.DeviceTypes.DESKTOP,
     )
 
-    val configStorage = ContentBasedPersistentStorage(
+    val configStorage = PersistentStorage(
         FileContentProvider(
             fileName = "config.json",
             relativePath = "appcache",
@@ -84,14 +83,16 @@ fun main() = application {
 
     val repositoryFactory = RepositoryFactoryImpl(
         api = networkingFactory.createApi(),
-        freshApi = networkingFactory.createFreshApi(),
         profileStorage = profileStorage,
         appDataStorage = appDataStorage,
     )
 
     val vmStoreImpl = ViewModelStore(
         coroutineScope = rememberCoroutineScope(),
-        vmFactories = viewModelFactories(repositoryFactory = repositoryFactory)
+        vmFactories = viewModelFactories(
+            repositoryFactory = repositoryFactory,
+            configStorage = configStorage,
+        )
     )
 
     var windowWidth: Int? by configStorage
@@ -150,18 +151,23 @@ fun main() = application {
 
     val trayState = rememberTrayState()
 
-    Tray(
-        state = trayState,
-        icon = TrayIcon,
-        menu = {
-            Item(
-                "Exit",
-                onClick = ::exitApplication
-            )
-        }
-    )
+//    Tray(
+//        state = trayState,
+//        icon = TrayIcon,
+//        menu = {
+//            Item(
+//                "Exit",
+//                onClick = ::exitApplication
+//            )
+//        }
+//    )
 
-    Window(state = windowState, onCloseRequest = ::exitApplication, title = "FreshApp") {
+    Window(
+        state = windowState,
+        onCloseRequest = ::exitApplication,
+        title = "FreshApp",
+        icon = painterResource("ic_logo.png")
+    ) {
         var restartRequired by remember { mutableStateOf(false) }
         var downloading by remember { mutableStateOf(0F) }
         var initialized by remember { mutableStateOf(false) }

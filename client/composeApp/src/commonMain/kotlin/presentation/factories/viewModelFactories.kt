@@ -1,9 +1,11 @@
 package presentation.factories
 
+import data.repository.DashboardRepository
 import data.repository.FavoriteRepository
 import data.repository.FeedRepository
 import data.repository.ProfileRepository
 import data.repository.RepositoryFactory
+import data.utils.PersistentStorage
 import presentation.base.ViewModelFactory
 import presentation.screens.authScreen.AuthViewModel
 import presentation.screens.bookmarkListScreen.BookmarkListViewModel
@@ -38,13 +40,17 @@ class BookmarkTabViewModelFactory() : ViewModelFactory<BookmarkTabViewModel> {
 }
 
 class PostListViewModelFactory(
+    val configStorage: PersistentStorage,
     val feedRepository: FeedRepository,
     val favoriteRepository: FavoriteRepository,
+    val dashboardRepository: DashboardRepository,
 ) : ViewModelFactory<PostListViewModel> {
     override fun createViewModel(): PostListViewModel {
         return PostListViewModel(
+            configStorage = configStorage,
             feedRepository = feedRepository,
             favoriteRepository = favoriteRepository,
+            dashboardRepository = dashboardRepository
         )
     }
 
@@ -67,9 +73,11 @@ class BookmarkListViewModelFactory(
 
 }
 
-class PostDetailsViewModelFactory() : ViewModelFactory<PostDetailsViewModel> {
+class PostDetailsViewModelFactory(
+    val favoriteRepository: FavoriteRepository
+) : ViewModelFactory<PostDetailsViewModel> {
     override fun createViewModel(): PostDetailsViewModel {
-        return PostDetailsViewModel()
+        return PostDetailsViewModel(favoriteRepository = favoriteRepository)
     }
 
     override val vmTypeName: String
@@ -134,10 +142,12 @@ class NotificationsViewModelFactory(private val profileRepository: ProfileReposi
 
 
 fun viewModelFactories(
-    repositoryFactory: RepositoryFactory
+    repositoryFactory: RepositoryFactory,
+    configStorage: PersistentStorage
 ): List<ViewModelFactory<*>> {
     val profileRepository = repositoryFactory.createProfileRepository()
     val favoriteRepository = repositoryFactory.createFavoriteRepository()
+    val dashboardRepository = repositoryFactory.createDashboardRepository()
     return listOf<ViewModelFactory<*>>(
         HomeTabViewModelFactory(),
         ProfileTabViewModelFactory(),
@@ -147,12 +157,16 @@ fun viewModelFactories(
         RegViewModelFactory(profileRepository),
         NotificationsViewModelFactory(profileRepository),
         PostListViewModelFactory(
+            configStorage = configStorage,
             feedRepository = repositoryFactory.createFeedRepository(favoriteRepository),
             favoriteRepository = favoriteRepository,
+            dashboardRepository =  dashboardRepository
         ),
         BookmarkListViewModelFactory(
             favoriteRepository = favoriteRepository,
         ),
-        PostDetailsViewModelFactory(),
+        PostDetailsViewModelFactory(
+            favoriteRepository = favoriteRepository,
+        ),
     )
 }

@@ -36,6 +36,9 @@ async function initRoutes(router, context) {
 	router.get('/notifications', middlewares.notifications.fetchNotifications());
 	router.get('/notifications/:id', middlewares.notifications.fetchNotificationById());
 
+	router.post('/feed', middlewares.feed.fetchFeed());
+	router.post('/dashboard', middlewares.feed.fetchDashboard());
+
 	router.use(handleErrors);
 }
 
@@ -49,9 +52,10 @@ function handleTokenValidation(sessionMiddleware, sessionRepository) {
 		const isSessionByTokenGet = req.path.startsWith("/sessions/") && req.path !== "/sessions/" && req.method === 'GET';
 		const isSessionByTokenDelete = req.path.startsWith("/sessions/") && req.path !== "/sessions/" && req.method === 'DELETE';
 		const isUserCreate = req.path.startsWith('/users') && req.method === 'POST' && !req.path.startsWith('/users/');
-		const isJokesGet = req.path.startsWith('/jokes');
+		const isFeedPost = req.path === '/feed' && req.method === 'POST';
+		const isDashboardPost = req.path === '/dashboard' && req.method === 'POST';
 
-		if (isSessionsPost || isSessionByTokenGet || isSessionByTokenDelete || isUserCreate || isJokesGet) {
+		if (isSessionsPost || isSessionByTokenGet || isSessionByTokenDelete || isUserCreate || isFeedPost || isDashboardPost) {
 			return next();
 		}
 
