@@ -55,6 +55,15 @@ kotlin {
     }
 }
 
+// jogamp.org is unreachable and 2.5.0 is not published to Maven Central.
+// Force the available 2.6.0 release (pulled transitively by dev.datlag:kcef).
+configurations.all {
+    resolutionStrategy {
+        force("org.jogamp.gluegen:gluegen-rt:2.6.0")
+        force("org.jogamp.jogl:jogl-all:2.6.0")
+    }
+}
+
 buildConfig {
     val localPropertiesFile = rootProject.file("local.properties")
     val localProperties = Properties()
@@ -62,7 +71,17 @@ buildConfig {
         localProperties.load(FileInputStream(localPropertiesFile))
     }
 
-    useJavaOutput()
+    // Kotlin output is required for KMP: generated Java sources are not compiled
+    // by compileKotlinDesktop, causing NoClassDefFoundError at runtime.
+    // internalVisibility must be false, otherwise the generated object is `internal`
+    // and cannot be loaded at runtime from the desktop entry point.
+    useKotlinOutput {
+        internalVisibility = false
+    }
+    // Explicit lowercase package: the default package is derived from the project
+    // directory name ("FreshApp"), but the Kotlin compiler emits the class file
+    // under a lowercase path, so the JVM cannot find it inside the jar.
+    packageName("com.poetofcode.freshapp")
     buildConfigField("APP_NAME", project.name)
     buildConfigField("SERVER_URL", localProperties.getProperty("serverUrl"))
     buildConfigField("VERSION_NAME", libs.versions.app.versionName.get())

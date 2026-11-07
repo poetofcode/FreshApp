@@ -1,6 +1,6 @@
 package presentation.screens.profileScreen
 
-import FreshApp.composeApp.BuildConfig
+import com.poetofcode.freshapp.BuildConfig
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

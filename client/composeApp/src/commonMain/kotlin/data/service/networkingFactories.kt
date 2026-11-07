@@ -1,6 +1,6 @@
 package data.service
 
-import FreshApp.composeApp.BuildConfig
+import com.poetofcode.freshapp.BuildConfig
 import data.utils.ProfileStorage
 import io.ktor.client.HttpClient
 import presentation.base.Config
@@ -21,7 +21,7 @@ class NetworkingFactoryImpl(
 
     override fun createHttpClient(): HttpClient {
         return HttpClientFactory(
-            baseUrl = BuildConfig.SERVER_URL.takeIf { it.isNotBlank() }
+            baseUrl = BuildConfig.SERVER_URL?.takeIf { it.isNotBlank() }
                 ?: DEFAULT_BASE_URL,
         ).createClient()
     }

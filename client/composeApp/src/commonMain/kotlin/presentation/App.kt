@@ -1,6 +1,6 @@
 package presentation
 
-import FreshApp.composeApp.BuildConfig
+import com.poetofcode.freshapp.BuildConfig
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme

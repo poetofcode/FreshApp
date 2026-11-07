@@ -8,19 +8,26 @@ services:
     volumes:
       - mongo_db:/data/db
     command: mongod --quiet --logpath /dev/null
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   api:
     build: .
     ports:
       - 3010:3000
     volumes:
-      - ./app:/home/poet/docker-pr/sprout/app
+      - ./app:/home/poet/docker-pr/freshapp/app
     environment:
       PORT: 3000
       MONGODB_URI: mongodb://mongo_db:27017
-      DBNAME: sprout
+      DBNAME: freshapp
     depends_on:
-      - mongo_db
+      mongo_db:
+        condition: service_healthy
       
 volumes:
   mongo_db: {}
