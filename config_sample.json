@@ -7,7 +7,7 @@
     },
     "fcmEnabled": false,
     "parser": {
-      "path": "http://0.0.0.0:8080/site/fresh/",
+      "path": "http://0.0.0.0/site2api/site/fresh/",
       "key": "xxxxx"
     }
   },
@@ -19,7 +19,7 @@
     },
     "fcmEnabled": false,
     "parser": {
-      "path": "http://0.0.0.0:8080/site/fresh/",
+      "path": "http://0.0.0.0/site2api/site/fresh/",
       "key": "xxxxx"
     }
   }

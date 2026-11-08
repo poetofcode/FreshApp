@@ -4,8 +4,8 @@ COPY package*.json .
 RUN npm install -g nodemon
 RUN npm install
 COPY . .
-# config.json в .dockerignore (локальные настройки не должны попадать в образ),
-# поэтому генерируем его из шаблона, если он отсутствует
+# config.json копируется в образ из контекста сборки (исключён в .dockerignore),
+# при его отсутствии генерируем файл из шаблона
 RUN if [ ! -f config.json ]; then cp config_sample.json config.json; fi
 ENV FreshApp_ENV=prod
 # CMD ["npm", "start"]
