@@ -2,6 +2,12 @@ const AuthMiddleware = require('./auth.js').AuthMiddleware;
 const cookieParser = require('cookie-parser');
 
 function initRoutes(router, context) {
+	// Прокидываем префикс в шаблоны (доступен как {{basePath}}).
+	router.use(function (req, res, next) {
+		res.locals.basePath = context.basePath || '';
+		next();
+	});
+
 	router.use(async function (req, res, next) {
 		const token = req.cookies.token;
 
@@ -12,14 +18,14 @@ function initRoutes(router, context) {
 			return next();
 		}
 		if (!token && req.path !== '/login') {
-			return res.redirect('/front/login');
+			return res.redirect(`${req.baseUrl}/login`);
 		}
 
 		try {
 			const result = (await context.apiGet(`/sessions/${token}`)).data.result;
 			if (result) {
 				if (req.path === '/login') {
-					return res.redirect('/front');
+					return res.redirect(req.baseUrl);
 				} else {
 					return next();
 				}
@@ -28,7 +34,7 @@ function initRoutes(router, context) {
 		} catch (err) {
 			if (err.response.status == 400) {
 				res.clearCookie('token');
-				return res.redirect('/front/login');
+				return res.redirect(`${req.baseUrl}/login`);
 			} else {
 				return next(err);
 			}

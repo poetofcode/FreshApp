@@ -1,6 +1,7 @@
-{ 
+{
   "dev": {
     "port": 3000,
+    "basePath": "/freshapp",
     "db": {
       "url": "mongodb://127.0.0.1:27017/",
       "name": "freshapp"
@@ -13,6 +14,7 @@
   },
   "prod": {
     "port": 3000,
+    "basePath": "/freshapp",
     "db": {
       "url": "mongodb://mongo_db:27017/",
       "name": "freshapp"

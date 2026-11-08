@@ -1,6 +1,6 @@
 <div class="wrapper">
 	<h2>Авторизация</h2>
-	<form method="POST" action="/front/login">
+	<form method="POST" action="{{basePath}}/front/login">
 		<div class="form-field">
 			<input type="username" placeholder="Логин" name="username" required />
 		</div>
@@ -47,7 +47,7 @@
    			setCookie("token", parsed.token, 10000);
 			// console.log(document.cookie);
 
-			window.location.href = "/front";
+			window.location.href = "{{basePath}}/front";
 			// TODO make redirect on root
 		  }
 		);

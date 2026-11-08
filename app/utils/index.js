@@ -11,7 +11,7 @@ const { combine, timestamp, label, printf } = format;
 
 const appDir = dirname(require.main.filename);
 
-const ignoreList = [
+const IGNORED_PATHS = [
   '/api/v1/sessions/',
   '/style/',
   '/lib/',
@@ -19,7 +19,10 @@ const ignoreList = [
   '/front',
 ];
 
-function logger() {
+function logger(basePath = '') {
+  // req.url на уровне приложения содержит basePath, поэтому префикс
+  // добавляется к каждому игнорируемому маршруту.
+  const ignoreList = IGNORED_PATHS.map((item) => `${basePath}${item}`);
 	const myFormat = printf(({ level, message, timestamp }) => {
 		const parsedDate = new Date(timestamp);
 		const dateFormatted = parsedDate.toISOString().

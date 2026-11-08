@@ -9,7 +9,7 @@ var fs = require('fs');
 		const configurations = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 		const config = configurations[env];
 		await app.start(config);
-	    console.log(`Server running: http://127.0.0.1:${config.port}/front`);
+	    console.log(`Server running: http://127.0.0.1:${config.port}${config.basePath || ''}/front`);
 	} catch(err) {
 	    return console.log(err);
 	} 

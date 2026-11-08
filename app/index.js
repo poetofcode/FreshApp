@@ -24,19 +24,27 @@ class Application {
 
 	async start(config) {
 		this.config = config;
+		// Префикс всех публичных маршрутов (например "/freshapp").
+		// Нормализуем: без хвостовых слэшей, без завершающего "/".
+		this.basePath = String(this.config.basePath || '').replace(/\/+$/, '');
 		const mongoClient = new MongoClient(this.config.db.url);
-        await mongoClient.connect();
-        app.locals.db = mongoClient.db(this.config.db.name);
-        this.initHelpers();
-        await this.initAPI();
-        worker.launch(this.context);
-        return app.listen(this.config.port);
+	       await mongoClient.connect();
+	       app.locals.db = mongoClient.db(this.config.db.name);
+	       app.locals.basePath = this.basePath;
+	       // За reverse proxy (Caddy) Express должен доверять X-Forwarded-* заголовкам,
+	       // иначе редиректы и IP в логах будут указывать на внутренний хост.
+	       app.set('trust proxy', true);
+	       this.initHelpers();
+	       await this.initAPI();
+	       worker.launch(this.context);
+	       return app.listen(this.config.port);
 	}
 
 	async initAPI() {
 		const apiRouter = express.Router();
 		const frontRouter = express.Router();
 		const viewsPath = `${__dirname}/views`;
+		const basePath = this.basePath;
 
 		app.set("views", viewsPath);
 		app.engine("hbs", expressHbs.engine(
@@ -48,16 +56,16 @@ class Application {
 		));
 		app.set("view engine", "hbs");
 		hbs.registerPartials(`${viewsPath}/partials`);
-	    app.use(utils.logger());
-		app.use(express.json());
-		app.use(express.urlencoded());
-		app.use(cookieParser());
+	    app.use(utils.logger(basePath));
+	 app.use(express.json());
+	 app.use(express.urlencoded());
+	 app.use(cookieParser());
 
-		await apiMiddleware.initRoutes(apiRouter, this.context);
-		app.use('/api/v1', apiRouter);
-		frontMiddleware.initRoutes(frontRouter, this.context);
-		app.use('/front', frontRouter);
-		app.use(express.static(`${__dirname}/public`));
+	 await apiMiddleware.initRoutes(apiRouter, this.context);
+	 app.use(`${basePath}/api/v1`, apiRouter);
+	 frontMiddleware.initRoutes(frontRouter, this.context);
+	 app.use(`${basePath}/front`, frontRouter);
+	 app.use(basePath || '/', express.static(`${__dirname}/public`));
 	}
 
 	initHelpers() {
@@ -68,7 +76,7 @@ class Application {
 			return headers;
 		}
 
-		this.localUrl = `http://0.0.0.0:${this.config.port}/api/v1`;
+		this.localUrl = `http://127.0.0.1:${this.config.port}${this.basePath}/api/v1`;
 		this.apiGet = (url, token) => {
 			return axios({
 	          method: 'get',

@@ -10,7 +10,7 @@
   function logout() {
       console.log(`Logout...`)
 
-        fetch(`/api/v1/sessions/${getCookie('token')}`, {
+        fetch(`{{basePath}}/api/v1/sessions/${getCookie('token')}`, {
             method: 'DELETE',
             headers: {
               'Accept': 'application/json',
@@ -22,7 +22,7 @@
                 .json()
                 .then(data => {
                     if (data.result) {
-                        window.location.href = "/front";
+                        window.location.href = "{{basePath}}/front";
                         return;
                     }
                     if (!data.result) {

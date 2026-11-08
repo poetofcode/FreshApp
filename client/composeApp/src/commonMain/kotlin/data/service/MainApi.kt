@@ -24,8 +24,9 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
-import io.ktor.http.path
+import io.ktor.http.takeFrom
 import presentation.base.Config
 
 class MainApi(
@@ -33,13 +34,18 @@ class MainApi(
     private val profileStorage: ProfileStorage,
     private val deviceType: Config.DeviceTypes,
     private val appVersion: String,
+    /**
+     * Полный базовый адрес сервера вместе с префиксом, например
+     * "http://127.0.0.1:3010/freshapp". Должен совпадать с basePath на бэкенде.
+     */
+    private val baseUrl: String,
 ) {
 
     suspend fun createSession(requestBody: CreateSessionRequestBody): ResultResponse<CreateSessionResponse> =
         parseRequestResult<CreateSessionResponse> {
             httpClient.post {
                 nonAuthBlock {
-                    url { path("/api/v1/sessions") }
+                    apiPath("sessions")
                     setBody(requestBody)
                 }
             }
@@ -48,7 +54,7 @@ class MainApi(
     suspend fun deleteSession(token: String) {
         httpClient.delete {
             authBlock {
-                url { path("/api/v1/sessions/$token") }
+                apiPath("sessions", token)
             }
         }
     }
@@ -56,7 +62,7 @@ class MainApi(
     suspend fun createSubscription() {
         httpClient.post {
             authBlock {
-                url { path("/api/v1/subscriptions") }
+                apiPath("subscriptions")
             }
         }
     }
@@ -64,7 +70,7 @@ class MainApi(
     suspend fun deleteSubscription() {
         httpClient.delete {
             authBlock {
-                url { path("/api/v1/subscriptions") }
+                apiPath("subscriptions")
             }
         }
     }
@@ -72,7 +78,7 @@ class MainApi(
     suspend fun getSubscription() = parseRequestResult<SubscriptionResponse> {
         httpClient.get {
             authBlock {
-                url { path("/api/v1/subscriptions/me") }
+                apiPath("subscriptions", "me")
             }
         }
     }
@@ -80,7 +86,7 @@ class MainApi(
     suspend fun getNotifications() = parseRequestResult<NotificationResponse> {
         httpClient.get {
             authBlock {
-                url { path("/api/v1/notifications") }
+                apiPath("notifications")
             }
         }
     }
@@ -88,7 +94,7 @@ class MainApi(
     suspend fun saveFirebasePushToken(pushToken: String) {
         httpClient.post {
             authBlock {
-                url { path("/api/v1/sessions/push_token") }
+                apiPath("sessions", "push_token")
                 setBody(
                     SaveFirebasePushTokenRequestBody(
                         pushToken = pushToken
@@ -101,7 +107,7 @@ class MainApi(
     suspend fun markNotificationsAsSeen() {
         httpClient.post {
             authBlock {
-                url { path("/api/v1/users/me/notifications/seen/") }
+                apiPath("users", "me", "notifications", "seen")
             }
         }
     }
@@ -110,7 +116,7 @@ class MainApi(
         parseRequestResult<FeedResponse> {
             httpClient.post {
                 nonAuthBlock {
-                    url { path("/api/v1/feed") }
+                    apiPath("feed")
                     setBody(requestBody)
                 }
             }
@@ -120,7 +126,7 @@ class MainApi(
         parseRequestResult<DashboardResponse> {
             httpClient.post {
                 nonAuthBlock {
-                    url { path("/api/v1/dashboard") }
+                    apiPath("dashboard")
                 }
             }
         }
@@ -143,6 +149,24 @@ class MainApi(
             null
         }
 
+    /**
+     * Собирает абсолютный путь запроса от baseUrl.
+     *
+     * BaseUrl применяется здесь явно через takeFrom, а не через DefaultRequest:
+     * при мердже дефолтного URL Ktor подставляет его путь только если путь
+     * запроса пустой, поэтому appendPathSegments в одиночку терял префикс
+     * (например "/freshapp") и запрос уходил на старую схему "/api/v1/...".
+     *
+     * Сегменты передаются по отдельности, чтобы слэши не попали в URL
+     * в закодированном виде (%2F).
+     */
+    private fun HttpRequestBuilder.apiPath(vararg segments: String) {
+        url {
+            takeFrom(baseUrl)
+            appendPathSegments("api", "v1", *segments)
+        }
+    }
+
     private fun HttpRequestBuilder.nonAuthBlock(block: HttpRequestBuilder.() -> Unit) {
         contentType(ContentType.Application.Json)
         header("x-client-type", deviceType.title)
@@ -162,7 +186,7 @@ class MainApi(
     suspend fun createAccount(requestBody: CreateSessionRequestBody) {
         httpClient.post {
             nonAuthBlock {
-                url { path("/api/v1/users") }
+                apiPath("users")
                 setBody(requestBody)
             }
         }
