@@ -50,6 +50,8 @@ import presentation.navigation.postSideEffect
 import presentation.theme.AppColors
 import presentation.theme.AppTheme
 
+private const val SERVER_URL_HINT =
+    "Укажите строку подключения в формате: \"http[s]://IP_адрес[:порт]/freshapp\""
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ProfileScreen : BaseScreen<ProfileViewModel>() {
@@ -281,13 +283,12 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 enabled = !useDefault,
                 singleLine = true,
                 isError = error != null,
-                placeholder = { Text(text = "http://127.0.0.1:3010/freshapp") },
                 supportingText = {
                     Text(
                         text = when {
                             useDefault -> "Будет использован адрес по умолчанию"
                             error != null -> error
-                            else -> "Укажите адрес вместе с префиксом API"
+                            else -> SERVER_URL_HINT
                         },
                         color = if (error != null && !useDefault) {
                             MaterialTheme.colorScheme.error
