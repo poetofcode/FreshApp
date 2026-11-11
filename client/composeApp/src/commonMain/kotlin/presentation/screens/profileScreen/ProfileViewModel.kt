@@ -26,7 +26,6 @@ class ProfileViewModel(
     data class State(
         val profile: Profile? = null,
         val serverUrl: String = String(),
-        val defaultServerUrl: String = String(),
         val isServerUrlDefault: Boolean = true,
         val serverUrlError: String? = null,
     )
@@ -56,7 +55,6 @@ class ProfileViewModel(
         reduce {
             copy(
                 serverUrl = serverUrlStore.currentUrl,
-                defaultServerUrl = serverUrlStore.currentDefaultUrl,
                 isServerUrlDefault = serverUrlStore.isDefault,
             )
         }
@@ -72,7 +70,12 @@ class ProfileViewModel(
         }
     }
 
-    fun onSaveServerUrl(raw: String) {
+    fun onSaveServerUrl(useDefault: Boolean, raw: String) {
+        if (useDefault) {
+            applyDefaultServerUrl()
+            return
+        }
+
         when (val validation = serverUrlStore.save(raw)) {
             is ServerUrlValidation.Invalid -> {
                 reduce { copy(serverUrlError = validation.error) }
@@ -96,11 +99,7 @@ class ProfileViewModel(
         }
     }
 
-    fun onResetServerUrlClick() {
-        reduce { copy(serverUrlError = null) }
-    }
-
-    fun onConfirmResetServerUrl() {
+    private fun applyDefaultServerUrl() {
         val urlChanged = !serverUrlStore.isDefault
         serverUrlStore.reset()
         fetchServerUrl()
@@ -127,7 +126,6 @@ class ProfileViewModel(
 
     override fun onInitState() : State = State(
         serverUrl = serverUrlStore.currentUrl,
-        defaultServerUrl = serverUrlStore.currentDefaultUrl,
         isServerUrlDefault = serverUrlStore.isDefault,
     )
 

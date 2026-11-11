@@ -24,7 +24,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -196,15 +195,6 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                     ConnectionActions()
                 }
             }
-
-            if (!state.isServerUrlDefault) {
-                Text(
-                    text = "По умолчанию: ${state.defaultServerUrl}",
-                    fontSize = 12.sp,
-                    color = AppColors.iconMutedColor,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-            }
         }
     }
 
@@ -216,7 +206,7 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
             color = AppColors.iconMutedColor,
         )
         Text(
-            text = state.serverUrl,
+            text = if (state.isServerUrlDefault) "[по умолчанию]" else state.serverUrl,
             fontFamily = FontFamily.Monospace,
             modifier = Modifier.padding(top = 4.dp),
         )
@@ -224,22 +214,11 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
 
     @Composable
     fun ConnectionActions(modifier: Modifier = Modifier) {
-        Row(
+        OutlinedButton(
             modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            onClick = { openServerUrlEditor() }
         ) {
-            OutlinedButton(
-                onClick = { openServerUrlEditor() }
-            ) {
-                Text(text = "Изменить")
-            }
-            TextButton(
-                enabled = !state.isServerUrlDefault,
-                onClick = { openServerUrlResetConfirm() }
-            ) {
-                Text(text = "Вернуть к дефолтным")
-            }
+            Text(text = "Изменить")
         }
     }
 
@@ -251,16 +230,13 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
         })
     }
 
-    private fun openServerUrlResetConfirm() {
-        viewModel.onResetServerUrlClick()
-        postSideEffect(ShowModalBottomSheetEffect {
-            ConfirmResetServerUrlContent()
-        })
-    }
-
     @Composable
     fun EditServerUrlContent(initialValue: String) = Surface {
-        var draft by remember(initialValue) { mutableStateOf(initialValue) }
+        val isDefault = state.isServerUrlDefault
+        var useDefault by remember(initialValue, isDefault) { mutableStateOf(isDefault) }
+        var draft by remember(initialValue, isDefault) {
+            mutableStateOf(if (isDefault) String() else initialValue)
+        }
         val error = state.serverUrlError
 
         Column(
@@ -271,20 +247,49 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 text = "Строка подключения",
                 fontWeight = FontWeight.Bold,
             )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Switch(
+                    checked = useDefault,
+                    onCheckedChange = {
+                        useDefault = it
+                        viewModel.clearServerUrlError()
+                    }
+                )
+                Text(
+                    text = "Использовать значение по умолчанию",
+                    modifier = Modifier.padding(start = 16.dp),
+                )
+            }
+            if (useDefault && !isDefault) {
+                Text(
+                    text = "Текущая сессия будет сброшена — потребуется войти заново.",
+                    fontSize = 12.sp,
+                    color = AppColors.iconMutedColor,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                )
+            }
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                value = draft,
+                value = if (useDefault) "[по умолчанию]" else draft,
                 onValueChange = {
                     draft = it
                     viewModel.clearServerUrlError()
                 },
+                enabled = !useDefault,
                 singleLine = true,
                 isError = error != null,
                 placeholder = { Text(text = "http://127.0.0.1:3010/freshapp") },
                 supportingText = {
                     Text(
-                        text = error ?: "Укажите адрес вместе с префиксом API",
-                        color = if (error != null) {
+                        text = when {
+                            useDefault -> "Будет использован адрес по умолчанию"
+                            error != null -> error
+                            else -> "Укажите адрес вместе с префиксом API"
+                        },
+                        color = if (error != null && !useDefault) {
                             MaterialTheme.colorScheme.error
                         } else {
                             AppColors.iconMutedColor
@@ -308,54 +313,10 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                 Button(
                     modifier = Modifier,
                     onClick = {
-                        viewModel.onSaveServerUrl(draft)
+                        viewModel.onSaveServerUrl(useDefault, draft)
                     }
                 ) {
                     Text(text = "Сохранить")
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun ConfirmResetServerUrlContent() = Surface {
-        Column(
-            Modifier.fillMaxWidth().padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text("Вернуть строку подключения к значению по умолчанию?")
-            Text(
-                text = state.defaultServerUrl,
-                fontFamily = FontFamily.Monospace,
-                color = AppColors.iconMutedColor,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-            Text(
-                text = "Текущая сессия будет сброшена — потребуется войти заново.",
-                fontSize = 12.sp,
-                color = AppColors.iconMutedColor,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-            Row(
-                Modifier.padding(top = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                OutlinedButton(
-                    modifier = Modifier,
-                    onClick = {
-                        postSideEffect(HideBottomSheetEffect)
-                    }
-                ) {
-                    Text(text = "Отмена")
-                }
-                Button(
-                    modifier = Modifier,
-                    onClick = {
-                        viewModel.onConfirmResetServerUrl()
-                    }
-                ) {
-                    Text(text = "Вернуть")
                 }
             }
         }
