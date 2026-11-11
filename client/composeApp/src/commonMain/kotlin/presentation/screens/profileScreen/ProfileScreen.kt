@@ -53,6 +53,8 @@ import presentation.theme.AppTheme
 private const val SERVER_URL_HINT =
     "Укажите строку подключения в формате: \"http[s]://IP_адрес[:порт]/freshapp\""
 
+private const val SERVER_URL_TEMPLATE = "http://ваш_IP/freshapp"
+
 @OptIn(ExperimentalMaterial3Api::class)
 class ProfileScreen : BaseScreen<ProfileViewModel>() {
     override val screenId: String
@@ -257,6 +259,9 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                     checked = useDefault,
                     onCheckedChange = {
                         useDefault = it
+                        if (!it && draft.isBlank()) {
+                            draft = SERVER_URL_TEMPLATE
+                        }
                         viewModel.clearServerUrlError()
                     }
                 )
