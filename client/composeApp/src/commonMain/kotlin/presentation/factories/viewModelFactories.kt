@@ -5,6 +5,7 @@ import data.repository.FavoriteRepository
 import data.repository.FeedRepository
 import data.repository.ProfileRepository
 import data.repository.RepositoryFactory
+import data.service.ServerUrlStore
 import data.utils.PersistentStorage
 import presentation.base.ViewModelFactory
 import presentation.screens.authScreen.AuthViewModel
@@ -96,10 +97,15 @@ class ProfileTabViewModelFactory
 
 }
 
-class ProfileViewModelFactory(val profileRepository: ProfileRepository) :
-    ViewModelFactory<ProfileViewModel> {
+class ProfileViewModelFactory(
+    val profileRepository: ProfileRepository,
+    val serverUrlStore: ServerUrlStore,
+) : ViewModelFactory<ProfileViewModel> {
     override fun createViewModel(): ProfileViewModel {
-        return ProfileViewModel(profileRepository)
+        return ProfileViewModel(
+            profileRepository = profileRepository,
+            serverUrlStore = serverUrlStore,
+        )
     }
 
     override val vmTypeName: String
@@ -143,7 +149,8 @@ class NotificationsViewModelFactory(private val profileRepository: ProfileReposi
 
 fun viewModelFactories(
     repositoryFactory: RepositoryFactory,
-    configStorage: PersistentStorage
+    configStorage: PersistentStorage,
+    serverUrlStore: ServerUrlStore,
 ): List<ViewModelFactory<*>> {
     val profileRepository = repositoryFactory.createProfileRepository()
     val favoriteRepository = repositoryFactory.createFavoriteRepository()
@@ -152,7 +159,10 @@ fun viewModelFactories(
         HomeTabViewModelFactory(),
         ProfileTabViewModelFactory(),
         BookmarkTabViewModelFactory(),
-        ProfileViewModelFactory(profileRepository),
+        ProfileViewModelFactory(
+            profileRepository = profileRepository,
+            serverUrlStore = serverUrlStore,
+        ),
         AuthViewModelFactory(profileRepository),
         RegViewModelFactory(profileRepository),
         NotificationsViewModelFactory(profileRepository),

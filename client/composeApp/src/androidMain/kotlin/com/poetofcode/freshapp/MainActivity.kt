@@ -15,6 +15,7 @@ import com.poetofcode.freshapp.utils.shareLink
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import data.service.ServerUrlStore
 import data.utils.AppDataStorageImpl
 import data.utils.PersistentStorage
 import data.utils.ProfileStorageImpl
@@ -44,16 +45,19 @@ class MainActivity : ComponentActivity() {
         )
     )
 
-    private val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
-        profileStorage,
-        Config.DeviceTypes.ANDROID,
-    )
-
     private val configStorage = PersistentStorage(
         AndroidContentProvider(
             fileName = "config.json",
             context = this,
         )
+    )
+
+    private val serverUrlStore = ServerUrlStore(storage = configStorage)
+
+    private val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
+        profileStorage = profileStorage,
+        deviceType = Config.DeviceTypes.ANDROID,
+        serverUrlStore = serverUrlStore,
     )
 
     private val appDataStorage = AppDataStorageImpl(
@@ -76,6 +80,7 @@ class MainActivity : ComponentActivity() {
         vmFactories = viewModelFactories(
             repositoryFactory = repositoryFactory,
             configStorage = configStorage,
+            serverUrlStore = serverUrlStore,
         )
     )
 

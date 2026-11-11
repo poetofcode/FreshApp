@@ -22,6 +22,7 @@ import androidx.compose.ui.window.rememberWindowState
 import data.repository.RepositoryFactoryImpl
 import data.service.NetworkingFactory
 import data.service.NetworkingFactoryImpl
+import data.service.ServerUrlStore
 import data.utils.AppDataStorageImpl
 import data.utils.FileContentProvider
 import data.utils.PersistentStorage
@@ -62,16 +63,20 @@ fun main() = application {
             relativePath = "appcache",
         )
     )
-    val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
-        profileStorage,
-        Config.DeviceTypes.DESKTOP,
-    )
 
     val configStorage = PersistentStorage(
         FileContentProvider(
             fileName = "config.json",
             relativePath = "appcache",
         )
+    )
+
+    val serverUrlStore = ServerUrlStore(storage = configStorage)
+
+    val networkingFactory: NetworkingFactory = NetworkingFactoryImpl(
+        profileStorage = profileStorage,
+        deviceType = Config.DeviceTypes.DESKTOP,
+        serverUrlStore = serverUrlStore,
     )
 
     val appDataStorage = AppDataStorageImpl(
@@ -92,6 +97,7 @@ fun main() = application {
         vmFactories = viewModelFactories(
             repositoryFactory = repositoryFactory,
             configStorage = configStorage,
+            serverUrlStore = serverUrlStore,
         )
     )
 

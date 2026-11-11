@@ -1,6 +1,8 @@
 package presentation.screens.profileScreen
 
 import data.repository.ProfileRepository
+import data.service.ServerUrlStore
+import data.service.ServerUrlValidation
 import domain.model.Profile
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -17,11 +19,16 @@ import presentation.screens.authScreen.AuthScreen
 import presentation.screens.regScreen.RegScreen
 
 class ProfileViewModel(
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val serverUrlStore: ServerUrlStore,
 ) : BaseViewModel<ProfileViewModel.State>() {
 
     data class State(
-        val profile: Profile? = null
+        val profile: Profile? = null,
+        val serverUrl: String = String(),
+        val defaultServerUrl: String = String(),
+        val isServerUrlDefault: Boolean = true,
+        val serverUrlError: String? = null,
     )
 
     init {
@@ -45,6 +52,71 @@ class ProfileViewModel(
         reduce { copy(profile = profile) }
     }
 
+    private fun fetchServerUrl() {
+        reduce {
+            copy(
+                serverUrl = serverUrlStore.currentUrl,
+                defaultServerUrl = serverUrlStore.currentDefaultUrl,
+                isServerUrlDefault = serverUrlStore.isDefault,
+            )
+        }
+    }
+
+    fun onEditServerUrlClick() {
+        reduce { copy(serverUrlError = null) }
+    }
+
+    fun clearServerUrlError() {
+        if (state.value.serverUrlError != null) {
+            reduce { copy(serverUrlError = null) }
+        }
+    }
+
+    fun onSaveServerUrl(raw: String) {
+        when (val validation = serverUrlStore.save(raw)) {
+            is ServerUrlValidation.Invalid -> {
+                reduce { copy(serverUrlError = validation.error) }
+            }
+
+            is ServerUrlValidation.Valid -> {
+                val urlChanged = validation.url != state.value.serverUrl
+                reduce {
+                    copy(
+                        serverUrl = serverUrlStore.currentUrl,
+                        isServerUrlDefault = serverUrlStore.isDefault,
+                        serverUrlError = null,
+                    )
+                }
+                postSideEffect(HideBottomSheetEffect)
+
+                if (urlChanged) {
+                    dropSessionAfterServerChange()
+                }
+            }
+        }
+    }
+
+    fun onResetServerUrlClick() {
+        reduce { copy(serverUrlError = null) }
+    }
+
+    fun onConfirmResetServerUrl() {
+        val urlChanged = !serverUrlStore.isDefault
+        serverUrlStore.reset()
+        fetchServerUrl()
+        postSideEffect(HideBottomSheetEffect)
+
+        if (urlChanged) {
+            dropSessionAfterServerChange()
+        }
+    }
+
+    private fun dropSessionAfterServerChange() {
+        profileRepository.clearProfileLocal()
+        fetchProfile()
+        postSharedEvent(OnQuitProfileSharedEvent)
+    }
+
     fun onSignInToAccountButtonClick() {
         postEffect(
             NavigateEffect(
@@ -53,7 +125,11 @@ class ProfileViewModel(
         )
     }
 
-    override fun onInitState() : State = State()
+    override fun onInitState() : State = State(
+        serverUrl = serverUrlStore.currentUrl,
+        defaultServerUrl = serverUrlStore.currentDefaultUrl,
+        isServerUrlDefault = serverUrlStore.isDefault,
+    )
 
     override fun obtainSharedEvent(event: SharedEvent) {
         when (event) {

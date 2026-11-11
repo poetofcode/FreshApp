@@ -83,7 +83,7 @@ buildConfig {
     // under a lowercase path, so the JVM cannot find it inside the jar.
     packageName("com.poetofcode.freshapp")
     buildConfigField("APP_NAME", project.name)
-    buildConfigField("SERVER_URL", localProperties.getProperty("SERVER_URL"))
+    buildConfigField("SERVER_URL", localProperties.getProperty("SERVER_URL") ?: "")
     buildConfigField("VERSION_NAME", libs.versions.app.versionName.get())
     buildConfigField("VERSION_CODE", libs.versions.app.versionCode.get())
 }

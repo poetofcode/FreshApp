@@ -13,19 +13,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -77,60 +87,46 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                     }
                 )
 
-                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    if (!isAuth) {
-                        UnsignedProfile()
-                    } else {
-                        SignedProfile()
-                    }
-                }
-
+                SettingsList(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    isAuth = isAuth,
+                )
             }
         }
     }
 
     @Composable
-    fun UnsignedProfile() {
-        Box(Modifier.fillMaxSize()) {
-            Column(Modifier.wrapContentSize().padding(16.dp)) {
-                /*
-                Text(
-                    text = "Войдите в аккаунт, чтобы получить доступ ко всем функциям приложения",
-                    color = Color.Gray,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Button(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                        .padding(top = 30.dp),
-                    onClick = {
-                        viewModel.onSignInToAccountButtonClick()
-                    }
-                ) {
-                    Text(text = "Войти в аккаунт")
+    fun SettingsList(modifier: Modifier = Modifier, isAuth: Boolean) {
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            if (isAuth) {
+                GroupedBox(title = "Аккаунт") {
+                    AccountBox()
                 }
-                OutlinedButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                        .padding(top = 10.dp),
-                    onClick = {
-                        viewModel.onRegistrationButtonClick()
-                    }
-                ) {
-                    Text(text = "Регистрация")
-                }
-                 */
+            }
 
-                GroupedBox(
-                    title = "Отображение"
-                ) {
-                    CommonPrefs()
-                }
+            GroupedBox(
+                modifier = if (isAuth) Modifier.padding(top = 16.dp) else Modifier,
+                title = "Отображение"
+            ) {
+                CommonPrefs()
+            }
 
-                GroupedBox(
-                    modifier = Modifier.padding(top = 16.dp),
-                    title = "О приложении"
-                ) {
-                    AboutApp()
-                }
+            GroupedBox(
+                modifier = Modifier.padding(top = 16.dp),
+                title = "Настройки соединения"
+            ) {
+                ConnectionPrefs()
+            }
+
+            GroupedBox(
+                modifier = Modifier.padding(top = 16.dp),
+                title = "О приложении"
+            ) {
+                AboutApp()
             }
         }
     }
@@ -183,62 +179,211 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
     }
 
     @Composable
-    fun AboutApp(modifier: Modifier = Modifier) {
-        val versionName = BuildConfig.VERSION_NAME
-        val versionCode = BuildConfig.VERSION_CODE
-        val githubLink = "https://github.com/poetofcode/freshapp"
+    fun ConnectionPrefs(modifier: Modifier = Modifier) {
+        val isMobile = LocalMainAppState.current.config.deviceType.isMobile
+
         Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
-            // App version
-            Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Версия $versionName ($versionCode)",
-                    modifier = Modifier,
+            if (isMobile) {
+                ConnectionLabel()
+                ConnectionActions(
+                    modifier = Modifier.padding(top = 12.dp),
                 )
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        ConnectionLabel()
+                    }
+                    ConnectionActions()
+                }
             }
 
-            // Github link
-            Row(
-                modifier = Modifier.padding(top = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            if (!state.isServerUrlDefault) {
+                Text(
+                    text = "По умолчанию: ${state.defaultServerUrl}",
+                    fontSize = 12.sp,
+                    color = AppColors.iconMutedColor,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun ConnectionLabel() {
+        Text(
+            text = "Строка подключения",
+            fontSize = 13.sp,
+            color = AppColors.iconMutedColor,
+        )
+        Text(
+            text = state.serverUrl,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.padding(top = 4.dp),
+        )
+    }
+
+    @Composable
+    fun ConnectionActions(modifier: Modifier = Modifier) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OutlinedButton(
+                onClick = { openServerUrlEditor() }
             ) {
-                ClickableItem(
+                Text(text = "Изменить")
+            }
+            TextButton(
+                enabled = !state.isServerUrlDefault,
+                onClick = { openServerUrlResetConfirm() }
+            ) {
+                Text(text = "Вернуть к дефолтным")
+            }
+        }
+    }
+
+    private fun openServerUrlEditor() {
+        viewModel.onEditServerUrlClick()
+        val initialValue = state.serverUrl
+        postSideEffect(ShowModalBottomSheetEffect {
+            EditServerUrlContent(initialValue = initialValue)
+        })
+    }
+
+    private fun openServerUrlResetConfirm() {
+        viewModel.onResetServerUrlClick()
+        postSideEffect(ShowModalBottomSheetEffect {
+            ConfirmResetServerUrlContent()
+        })
+    }
+
+    @Composable
+    fun EditServerUrlContent(initialValue: String) = Surface {
+        var draft by remember(initialValue) { mutableStateOf(initialValue) }
+        val error = state.serverUrlError
+
+        Column(
+            Modifier.fillMaxWidth().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = "Строка подключения",
+                fontWeight = FontWeight.Bold,
+            )
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                value = draft,
+                onValueChange = {
+                    draft = it
+                    viewModel.clearServerUrlError()
+                },
+                singleLine = true,
+                isError = error != null,
+                placeholder = { Text(text = "http://127.0.0.1:3010/freshapp") },
+                supportingText = {
+                    Text(
+                        text = error ?: "Укажите адрес вместе с префиксом API",
+                        color = if (error != null) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            AppColors.iconMutedColor
+                        }
+                    )
+                },
+            )
+            Row(
+                Modifier.padding(top = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                OutlinedButton(
                     modifier = Modifier,
-                    text = "Страница на Github"
+                    onClick = {
+                        viewModel.clearServerUrlError()
+                        postSideEffect(HideBottomSheetEffect)
+                    }
                 ) {
-                    viewModel.postSharedEvent(OnOpenExternalBrowserSharedEvent(githubLink))
+                    Text(text = "Отменить")
+                }
+                Button(
+                    modifier = Modifier,
+                    onClick = {
+                        viewModel.onSaveServerUrl(draft)
+                    }
+                ) {
+                    Text(text = "Сохранить")
                 }
             }
         }
     }
 
     @Composable
-    fun SignedProfile() {
-        Box(Modifier.fillMaxSize()) {
-            Column(Modifier.wrapContentSize().align(Alignment.Center)) {
-                Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    Text(
-                        text = "Вы авторизованы",
-                        color = Color.Gray,
-                    )
-                    Text(
-                        text = state.profile?.email.orEmpty(),
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 6.dp),
-                    )
-                }
-
-                ClickableItem(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
-                    text = "Выйти из аккаунта"
+    fun ConfirmResetServerUrlContent() = Surface {
+        Column(
+            Modifier.fillMaxWidth().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Вернуть строку подключения к значению по умолчанию?")
+            Text(
+                text = state.defaultServerUrl,
+                fontFamily = FontFamily.Monospace,
+                color = AppColors.iconMutedColor,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+            Text(
+                text = "Текущая сессия будет сброшена — потребуется войти заново.",
+                fontSize = 12.sp,
+                color = AppColors.iconMutedColor,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+            Row(
+                Modifier.padding(top = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                OutlinedButton(
+                    modifier = Modifier,
+                    onClick = {
+                        postSideEffect(HideBottomSheetEffect)
+                    }
                 ) {
-                    postSideEffect(ShowModalBottomSheetEffect {
-                        ConfirmContent()
-                    })
+                    Text(text = "Отмена")
                 }
+                Button(
+                    modifier = Modifier,
+                    onClick = {
+                        viewModel.onConfirmResetServerUrl()
+                    }
+                ) {
+                    Text(text = "Вернуть")
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun AccountBox(modifier: Modifier = Modifier) {
+        Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Вы авторизованы",
+                    color = Color.Gray,
+                )
+                Text(
+                    text = state.profile?.email.orEmpty(),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 6.dp),
+                )
+            }
+
+            ClickableItem(
+                modifier = Modifier.padding(top = 10.dp),
+                text = "Выйти из аккаунта"
+            ) {
+                postSideEffect(ShowModalBottomSheetEffect {
+                    ConfirmContent()
+                })
             }
         }
     }
@@ -270,6 +415,36 @@ class ProfileScreen : BaseScreen<ProfileViewModel>() {
                     }
                 ) {
                     Text(text = "Да")
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun AboutApp(modifier: Modifier = Modifier) {
+        val versionName = BuildConfig.VERSION_NAME
+        val versionCode = BuildConfig.VERSION_CODE
+        val githubLink = "https://github.com/poetofcode/freshapp"
+        Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Версия $versionName ($versionCode)",
+                    modifier = Modifier,
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(top = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ClickableItem(
+                    modifier = Modifier,
+                    text = "Страница на Github"
+                ) {
+                    viewModel.postSharedEvent(OnOpenExternalBrowserSharedEvent(githubLink))
                 }
             }
         }

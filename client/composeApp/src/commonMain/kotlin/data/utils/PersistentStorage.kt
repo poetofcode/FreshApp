@@ -100,6 +100,18 @@ class PersistentStorage(
 
     fun save(key: String, param: Any) {
         _map[key] = toJsonElement(param)
+        persist()
+    }
+
+    fun remove(key: String): Boolean {
+        val wasRemoved = _map.remove(key) != null
+        if (wasRemoved) {
+            persist()
+        }
+        return wasRemoved
+    }
+
+    private fun persist() {
         val str = json.encodeToString(_map)
         contentProvider.saveContent(str)
     }

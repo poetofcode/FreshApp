@@ -2,7 +2,6 @@ package data.service
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
@@ -13,10 +12,8 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class HttpClientFactory(
-    val baseUrl: String,
-) {
-    
+class HttpClientFactory {
+
     fun createClient() : HttpClient {
         val bearerTokenStorage = mutableListOf<BearerTokens>()
 
@@ -42,10 +39,6 @@ class HttpClientFactory(
                     isLenient = true
                     ignoreUnknownKeys = true
                 })
-            }
-
-            install(DefaultRequest) {
-                url(baseUrl)
             }
 
 //            install(Auth) {

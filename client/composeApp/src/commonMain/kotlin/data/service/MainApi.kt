@@ -38,7 +38,7 @@ class MainApi(
      * Полный базовый адрес сервера вместе с префиксом, например
      * "http://127.0.0.1:3010/freshapp". Должен совпадать с basePath на бэкенде.
      */
-    private val baseUrl: String,
+    private val baseUrlProvider: () -> String,
 ) {
 
     suspend fun createSession(requestBody: CreateSessionRequestBody): ResultResponse<CreateSessionResponse> =
@@ -162,7 +162,7 @@ class MainApi(
      */
     private fun HttpRequestBuilder.apiPath(vararg segments: String) {
         url {
-            takeFrom(baseUrl)
+            takeFrom(baseUrlProvider())
             appendPathSegments("api", "v1", *segments)
         }
     }
